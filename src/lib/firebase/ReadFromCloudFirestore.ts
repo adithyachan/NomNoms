@@ -1,7 +1,13 @@
 import { collection, doc, getDocs, getDoc } from "firebase/firestore"; 
-import { useFirebaseFirestore } from "./useFirebase";
+import { useFirebaseFirestore } from "./hooks/useFirebase";
 
-const ReadFromCloudFirestore = async (collectionName: string, docName?: string | undefined) => {
+/**
+ * Reads the document from the collection specified from firestore
+ * @param collectionName name of the collection to read
+ * @param docName name of the document in the collection to read 
+ * @returns Promise of type QueryDocumentSnapshot. Use .data() to extract the actual payload
+ */
+const ReadDocumentFromCloudFirestore = async (collectionName: string, docName: string) => {
   const firestore = useFirebaseFirestore()
   if (docName) {
     // Get document with name
@@ -14,16 +20,27 @@ const ReadFromCloudFirestore = async (collectionName: string, docName?: string |
     }
 
     // document does not exist
-    console.error("Document" + query + "does not exist!")
+    console.error("Document, " + docName + ", in collection, " + collectionName + ", does not exist!")
     return undefined
   }
-  else {
-    // return all docs in the collection
-    const query = await getDocs(collection(firestore, collectionName));
-    return query.docs
-  }
-  
-  
 }
 
-export default ReadFromCloudFirestore
+/**
+ * Reads an entire collection from firestore
+ * @param collectionName name of the collection to read
+ * @return Promise of type QuerySnapshot<DocumentData>. Use .docs to get all documents in the collection
+ */
+const ReadCollectionFromCloudFirestore = async (collectionName: string) => {
+  const firestore = useFirebaseFirestore()
+
+  try {
+    const query = await getDocs(collection(firestore, collectionName))
+    return query
+  }
+  catch (e) {
+    console.error("Collection, " + collectionName + ", does not exist.")
+    return undefined
+  }
+}
+
+export { ReadDocumentFromCloudFirestore, ReadCollectionFromCloudFirestore }

@@ -19,6 +19,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/lib/firebase/WriteToCloudFirestore.ts", "src/lib/firebase/useFirebase.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/lib/firebase/WriteToCloudFirestore.ts", "src/lib/firebase/hooks/useFirebase.ts"],
   "exclude": ["node_modules"]
 }
