@@ -1,10 +1,10 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import { useFirebaseApp } from '../lib/firebase/useFirebase'
 
 export default function Home() {
+  // start up firebase
+  const app = useFirebaseApp()
+  
   return (
     <>
       <Head>
@@ -14,7 +14,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <p>Hello, World</p>
+        {/* TODO: Create Basic Landing */}
+        <p>NomNoms</p>
       </main>
     </>
   )
