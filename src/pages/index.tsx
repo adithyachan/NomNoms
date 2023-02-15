@@ -1,10 +1,10 @@
 import Head from 'next/head'
-import { useFirebaseApp } from '../lib/firebase/useFirebase'
+import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
 
 export default function Home() {
   // start up firebase
   const app = useFirebaseApp()
-  
+
   return (
     <>
       <Head>
