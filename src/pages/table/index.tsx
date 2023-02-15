@@ -1,7 +1,6 @@
 /* TODO: Create Table Main Page */
-import { WriteToCloudFirestore } from "@/lib/firebase/WriteToCloudFirestore";
-import { ReadCollectionFromCloudFirestore } from "@/lib/firebase/ReadFromCloudFirestore";
-import { DeleteDocumentFromCloudFirestore } from "@/lib/firebase/DeleteFromCloudFirestore";
+import { ReadCollection, WriteDocument, DeleteDocument } from "@/lib/firebase/FirestoreOperations";
+
 import { QuerySnapshot, QueryDocumentSnapshot, DocumentData} from "firebase/firestore"
 import Table from "../../types/Table";
 import { useState } from "react";
@@ -19,16 +18,16 @@ export default function TablePage() {
   }
 
   const writeData = async () => {
-    await WriteToCloudFirestore(col, data)
+    await WriteDocument(col, data)
   }
 
   const readData = async () => {
-    const dataAccessed = await ReadCollectionFromCloudFirestore(col)
+    const dataAccessed = await ReadCollection(col)
     setContent(dataAccessed?.docs)
   }
 
   const deleteData = async () => {
-    await DeleteDocumentFromCloudFirestore(col, doc)
+    await DeleteDocument(col, doc)
     await readData()
     setDoc("")
   }
