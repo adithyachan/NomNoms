@@ -6,12 +6,14 @@ export default async function handler({ query }, res: any) {
     try {   
       let searchUrl = baseUrl
       
-      if (query.offset) searchUrl += `offset=${query.offset}&`;
+      // if (query.offset) searchUrl += `offset=${query.offset}&`;
       if (query.limit) searchUrl += `limit=${query.limit}&`;
-      if (query.term) searchUrl += `term=${query.term}&`;
+      // if (query.term) searchUrl += `term=${query.term}&`;
       if (query.location) searchUrl += `location=${query.location}&`;
-      if (query.sortBy) searchUrl += `sort_by=${query.sortBy}&`;
-      
+      // if (query.sortBy) searchUrl += `sort_by=${query.sortBy}&`;
+      if (query.radius) searchUrl += `radius=${query.radius}&`;
+      if (query.categories) searchUrl += `categories=${query.categories}&`;
+      console.log(searchUrl);
       let businesses = await fetch(
           searchUrl,
           {
