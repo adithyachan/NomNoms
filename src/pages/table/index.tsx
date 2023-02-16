@@ -1,17 +1,15 @@
 /* TODO: Create Table Main Page */
-import { ReadTable, ReadTables, WriteTable, DeleteTable } from "@/lib/firebase/table/TableOperations";
+import { ReadTables, WriteTable, DeleteTable } from "@/lib/firebase/table/TableOperations";
 import { Timestamp } from "firebase/firestore";
 
-import { Table } from "../../types/Table";
+import { ITable } from "../../types/Table";
 import { useState } from "react";
 
 export default function TablePage() {
-  const [content, setContent] = useState<{[id: string]: Table}>();
+  const [content, setContent] = useState<{[id: string]: ITable}>();
   const [doc, setDoc] = useState("");
 
-  const col = "tables";
-
-  const data: Table = {
+  const data: ITable = {
     name: "",
     lastAccessed: Timestamp.fromDate(new Date()),
     users: [],
