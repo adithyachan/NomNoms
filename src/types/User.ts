@@ -1,4 +1,4 @@
-interface IUser {
+export interface IUser {
   name: string,
   tables: string[],
 }

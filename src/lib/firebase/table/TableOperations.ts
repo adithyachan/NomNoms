@@ -1,4 +1,4 @@
-import { Table } from "@/types/Table";
+import { ITable, Table } from "@/types/Table";
 import { collection, doc, QueryDocumentSnapshot } from "firebase/firestore";
 import { ReadDocumentWithConverter, ReadCollectionWithConverter, WriteDocumentWithConverter, DeleteDocument } from "../FirestoreOperations";
 import { useFirebaseFirestore } from "../hooks/useFirebase";
@@ -32,7 +32,7 @@ export const ReadTable = async (docName: string) => {
   const firestore = useFirebaseFirestore()
   try {
     const docRef = doc(firestore, collectionName, docName).withConverter(tableConverter)
-    const table = (await ReadDocumentWithConverter(docRef))?.data()
+    const table = tableConverter.fromFirestore((await ReadDocumentWithConverter(docRef))!)
     return table
   }
   catch (e) {
@@ -69,14 +69,14 @@ export const ReadTables = async () => {
  * @param data Table object to write
  * @returns id of the object that was written
  */
-export const WriteTable = async (data: Table) => {
+export const WriteTable = async (data: ITable) => {
   const firestore = useFirebaseFirestore()
   try {
     const docRef = doc(collection(firestore, collectionName)).withConverter(tableConverter);
     const table = (await WriteDocumentWithConverter(docRef, data))
   }
   catch (e) {
-    console.log("Error reading table: " + e)
+    console.error("Error reading table: " + e)
     return undefined
   }
 }
