@@ -18,7 +18,7 @@ export default function Home() {
         {/* TODO: Create Basic Landing */}
         <p>NomNoms</p>
         <JoinTable />
-        <GetRestaurants />
+        <GetRestaurants zip="10019" radius="8000" categories="japanese"/>
       </main>
     </>
   )

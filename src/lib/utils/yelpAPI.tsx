@@ -9,8 +9,8 @@ const options = {
 }
 const fetcher = (url: string) => fetch(url, options).then(res => res.json());
 
-const GetRestaurants = () => {
-  const {data, error, isLoading} = useSWR('/api/businesses?location=10019', fetcher);
+const GetRestaurants = ({zip, radius, categories}) => {
+  const {data, error, isLoading} = useSWR(`/api/businesses?limit=50&location=${zip}&radius=${radius}&categories=${categories}`, fetcher);
 
   if (error) {
     console.log(error);
