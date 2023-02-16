@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
-import JoinTable from '@/components/table/jointable'
+import JoinTable from '@/components/table/JoinTable'
 export default function Home() {
   // start up firebase
   const app = useFirebaseApp()
