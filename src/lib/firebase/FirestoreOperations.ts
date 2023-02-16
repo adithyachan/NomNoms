@@ -10,8 +10,8 @@ import {
         CollectionReference} from "firebase/firestore";
   
 import { useFirebaseFirestore } from "./hooks/useFirebase";
-import { Table } from '@/types/Table'
-import { User } from '@/types/User'
+import { ITable } from '@/types/Table'
+import { IUser } from '@/types/User'
 
 
 /**
@@ -43,13 +43,11 @@ export const ReadDocument = async (collectionName: string, docName: string) => {
  * @returns Promise of type QueryDocumentSnapshot. Use .data() to extract the actual payload
  */
 export const ReadDocumentWithConverter = async (docRef: DocumentReference) => {
-  const firestore = useFirebaseFirestore()
   // Get document with name
   const query = await getDoc(docRef)
 
   // Check if document exists
   if (query.exists()) {
-    console.log("Document: " + query)
     return query
   }
 
@@ -105,7 +103,7 @@ export const ReadCollectionWithConverter = async (collectionRef: CollectionRefer
  * 
  * @returns document id of written document
  */
-export const WriteDocument = async (collectionName: string, data: Table | User , docName? : string | undefined) => {
+export const WriteDocument = async (collectionName: string, data: ITable | IUser , docName? : string | undefined) => {
     const firestore = useFirebaseFirestore()
 
     console.log(firestore)
@@ -139,7 +137,7 @@ export const WriteDocument = async (collectionName: string, data: Table | User ,
  * 
  * @returns document id of written document
  */
-export const WriteDocumentWithConverter = async (docRef: DocumentReference, data: Table | User) => {
+export const WriteDocumentWithConverter = async (docRef: DocumentReference, data: ITable | IUser) => {
   const firestore = useFirebaseFirestore()
 
   try {
