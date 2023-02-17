@@ -79,7 +79,7 @@ export default function Hero() {
         <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
         <h1 className={classes.title}>
           {`Can't  `}
-          <Text component="span" color="#f25653" inherit>
+          <Text component="span" color="red" inherit>
             decide
           </Text>{' '}
           where to eat?{' '}
@@ -87,7 +87,7 @@ export default function Hero() {
 
         <Text className={classes.description} color="dimmed">
           Stop fighting over restaurants with your friends. Food faster, become a{' '}
-          <Text component="span" color="#f25653" inherit>
+          <Text component="span" color="red" inherit>
             Nomster
           </Text>{'.'}
         </Text>
