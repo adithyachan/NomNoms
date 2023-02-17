@@ -1,6 +1,7 @@
 /* TODO: Make reset password page */
+import { useFirebaseApp, useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 import { useState } from "react";
-
 
 export default function resetPass() {
     const [email, setEmail] = useState("");
@@ -8,6 +9,9 @@ export default function resetPass() {
     const handleReset = async (e : any) => {
         console.log("helloworld");
         e.preventDefault();
+        const auth = useFirebaseAuth();
+        //fix edge cases
+        sendPasswordResetEmail(auth, email);
     };
 
     return (
