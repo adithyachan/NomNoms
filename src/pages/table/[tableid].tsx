@@ -10,7 +10,7 @@ import { ReadTable } from "@/lib/firebase/table/TableOperations";
 import { Table } from "@/types/Table";
 
 // Layouts
-import TableSelectedLayout from "@/layouts/tableSelected/TableSelectedLayout";
+import TableSelectedLayout from "@/layouts/table/tableSelected/TableSelectedLayout";
 import LoadingLayout from "@/layouts/LoadingLayout";
 
 

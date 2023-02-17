@@ -4,7 +4,7 @@ import { Timestamp } from "firebase/firestore";
 
 import { ITable } from "../../types/Table";
 import { useState } from "react";
-import TableSelectionLayout from "@/layouts/tableSelection/TableSelectionLayout";
+import TableSelectionLayout from "@/layouts/table/tableSelection/TableSelectionLayout";
 
 export default function TablePage() {
 
