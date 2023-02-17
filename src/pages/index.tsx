@@ -1,3 +1,4 @@
+import LandingLayout from '@/layouts/LandingLayout'
 import Head from 'next/head'
 import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
 
@@ -15,7 +16,7 @@ export default function Home() {
       </Head>
       <main>
         {/* TODO: Create Basic Landing */}
-        <p>NomNoms</p>
+        <LandingLayout />
       </main>
     </>
   )
