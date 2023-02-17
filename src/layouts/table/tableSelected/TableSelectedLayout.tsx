@@ -1,10 +1,10 @@
-import TablePrefSidebar from "@/components/table/TablePrefSidebar";
-import TableUserSidebar from "@/components/table/TableUserSidebar";
+import TablePrefSidebar from "@/components/table/tableSelected/TablePrefSidebar";
+import TableUserSidebar from "@/components/table/tableSelected/TableUserSidebar";
 import { Table } from "@/types/Table";
 import { Container, Grid } from "@mantine/core";
 import RestaurantListLayout from "./RestaurantListLayout";
 
-export default function MainTableLayout(props: {table: Table}) {
+export default function TableSelectedLayout(props: {table: Table}) {
   return (
     <Container fluid>
       {/* Create Grid with 3 columns, 1st & 3rd are smaller. Middle is larger */}
