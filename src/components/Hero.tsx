@@ -76,7 +76,7 @@ export default function Hero() {
     <div className={classes.wrapper}>
       <Container size={700} className={classes.inner}>
 
-        <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
+        <Image width={500} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
         <h1 className={classes.title}>
           {`Can't  `}
           <Text component="span" color="red" inherit>
