@@ -1,5 +1,5 @@
-import TablePrefSidebar from "@/components/table/TablePrefSidebar";
-import TableUserSidebar from "@/components/table/TableUserSidebar";
+import TablePrefSidebar from "@/components/table/tableSelected/TablePrefSidebar";
+import TableUserSidebar from "@/components/table/tableSelected/TableUserSidebar";
 import { Table } from "@/types/Table";
 import { Container, Grid } from "@mantine/core";
 import RestaurantListLayout from "./RestaurantListLayout";
