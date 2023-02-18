@@ -8,24 +8,7 @@ import { useState } from "react";
 import ResetPassLayout from "@/layouts/auth/ResetPassLayout"
 
 export default function ResetPass() {
-    
-    const [email, updateEmail] = useState("");
-    
-    const [error, setError] = useState("");
-    const router = useRouter();
 
-    const handleReset = async (e : any) => {
-        //console.log("helloworld");
-        e.preventDefault();
-        const auth = useFirebaseAuth();
-        //fix edge cases  
-        sendPasswordResetEmail(auth, email).then(() => {
-          router.push('/auth/inputresetpass')
-        }).catch(error => {
-            setError(error.message);
-        });
-    };
-    
     return (
         /* html type
         <>
@@ -51,7 +34,7 @@ export default function ResetPass() {
         </div>
         */
        <>
-       <ResetPassLayout updateEmail={updateEmail}/>
+       <ResetPassLayout />
        </>
     );
 }
