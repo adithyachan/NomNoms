@@ -37,20 +37,7 @@ export class Table implements ITable {
       this.leader = "";
       this.expiration = Timestamp.fromDate(new Date());
     }
-    
   };
-
-  public toJSON() {
-    const json: ITable = {
-      name: this.name,
-      lastAccessed: this.lastAccessed,
-      users: this.users,
-      leader: this.leader,
-      expiration: this.expiration
-    }
-
-    return json
-  }
 }
 
 

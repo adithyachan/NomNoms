@@ -13,7 +13,6 @@ import { useFirebaseFirestore } from "./hooks/useFirebase";
 import { ITable } from '@/types/Table'
 import { IUser } from '@/types/User'
 
-
 /**
  * Reads the document from the collection specified from firestore
  * @param collectionName name of the collection to read
