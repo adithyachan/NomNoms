@@ -58,25 +58,28 @@ import { useForm } from 'react-hook-form'
     const { handleSubmit, register, getValues, formState: {isValid, errors} } = useForm(
     { mode: 'onChange', defaultValues: {email: ''}});
     const router = useRouter();
-    const [error, setError] = useState("");
+    const [isError, setError] = useState(Boolean);
 
     //const handleReset = async (e : any) => {}
-    const handleReset = async () => {
+    const handleReset = async (e : any) => {
       console.log(getValues('email'));
+      e.preventDefault();
       const email = getValues('email');   
       const auth = useFirebaseAuth();
       //fix edge cases  
       sendPasswordResetEmail(auth, email).then(() => {
+        setError(false);
         router.push('/auth/inputresetpass')
       }).catch(error => {
-          setError(error.message);
+        setError(true);
       });
+      e.target.reset();
     };
 
     const { classes } = useStyles();
 
     return (
-      <>
+      <form onSubmit={handleReset}>
     <Container size={460} my={30}>
         <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
         <Title className={classes.title} align="center">
@@ -86,7 +89,7 @@ import { useForm } from 'react-hook-form'
           Enter your email to get a reset link
         </Text>
         <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
-        <form onSubmit={handleSubmit(handleReset)}>
+
         <TextInput  
         label="Your email" 
         placeholder="nomnoms@gmail.com" 
@@ -107,9 +110,10 @@ import { useForm } from 'react-hook-form'
             </Anchor>
             <Button className={classes.control} disabled={!isValid} type="submit" >Reset password</Button>
           </Group>
-        </form>
         </Paper>
+
       </Container>
-      </>
+
+      </form>
     );
   }
