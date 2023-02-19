@@ -76,6 +76,10 @@ import { useForm } from 'react-hook-form'
       e.target.reset();
     };
 
+    const handleReturn = (e : any) => {
+      router.push('/')
+    }
+
     const { classes } = useStyles();
 
     return (
@@ -105,7 +109,7 @@ import { useForm } from 'react-hook-form'
             <Anchor color="dimmed" size="sm" className={classes.control}>
               <Center inline>
                 <IconArrowLeft size={12} stroke={1.5} />
-                <Box ml={5}>Back to login page</Box>
+                <Box onClick={handleReturn} ml={5}>Back to login page</Box>
               </Center>
             </Anchor>
             <Button className={classes.control} disabled={!isValid} type="submit" >Reset password</Button>
