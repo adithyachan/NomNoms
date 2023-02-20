@@ -2,6 +2,8 @@
 import { useFirebaseApp, useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { useState } from "react";
+import { CreateAccountEmailandPassword } from "@/lib/firebase/auth/AuthService";
+import CreateAccountLayout from "@/layouts/auth/CreateAccountLayout"
 
 
 
@@ -15,12 +17,13 @@ export default function CreateAccount() {
       console.log("working");
       e.preventDefault();
       const auth = useFirebaseAuth();
+      CreateAccountEmailandPassword(email, password)
   };
 
   return (
       
      //NextJS form component
-     <div>
+     /*<div>
      <form onSubmit={(e) => handleCreate(e)}>
        <input
          type="email"
@@ -43,9 +46,15 @@ export default function CreateAccount() {
          onChange={(e) => setConfirmPassword(e.target.value)}
        />
        <text>{"\n"}</text>
-       <button type="submit">Submit</button>
+       <button type="submit">Create Account</button>
      </form>
+
+     
       </div>
+  );*/
+  <>
+    < CreateAccountLayout/>
+  </>
   );
 }
  
