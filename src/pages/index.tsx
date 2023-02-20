@@ -1,3 +1,4 @@
+import LandingLayout from '@/layouts/LandingLayout'
 import Head from 'next/head'
 import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
 import JoinTable from '@/components/table/JoinTable'
@@ -16,9 +17,8 @@ export default function Home() {
       </Head>
       <main>
         {/* TODO: Create Basic Landing */}
-        <p>NomNoms</p>
-        <JoinTable />
-        <GetRestaurants zip="10019" radius="8000" categories="japanese"/>
+
+        <LandingLayout />
       </main>
     </>
   )

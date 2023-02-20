@@ -10,7 +10,7 @@ import { ReadTable } from "@/lib/firebase/table/TableOperations";
 import { Table } from "@/types/Table";
 
 // Layouts
-import MainTableLayout from "@/layouts/table/MainTableLayout";
+import TableSelectedLayout from "@/layouts/table/tableSelected/TableSelectedLayout";
 import LoadingLayout from "@/layouts/LoadingLayout";
 
 
@@ -64,5 +64,5 @@ export default function TablePage({ tableJSON }: InferGetStaticPropsType<typeof 
     );
   }
 
-  return <MainTableLayout table={ table }/>
+  return <TableSelectedLayout table={ table }/>
 }
