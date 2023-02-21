@@ -94,6 +94,8 @@ export default function Hero() {
 
         <Group className={classes.controls}>
           <Button
+            component = "a"
+            href="http://localhost:3000/auth/createAccount#:~:text=Don%27t%20have%20an-,account,-%3F%20Register"
             size="xl"
             className={classes.control}
             variant="filled"
@@ -104,7 +106,7 @@ export default function Hero() {
 
           <Button
             component="a"
-            href="https://github.com/mantinedev/mantine"
+            href="http://localhost:3000/auth/createAccount"
             size="xl"
             variant="default"
             className={classes.control}
