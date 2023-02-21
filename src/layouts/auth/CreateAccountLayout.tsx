@@ -13,7 +13,7 @@ import {
   Anchor,
   Stack,
 } from '@mantine/core';
-import { GoogleButton, TwitterButton } from "@/components/SocialButtons"
+import { GoogleButton, TwitterButton } from "@/components/auth/SocialButtons"
 
 export default function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(['login', 'register']);
@@ -34,7 +34,7 @@ export default function AuthenticationForm(props: PaperProps) {
   return (
     <Paper radius="md" p="xl" withBorder {...props}>
       <Text size="lg" weight={500}>
-        Welcome to Mantine, {type} with
+        Welcome to NomNoms, {type} with
       </Text>
         
       <Group grow mb="md" mt="md">
