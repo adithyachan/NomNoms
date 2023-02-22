@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
 import JoinTable from '@/components/table/JoinTable'
-import GetRestaurants from '@/lib/utils/yelpAPI'
+import {GetRestaurants, GetRestaurant} from '@/lib/utils/yelpAPI'
 export default function Home() {
   // start up firebase
   const app = useFirebaseApp()
@@ -18,7 +18,8 @@ export default function Home() {
         {/* TODO: Create Basic Landing */}
         <p>NomNoms</p>
         <JoinTable />
-        <GetRestaurants zip="10019" radius="8000" categories="japanese"/>
+        {/* <GetRestaurants zip="10019" radius="8000" categories="japanese"/> */}
+        <GetRestaurant id="TN4RnyqHMSupRFot4Q-_EA"/>
       </main>
     </>
   )

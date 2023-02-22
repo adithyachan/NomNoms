@@ -9,7 +9,7 @@ const options = {
 }
 const fetcher = (url: string) => fetch(url, options).then(res => res.json());
 export const GetRestaurant = ({id}) => {
-  const {data, error, isLoading} = useSWR(`/api/business/${id}`, fetcher);
+  const {data, error, isLoading} = useSWR(`/api/business?id=${id}`, fetcher);
 
   if (error) {
     console.log(error);
