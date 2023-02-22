@@ -3,7 +3,6 @@ import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import {
   TextInput,
   PasswordInput,
@@ -49,8 +48,7 @@ export default function AuthenticationForm(props: PaperProps) {
   });
 
   //disable the button if the inputs are not valid
-    const HandleCreate = async (e : any) => {
-      console.log("hello");
+    const handleCreate = async (e : any) => {
       const auth = useFirebaseAuth();
       createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
       .then((userCredential) => {
@@ -66,62 +64,6 @@ export default function AuthenticationForm(props: PaperProps) {
         // ..
       });
       console.log("working")
-    }
-
-    const provider = new GoogleAuthProvider();
-
-    const HandleGoogle = async (e: any) => {
-      console.log("checking google")
-      const auth = useFirebaseAuth();
-     signInWithPopup(auth, provider)
-   .then((result) => {
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential?.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });   
-    }
-
-    const facebookprovider = new FacebookAuthProvider();
-
-    const HandleFacebook = async (e: any) => {
-      console.log("checking facebook")
-      const auth = useFirebaseAuth();
-  signInWithPopup(auth, facebookprovider)
-  .then((result) => {
-    // The signed-in user info.
-    const user = result.user;
-
-    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-    const credential = FacebookAuthProvider.credentialFromResult(result);
-    const accessToken = credential?.accessToken;
-
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-  })
-  .catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = FacebookAuthProvider.credentialFromError(error);
-
-    // ...
-  });
     }
 
 
@@ -162,23 +104,11 @@ export default function AuthenticationForm(props: PaperProps) {
       
         
 
-     <form onSubmit={form.onSubmit(HandleCreate)}>
-
-      <Container size={500} my={50} 
+      <form onSubmit={handleCreate}>
+      <Container size={460} my={30} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
-          <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
-          {type === 'register' && (
-
-          <Title className= {classes.title} align = "center">
-              Not a Nomster yet?
-          </Title>
-          )}
-
-          {type === 'register' && (
-          <Text color="dimmed" size="sm" align="center">
-              Create an account below!
-            </Text>
-          )}
+        
+    
 
         <Stack>
 

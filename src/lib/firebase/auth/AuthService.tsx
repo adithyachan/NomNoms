@@ -1,4 +1,4 @@
-import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase"
+/*import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase"
 import {signInWithPopup, createUserWithEmailAndPassword, GoogleAuthProvider } from "firebase/auth";
 import { StringLiteral } from "typescript";
 
@@ -41,4 +41,6 @@ export async function SignUpWithGoogle() {
 		const credential = GoogleAuthProvider.credentialFromError(error);
 		// ...
 	});
-}
+}*/
+
+export{}
