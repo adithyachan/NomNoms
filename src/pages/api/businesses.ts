@@ -1,4 +1,4 @@
-export default async function handler({ query }, res: any) {
+export default async function handler({ query }: any, res: any) {
   const apiKey = process.env.NEXT_PUBLIC_YELP_FUSION_AUTH_TOKEN;
 
   const baseUrl = `https://api.yelp.com/v3/businesses/search?`;
@@ -13,7 +13,6 @@ export default async function handler({ query }, res: any) {
       // if (query.sortBy) searchUrl += `sort_by=${query.sortBy}&`;
       if (query.radius) searchUrl += `radius=${query.radius}&`;
       if (query.categories) searchUrl += `categories=${query.categories}&`;
-      console.log(searchUrl);
       let businesses = await fetch(
           searchUrl,
           {

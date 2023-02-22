@@ -1,11 +1,13 @@
 import Head from 'next/head'
 import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
 import JoinTable from '@/components/table/JoinTable'
-import {GetRestaurants, GetRestaurant} from '@/lib/utils/yelpAPI'
+import {useRestaurantBusinessEndpoint, useRestaurantListEndpoint} from '@/lib/utils/yelpAPI'
+import LandingLayout from '@/layouts/LandingLayout'
 export default function Home() {
   // start up firebase
   const app = useFirebaseApp()
-
+  const restaurantList = useRestaurantListEndpoint(10019, 3200, "japanese%2Cchinese")
+  const restaurant = useRestaurantBusinessEndpoint("TN4RnyqHMSupRFot4Q-_EA")
   return (
     <>
       <Head>
@@ -16,10 +18,8 @@ export default function Home() {
       </Head>
       <main>
         {/* TODO: Create Basic Landing */}
-        <p>NomNoms</p>
-        <JoinTable />
-        {/* <GetRestaurants zip="10019" radius="8000" categories="japanese"/> */}
-        <GetRestaurant id="TN4RnyqHMSupRFot4Q-_EA"/>
+        <LandingLayout/>
+        
       </main>
     </>
   )
