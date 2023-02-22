@@ -1,5 +1,8 @@
 import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
+import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
+// import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import {
   TextInput,
   PasswordInput,
@@ -32,6 +35,26 @@ export default function AuthenticationForm(props: PaperProps) {
       password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
     },
   });
+
+  //disable the button if the inputs are not valid
+    const handleCreate = async (e : any) => {
+      const auth = useFirebaseAuth();
+      createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        console.log("User was successfully created")
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("Account creation was unsuccessful")
+        // ..
+      });
+      console.log("working")
+    }
+
 
   const useStyles = createStyles((theme) => ({
     title: {
@@ -70,7 +93,7 @@ export default function AuthenticationForm(props: PaperProps) {
       
         
 
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={handleCreate}>
       <Container size={460} my={30} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
         

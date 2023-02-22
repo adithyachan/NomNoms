@@ -1,8 +1,8 @@
 /* TODO: Make Create Account Page */
 import { useFirebaseApp, useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
-import { sendPasswordResetEmail } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { useState } from "react";
-import { CreateAccountEmailandPassword } from "@/lib/firebase/auth/AuthService";
+//import { CreateAccountEmailandPassword } from "@/lib/firebase/auth/AuthService";
 import CreateAccountLayout from "@/layouts/auth/CreateAccountLayout"
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
@@ -14,48 +14,22 @@ export default function CreateAccount() {
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmPassword] = useState("");
 
-  const handleCreate = async (e : any) => {
-      console.log("working");
-      e.preventDefault();
-      const auth = useFirebaseAuth();
-      CreateAccountEmailandPassword(email, password)
-  };
-
-  
-
-
-  return (
-      
-     //NextJS form component
-     /*<div>
-     <form onSubmit={(e) => handleCreate(e)}>
-       <input
-         type="email"
-         placeholder = "Email Address"
-         value={email}
-         onChange={(e) => setEmail(e.target.value)}
-       />
-       <text>{"\n"}</text>
-       <input
-         type="password"
-         placeholder = "Password"
-         value={password}
-         onChange={(e) => setPassword(e.target.value)}
-       />
-       <text>{"\n"}</text>
-       <input
-         type="confirmpassword"
-         placeholder = "Confirm Password"
-         value={confirmpassword}
-         onChange={(e) => setConfirmPassword(e.target.value)}
-       />
-       <text>{"\n"}</text>
-       <button type="submit">Create Account</button>
-     </form>
-
-     
-      </div>
-  );*/
+  /*const handleCreate = async (e : any) => {
+    const auth = useFirebaseAuth();
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ..
+    });
+    console.log("working")
+  }*/
+  return(
   <>
     < CreateAccountLayout/>
   </>
@@ -86,5 +60,3 @@ export async function CreateAccountWithGoogle() {
     // ...
   });   
 }
-
-
