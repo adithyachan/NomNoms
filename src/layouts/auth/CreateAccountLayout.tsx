@@ -59,24 +59,24 @@ export default function AuthenticationForm(props: PaperProps) {
     },
   }));
 
+ 
+
   return (
 
     <Paper radius="md" p="xl" withBorder {...props}>
       <Text size="lg" weight={500}>
-        Welcome to NomNoms, {type} with
+        Welcome to NomNoms, {type} with 
       </Text>
+      
         
-      <Group grow mb="md" mt="md">
-        
-        <GoogleButton radius="xl">Google</GoogleButton>
-        <TwitterButton radius="xl">Twitter</TwitterButton>
-      </Group> 
-
-      <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
       <form onSubmit={form.onSubmit(() => {})}>
       <Container size={460} my={30} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
+        
+    
+
+        
         <Stack>
 
           <TextInput
@@ -116,6 +116,8 @@ export default function AuthenticationForm(props: PaperProps) {
               onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
             />
           )}
+
+      
         </Stack>
 
         <Group position="apart" mt="xl">
@@ -132,6 +134,13 @@ export default function AuthenticationForm(props: PaperProps) {
           </Anchor>
           <Button type="submit">{upperFirst(type)}</Button>
         </Group>
+
+        <Group grow mb="md" mt="md">
+        <GoogleButton radius="xl">Google</GoogleButton>
+        <TwitterButton radius="xl">Twitter</TwitterButton>
+      </Group>
+
+        
         </Container>
       </form>
     </Paper>
