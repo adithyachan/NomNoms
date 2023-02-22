@@ -13,7 +13,6 @@ export default async function handler({ query }: any, res: any) {
       // if (query.sortBy) searchUrl += `sort_by=${query.sortBy}&`;
       if (query.radius) searchUrl += `radius=${query.radius}&`;
       if (query.categories) searchUrl += `categories=${query.categories}&`;
-      console.log(searchUrl);
       let businesses = await fetch(
           searchUrl,
           {
