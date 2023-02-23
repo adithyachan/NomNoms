@@ -1,7 +1,7 @@
 import TablePrefSidebar from "@/components/table/tableSelected/TablePrefSidebar";
 import TableUserSidebar from "@/components/table/tableSelected/TableUserSidebar";
 import { Table } from "@/types/Table";
-import { Container, Grid } from "@mantine/core";
+import { Container, Grid, Title } from "@mantine/core";
 import RestaurantListLayout from "./RestaurantListLayout";
 
 export default function TableSelectedLayout(props: {table: Table}) {
@@ -13,6 +13,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
           <TablePrefSidebar />
         </Grid.Col>
         <Grid.Col span={6}>
+          <Title order={2}>{props.table.name}</Title>
           <RestaurantListLayout />
         </Grid.Col>
         <Grid.Col span={3}>
