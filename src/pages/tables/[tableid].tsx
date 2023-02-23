@@ -16,7 +16,6 @@ import LoadingLayout from "@/layouts/LoadingLayout";
 // Look for the table on page load
 export async function getStaticProps (context: GetStaticPropsContext) {
   const table = await ReadTable(context.params?.tableid as string);
-  console.log(table)
 
   if (!table) {
     return {
