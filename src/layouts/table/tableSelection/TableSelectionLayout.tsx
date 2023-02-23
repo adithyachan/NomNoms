@@ -4,7 +4,7 @@ import UserTablesLayout from "./UserTablesLayout";
 
 export default function TableSelectionLayout() {
   return (
-    <Container fluid>
+    <Container fluid className="bg-gradient-to-b from-rose-100 to-white">
       <Grid>
         <Grid.Col span={6}>
           <UserTablesLayout />

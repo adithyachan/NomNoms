@@ -6,7 +6,6 @@ import DefaultErrorPage from "next/error"
 
 // Firestore Imports
 import { ReadTable } from "@/lib/firebase/table/TableOperations";
-import { Table } from "@/types/Table";
 
 // Layouts
 import TableSelectedLayout from "@/layouts/table/tableSelected/TableSelectedLayout";
@@ -17,6 +16,7 @@ import LoadingLayout from "@/layouts/LoadingLayout";
 // Look for the table on page load
 export async function getStaticProps (context: GetStaticPropsContext) {
   const table = await ReadTable(context.params?.tableid as string);
+  console.log(table)
 
   if (!table) {
     return {
@@ -43,15 +43,14 @@ export function getStaticPaths() {
 
 export default function TablePage({ tableJSON }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter()
-  const { tableid } = router.query
 
   // Check if page is loaded yet
   if (router.isFallback) {
-    return <LoadingLayout fullscreen />;
+    return <LoadingLayout fullscreen logo/>;
   }
 
   // Create Table 
-  const table: Table = new Table(JSON.parse(tableJSON))
+  const table = JSON.parse(tableJSON)
 
   if (!table) {
     return (
