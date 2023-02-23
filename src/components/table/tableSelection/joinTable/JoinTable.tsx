@@ -26,14 +26,14 @@ export default function JoinTable() {
 
   const checkValid = (id: string) => {
     let actual_id = id
-    if (id.startsWith(process.env.NEXT_PUBLIC_ROOT + "/tables/")) {
-      actual_id = id.substring((process.env.NEXT_PUBLIC_ROOT + "/tables/").length)
+    if (id.startsWith(process.env.NEXT_PUBLIC_VERCEL_URL + "/tables/")) {
+      actual_id = id.substring((process.env.NEXT_PUBLIC_VERCEL_URL + "/tables/").length)
     }
-    else if (id.startsWith("https://" + process.env.NEXT_PUBLIC_ROOT + "/tables/")) {
-      actual_id = id.substring(("https://" + process.env.NEXT_PUBLIC_ROOT + "/tables/").length)
+    else if (id.startsWith("https://" + process.env.NEXT_PUBLIC_VERCEL_URL + "/tables/")) {
+      actual_id = id.substring(("https://" + process.env.NEXT_PUBLIC_VERCEL_URL + "/tables/").length)
     }
-    else if (id.startsWith("http://" + process.env.NEXT_PUBLIC_ROOT + "/tables/")) {
-      actual_id = id.substring(("http://" + process.env.NEXT_PUBLIC_ROOT + "/tables/").length)
+    else if (id.startsWith("http://" + process.env.NEXT_PUBLIC_VERCEL_URL + "/tables/")) {
+      actual_id = id.substring(("http://" + process.env.NEXT_PUBLIC_VERCEL_URL + "/tables/").length)
     }
 
     setValue(id)
