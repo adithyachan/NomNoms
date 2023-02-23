@@ -24,12 +24,13 @@ export default function AuthenticationForm(props: PaperProps) {
       email: '',
       name: '',
       password: '',
-      terms: true,
+      confirmPassword: '',
     },
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : val.length > 10 ? 'Password too long': null),
+      confirmPassword: (value, val) => (value !== val.password ? 'Passwords do not match': null),
     },
   });
 
@@ -94,7 +95,7 @@ export default function AuthenticationForm(props: PaperProps) {
             placeholder="Your password"
             value={form.values.password}
             onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-            error={form.errors.password && 'Password should include at least 6 characters'}
+            error={form.errors.password}
           />
 
           {type === 'register' && (
@@ -102,21 +103,11 @@ export default function AuthenticationForm(props: PaperProps) {
             required
                 label="Confirm Password"
                 placeholder="Confirm your password"
-                value={form.values.password}
-                onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                error={form.errors.password && 'Password should include at least 6 characters'}
+                value={form.values.confirmPassword}
+                onChange={(event) => form.setFieldValue('confirmPassword', event.currentTarget.value)}
+                error={form.errors.confirmPassword}
             />
           )}
-
-          {type === 'register' && (
-                
-            <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
-              onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-            />
-          )}
-
       
         </Stack>
 
