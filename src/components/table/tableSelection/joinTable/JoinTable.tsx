@@ -7,8 +7,8 @@ import { Table } from '@/types/Table';
 import Link from 'next/link';
 
 export default function JoinTable() {
-  const [value, setValue] = useState('')
-  const [opened, handlers] = useDisclosure()
+  const [value, setValue] = useState("")
+  const [ID, setID] = useState("")
   const [valid, setValid] = useState(false)
 
   const [tables, setTables] = useState<{[id: string]: Table}>()
@@ -25,14 +25,26 @@ export default function JoinTable() {
   }
 
   const checkValid = (id: string) => {
+    let actual_id = id
+    if (id.startsWith(process.env.NEXT_PUBLIC_ROOT + "/tables/")) {
+      actual_id = id.substring((process.env.NEXT_PUBLIC_ROOT + "/tables/").length)
+    }
+    else if (id.startsWith("https://" + process.env.NEXT_PUBLIC_ROOT + "/tables/")) {
+      actual_id = id.substring(("https://" + process.env.NEXT_PUBLIC_ROOT + "/tables/").length)
+    }
+    else if (id.startsWith("http://" + process.env.NEXT_PUBLIC_ROOT + "/tables/")) {
+      actual_id = id.substring(("http://" + process.env.NEXT_PUBLIC_ROOT + "/tables/").length)
+    }
+
     setValue(id)
+    setID(actual_id)
     setError("")
     setValid(true)
     if (tables) {
-      setValid(Object.keys(tables).includes(id))
+      setValid(Object.keys(tables).includes(actual_id))
     }
     else {
-      setError("Could not locate table")
+      setError("Invalid table link or code")
     }
   }
 
@@ -42,11 +54,9 @@ export default function JoinTable() {
 
   return (
     <>
-      <Container fluid className="pb-4">
+      <Container fluid className="mb-4">
         <TextInput
-          placeholder="ID"
-          onFocus={() => handlers.open()}
-          onBlur={() => handlers.close()}
+          placeholder="Paste a link or ID"
           mt="md"
           value={value}
           onChange={(e) => {
@@ -57,11 +67,11 @@ export default function JoinTable() {
         {!valid && value != "" ? <small className="text-red-500">{ "Could not find the specified table" }</small> : null}
       </Container>
       <Center>
-        <Button color="red" disabled={!valid}>
-          <Link className="text-white no-underline" href={`/tables/${encodeURIComponent(value)}`}>
-            Join
-          </Link>
-        </Button>
+        <Link className="text-white no-underline" href={valid ? `/tables/${encodeURIComponent(ID)}` : ""}>
+          <Button color="red" disabled={!valid}>
+              Join
+          </Button>
+        </Link>
       </Center>
     </>
   )
