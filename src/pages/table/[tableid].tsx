@@ -5,13 +5,13 @@ import Head from "next/head";
 import DefaultErrorPage from "next/error"
 
 // Firestore Imports
-import { Timestamp } from "firebase/firestore";
 import { ReadTable } from "@/lib/firebase/table/TableOperations";
 import { Table } from "@/types/Table";
 
 // Layouts
 import TableSelectedLayout from "@/layouts/table/tableSelected/TableSelectedLayout";
 import LoadingLayout from "@/layouts/LoadingLayout";
+
 
 
 // Look for the table on page load
@@ -63,6 +63,8 @@ export default function TablePage({ tableJSON }: InferGetStaticPropsType<typeof 
       </>
     );
   }
+  
+  //TODO: Check if current authenticated user is in the users list for this table and if they are not, add them and show a confirmation
 
   return <TableSelectedLayout table={ table }/>
 }
