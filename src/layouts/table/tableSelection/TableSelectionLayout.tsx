@@ -1,14 +1,13 @@
 import { Container, Grid } from "@mantine/core";
 import CreateJoinTableLayout from "./CreateJoinTableLayout";
-import UsersTablesLayout from "./UsersTablesLayout";
-
+import UserTablesLayout from "./UserTablesLayout";
 
 export default function TableSelectionLayout() {
   return (
     <Container fluid>
       <Grid>
         <Grid.Col span={6}>
-          <UsersTablesLayout />
+          <UserTablesLayout />
         </Grid.Col>
         <Grid.Col span={6}>
           <CreateJoinTableLayout />
