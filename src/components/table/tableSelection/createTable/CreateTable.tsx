@@ -5,13 +5,18 @@ import { useInputState, useDisclosure } from '@mantine/hooks';
 import { Table, ITable } from "@/types/Table"
 import { WriteTable } from "@/lib/firebase/table/TableOperations"
 import { Timestamp } from "firebase/firestore"
+import CodeModal from "./CodeModal";
 
 const special_chars = /[ `!@#$%^&*()+_\-=\[\]{};':"\\|,.<>\/?]/
 
 export default function CreateTable() {
   const [value, setValue] = useInputState('');
   const [error, setError] = useState(null)
-  const [opened, handlers] = useDisclosure();
+  const [opened, inputHandlers] = useDisclosure();
+
+  // show code modal
+  const [codeOpen, codeHandlers] = useDisclosure();
+  const [code, setCode] = useState("");
 
   // Input validation
   const special_chars_check = !special_chars.test(value)
@@ -29,8 +34,10 @@ export default function CreateTable() {
     const table = new Table(tableJSON)
     
     try {
-      await WriteTable(table)
+      const code = await WriteTable(table)
       setValue('')
+      setCode(code)
+      codeHandlers.open()
     }
     catch (e: any) {
       setError(e)
@@ -39,6 +46,7 @@ export default function CreateTable() {
 
   return (
     <>
+      {codeOpen ? <CodeModal code={ code } open={ codeOpen } handler={ codeHandlers }/> : null} 
       <Container fluid className="pb-4">
         <Tooltip
         label={length_check ? special_chars_check ? null : "No special characters" : "Name must be 4-16 characters"}
@@ -49,8 +57,8 @@ export default function CreateTable() {
         >
           <TextInput
             placeholder="Table Name"
-            onFocus={() => handlers.open()}
-            onBlur={() => handlers.close()}
+            onFocus={() => inputHandlers.open()}
+            onBlur={() => inputHandlers.close()}
             mt="md"
             value={value}
             onChange={setValue}
