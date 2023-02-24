@@ -19,7 +19,7 @@ export default function UserTablesLayout() {
     <>
       <Container className="bg-white p-10 mt-10 rounded-3xl shadow-lg shadow-rose-100">
         <Text className="mb-10 text-center text-5xl font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Your Tables</Text>
-        <Grid>
+        <Grid gutter={50}>
           {Object.keys(tables).map(
             (id) =>
             <Grid.Col key={id} span={12} sm={6}>

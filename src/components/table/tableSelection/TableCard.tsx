@@ -1,5 +1,5 @@
 import { Table } from "@/types/Table";
-import { Card, Text, CopyButton, Tooltip, ActionIcon, Button, Group, Center } from "@mantine/core"
+import { Card, Title, CopyButton, Tooltip, ActionIcon, Button, Group, Center } from "@mantine/core"
 import { IconCheck, IconCopy, IconSettings } from "@tabler/icons";
 import { useRouter } from "next/router";
 
@@ -28,7 +28,7 @@ export default function TableCard(props: {table: Table, id: string}) {
     <>
       <Card className="shadow-lg bg-rose-100 shadow-rose-200 transition ease-in-out hover:shadow-xl delay-100 duration-500 hover:shadow-rose-300 rounded-lg">
         <Center className="flex-col space-y-2">
-          <Text weight={500}>{ props.table.name }</Text>
+          <Title order={5}>{ props.table.name }</Title>
           <Group>
             <Tooltip label="Settings" withArrow position="bottom">
               <ActionIcon>
