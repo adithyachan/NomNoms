@@ -21,7 +21,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import React from 'react';
 import { useForm } from 'react-hook-form'
-import { showNotification } from '@mantine/notifications';
+import { useNotifications, showNotification } from '@mantine/notifications';
 import { IconCheck } from '@tabler/icons';
 
 
@@ -51,6 +51,8 @@ import { IconCheck } from '@tabler/icons';
     },
   }));
   
+
+
   export default function ForgotPassword() {
     const { handleSubmit, register, getValues, formState: {isValid, errors}, reset } = useForm(
     { mode: 'onChange', defaultValues: {email: ''}});
@@ -58,6 +60,8 @@ import { IconCheck } from '@tabler/icons';
 
     const router = useRouter();
     const [isError, setError] = useState(Boolean);
+
+
 
     const handleReset = async (e : any) => {
       console.log(getValues('email'));
@@ -128,6 +132,20 @@ import { IconCheck } from '@tabler/icons';
             </Paper>
           </Center>
         </Container>  
+
+        <Button
+        variant="outline"
+        onClick={() =>
+          showNotification({
+            title: 'Default notification',
+            message: 'Hey there, your code is awesome! 🤥',
+          })
+        }
+      >
+        Show notification
+      </Button>
+
+
       </form>
     );
   }

@@ -1,11 +1,7 @@
 /* TODO: Make reset password page */
-import { useFirebaseApp, useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
-import { Alert } from "@mantine/core";
-import { sendPasswordResetEmail } from "firebase/auth";
-import { redirect } from "next/dist/server/api-utils";
-import { Router, useRouter } from "next/router";
-import { useState } from "react";
 import ResetPassLayout from "@/layouts/auth/ResetPassLayout"
+import { MantineProvider } from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
 
 export default function ResetPass() {
 
@@ -33,8 +29,10 @@ export default function ResetPass() {
        </form>
         </div>
         */
-       <>
-       <ResetPassLayout />
-       </>
+        <MantineProvider >
+        <NotificationsProvider>
+          <ResetPassLayout />
+        </NotificationsProvider>
+      </MantineProvider>
     );
 }
