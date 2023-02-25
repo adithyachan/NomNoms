@@ -3,6 +3,7 @@ import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInAnonymously, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {
   TextInput,
   PasswordInput,
@@ -25,7 +26,7 @@ import {
   Stack,
   Autocomplete,
 } from '@mantine/core';
-import { GoogleButton, TwitterButton } from "@/components/auth/SocialButtons"
+import { GoogleButton, TwitterButton, FacebookButton} from "@/components/auth/SocialButtons"
 import { formatDiagnostic } from 'typescript';
 
 export default function AuthenticationForm(props: PaperProps) {
@@ -65,6 +66,32 @@ export default function AuthenticationForm(props: PaperProps) {
         // ..
       });
       console.log("working")
+    }
+
+    const provider = new GoogleAuthProvider();
+
+    const handleGoogle = async (e: any) => {
+      console.log("checking google")
+      const auth = useFirebaseAuth();
+     signInWithPopup(auth, provider)
+   .then((result) => {
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential?.accessToken;
+    // The signed-in user info.
+    const user = result.user;
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
+  });   
     }
 
 
