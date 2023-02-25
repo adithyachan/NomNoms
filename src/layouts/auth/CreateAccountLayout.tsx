@@ -19,12 +19,14 @@ import {
   Divider,
   useMantineColorScheme,
   ColorSchemeProvider,
+  NavLink,
   Checkbox,
   Anchor,
   Stack,
   Autocomplete,
 } from '@mantine/core';
 import { GoogleButton, TwitterButton } from "@/components/auth/SocialButtons"
+import { formatDiagnostic } from 'typescript';
 
 export default function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(['login', 'register']);
@@ -40,8 +42,9 @@ export default function AuthenticationForm(props: PaperProps) {
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
-      confirmpassword: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
-    },
+      confirmpassword: (val, values) =>
+        val !== values.password ? 'Passwords did not match' : null,
+  },
   });
 
   //disable the button if the inputs are not valid
@@ -98,13 +101,12 @@ export default function AuthenticationForm(props: PaperProps) {
   return (
 
     <Paper radius="md" p="xl" withBorder {...props}>
-      <Text size="lg" weight={500}>
-        Welcome to NomNoms, {type} with 
-      </Text>
+     
       
         
 
-      <form onSubmit={handleCreate}>
+     <form onSubmit={form.onSubmit(handleCreate)}>
+
       <Container size={500} my={50} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
           <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
@@ -148,7 +150,7 @@ export default function AuthenticationForm(props: PaperProps) {
                 placeholder="Confirm your password"
                 value={form.values.confirmpassword}
                 onChange={(event) => form.setFieldValue('confirmpassword', event.currentTarget.value)}
-                error={form.errors.confirmpassword && 'Password should include at least 6 characters'}
+                error={form.errors.confirmpassword && 'Passwords did not match'}
             />
           )}
 
@@ -159,7 +161,7 @@ export default function AuthenticationForm(props: PaperProps) {
                 
             <Checkbox
               label="I accept terms and conditions"
-              checked={false}
+              checked={form.values.terms}
               color = "pink"
               onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
             />
@@ -199,7 +201,14 @@ export default function AuthenticationForm(props: PaperProps) {
         
         </Container>
       </form>
-    </Paper>
+      {type === 'register' && (
+      <Text size="sm" weight={200} align="center">
+        By creating an account, you agree to our <Anchor href="https://mantine.dev/" target="_blank">
+          Terms of Service and Private Policy </Anchor>
 
+      </Text> 
+      )}
+    </Paper>
+   
   );
 }
