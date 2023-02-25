@@ -7,16 +7,22 @@ import {
   TextInput,
   PasswordInput,
   Text,
+  Title,
   createStyles,
   Paper,
   Group,
   PaperProps,
   Button,
+  Image,
+  MantineProvider,
   Container,
   Divider,
+  useMantineColorScheme,
+  ColorSchemeProvider,
   Checkbox,
   Anchor,
   Stack,
+  Autocomplete,
 } from '@mantine/core';
 import { GoogleButton, TwitterButton } from "@/components/auth/SocialButtons"
 
@@ -27,17 +33,20 @@ export default function AuthenticationForm(props: PaperProps) {
       email: '',
       name: '',
       password: '',
+      confirmpassword: '',
       terms: true,
     },
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      confirmpassword: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
     },
   });
 
   //disable the button if the inputs are not valid
     const handleCreate = async (e : any) => {
+      console.log("hello");
       const auth = useFirebaseAuth();
       createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
       .then((userCredential) => {
@@ -82,7 +91,9 @@ export default function AuthenticationForm(props: PaperProps) {
     },
   }));
 
- 
+  const { classes } = useStyles();
+
+  
 
   return (
 
@@ -94,18 +105,28 @@ export default function AuthenticationForm(props: PaperProps) {
         
 
       <form onSubmit={handleCreate}>
-      <Container size={460} my={30} 
+      <Container size={500} my={50} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
-        
-    
+          <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
+          {type === 'register' && (
 
-        
+          <Title className= {classes.title} align = "center">
+              Not a Nomster yet?
+          </Title>
+          )}
+
+          {type === 'register' && (
+          <Text color="dimmed" size="sm" align="center">
+              Create an account below!
+            </Text>
+          )}
+
         <Stack>
 
           <TextInput
             required
             label="Email"
-            placeholder="hello@mantine.dev"
+            placeholder="nomnoms@gmail.com"
             value={form.values.email}
             onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
             error={form.errors.email && 'Invalid email'}
@@ -125,29 +146,38 @@ export default function AuthenticationForm(props: PaperProps) {
             required
                 label="Confirm Password"
                 placeholder="Confirm your password"
-                value={form.values.password}
-                onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                error={form.errors.password && 'Password should include at least 6 characters'}
+                value={form.values.confirmpassword}
+                onChange={(event) => form.setFieldValue('confirmpassword', event.currentTarget.value)}
+                error={form.errors.confirmpassword && 'Password should include at least 6 characters'}
             />
           )}
 
+
           {type === 'register' && (
+
+            
                 
             <Checkbox
               label="I accept terms and conditions"
-              checked={form.values.terms}
+              checked={false}
+              color = "pink"
               onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
             />
+
+            
           )}
 
       
         </Stack>
 
+        
+
+
         <Group position="apart" mt="xl">
           <Anchor
             component="button"
             type="button"
-            color="dimmed"
+            color="pink"
             onClick={() => toggle()}
             size="xs"
           >
@@ -155,7 +185,10 @@ export default function AuthenticationForm(props: PaperProps) {
               ? 'Already have an account? Login'
               : "Don't have an account? Register"}
           </Anchor>
-          <Button type="submit">{upperFirst(type)}</Button>
+
+        
+          <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} type="submit"  >{upperFirst(type)}</Button>
+
         </Group>
 
         <Group grow mb="md" mt="md">
