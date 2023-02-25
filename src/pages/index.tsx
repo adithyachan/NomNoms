@@ -1,12 +1,14 @@
 import Head from 'next/head'
 import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
 import JoinTable from '@/components/table/JoinTable'
-import {GetRestaurants, GetRestaurant} from '@/lib/utils/yelpAPI'
+import {useRestaurantBusinessEndpoint, useRestaurantListEndpoint} from '@/lib/utils/yelpAPI'
+import LandingLayout from '@/layouts/LandingLayout'
 import RenderImage from '@/components/table/restaurantCards/Image'
 export default function Home() {
   // start up firebase
   const app = useFirebaseApp()
-
+  const restaurantList = useRestaurantListEndpoint(10019, 3200, "japanese%2Cchinese")
+  const restaurant = useRestaurantBusinessEndpoint("TN4RnyqHMSupRFot4Q-_EA")
   return (
     <>
       <Head>

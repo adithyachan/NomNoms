@@ -8,29 +8,21 @@ const options = {
   }
 }
 const fetcher = (url: string) => fetch(url, options).then(res => res.json());
-export const GetRestaurant = ({id}) => {
-  const {data, error, isLoading} = useSWR(`/api/business?id=${id}`, fetcher);
 
-  if (error) {
-    console.log(error);
-    return (<div>failed to load</div>);
-  }
-  if (isLoading) return (<div>Loading...</div>);
-  
-  console.log(data);
-  return <p>Successfully fetched from Yelp API</p> 
-};
-
-export const GetRestaurants = ({zip, radius, categories}) => {
+export function useRestaurantListEndpoint(zip: number, radius: number, categories: string) {
   const {data, error, isLoading} = useSWR(`/api/businesses?limit=50&location=${zip}&radius=${radius}&categories=${categories}`, fetcher);
+  if (error) return error
+  if (isLoading) return 'loading'
+  console.log('Restaurant list search:')
+  console.log(data)
+  return data
+}
 
-  if (error) {
-    console.log(error);
-    return (<div>failed to load</div>);
-  }
-  if (isLoading) return (<div>Loading...</div>);
-  
-  console.log(data);
-  return <p>Successfully fetched from Yelp API</p>
-};
-
+export function useRestaurantBusinessEndpoint(id: string) {
+  const {data, error, isLoading} = useSWR(`/api/business?id=${id}`, fetcher);
+  if (error) return error
+  if (isLoading) return 'loading'
+  console.log('Restaurant search by ID')
+  console.log(data)
+  return data
+}
