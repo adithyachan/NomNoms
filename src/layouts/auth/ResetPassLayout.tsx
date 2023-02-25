@@ -21,7 +21,8 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import React from 'react';
 import { useForm } from 'react-hook-form'
-import { useNotifications, showNotification } from '@mantine/notifications';
+import { showNotification } from '@mantine/notifications';
+import { NotificationsProvider } from '@mantine/notifications';
 import { IconCheck } from '@tabler/icons';
 
 
@@ -88,6 +89,7 @@ import { IconCheck } from '@tabler/icons';
 
     return (
       <form onSubmit={handleReset}>
+        <NotificationsProvider>
         <Container size={460} my={30} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
           <Center className="flex-col">
@@ -145,7 +147,7 @@ import { IconCheck } from '@tabler/icons';
         Show notification
       </Button>
 
-
+      </NotificationsProvider>
       </form>
     );
   }
