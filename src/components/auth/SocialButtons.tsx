@@ -2,20 +2,25 @@ import { Button, ButtonProps, Group } from '@mantine/core';
 import { GithubIcon, DiscordIcon, TwitterIcon } from '@mantine/ds';
 import { GoogleIcon } from './GoogleIcon';
 import { FacebookIcon } from './FacebookIcon';
+import { CreateAccountWithFacebook, CreateAccountWithGoogle } from '@/pages/auth/createAccount';
+import { signInAnonymously, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
+
 
 export function GoogleButton(props: ButtonProps) {
-  return <Button leftIcon={<GoogleIcon />} variant="default" color="gray" {...props} />;
+  return <Button onClick= {CreateAccountWithGoogle} leftIcon={<GoogleIcon />} variant="default" color="gray" {...props} />;
 }
 
 export function FacebookButton(props: ButtonProps) {
   return (
     <Button
+      onClick={CreateAccountWithFacebook}
       leftIcon={<FacebookIcon />}
       sx={(theme) => ({
-        backgroundColor: '#4267B2',
-        color: '#fff',
+        backgroundColor: '#fff',
+        color: '#4267B2',
         '&:hover': {
-          backgroundColor: theme.fn.darken('#4267B2', 0.1),
+          backgroundColor: theme.fn.darken('#fff', 0.1),
         },
       })}
       {...props}
