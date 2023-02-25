@@ -14,21 +14,16 @@ import {
     Image,
   } from '@mantine/core';
   import { IconArrowLeft } from '@tabler/icons';
-import { useEffect } from 'react';
-import { EmailAuthCredential } from 'firebase/auth';
 import { IconAlertTriangle } from '@tabler/icons';
-import { useFirebaseApp, useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
-import { Alert } from "@mantine/core";
+import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { redirect } from "next/dist/server/api-utils";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import React from 'react';
 import { useForm } from 'react-hook-form'
-import { NotificationsProvider, showNotification } from '@mantine/notifications';
+import { showNotification } from '@mantine/notifications';
 import { IconCheck } from '@tabler/icons';
-import { Console } from 'console';
-import { isEmail } from '@mantine/form';
+
 
   const useStyles = createStyles((theme) => ({
     title: {
@@ -74,10 +69,6 @@ import { isEmail } from '@mantine/form';
         //router.push('/auth/inputresetpass')
         console.log("safe"); 
         reset({email: ''});
-        return(
-          <>
-          </>
-        );
       }).catch(error => {
         setError(true)
         console.clear();
@@ -137,19 +128,6 @@ import { isEmail } from '@mantine/form';
             </Paper>
           </Center>
         </Container>  
-        <Group position="center">
-      <Button
-        variant="outline"
-        onClick={() =>
-          showNotification({
-            title: 'Default notification',
-            message: 'Hey there, your code is awesome! 🤥',
-          })
-        }
-      >
-        Show notification
-      </Button>
-    </Group>
       </form>
     );
   }
