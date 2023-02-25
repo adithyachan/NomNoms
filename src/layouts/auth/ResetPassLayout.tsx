@@ -25,6 +25,10 @@ import { Router, useRouter } from "next/router";
 import { useState } from "react";
 import React from 'react';
 import { useForm } from 'react-hook-form'
+import { NotificationsProvider, showNotification } from '@mantine/notifications';
+import { IconCheck } from '@tabler/icons';
+import { Console } from 'console';
+import { isEmail } from '@mantine/form';
 
   const useStyles = createStyles((theme) => ({
     title: {
@@ -53,21 +57,30 @@ import { useForm } from 'react-hook-form'
   }));
   
   export default function ForgotPassword() {
-    const { handleSubmit, register, getValues, formState: {isValid, errors} } = useForm(
+    const { handleSubmit, register, getValues, formState: {isValid, errors}, reset } = useForm(
     { mode: 'onChange', defaultValues: {email: ''}});
+
+
     const router = useRouter();
     const [isError, setError] = useState(Boolean);
 
     const handleReset = async (e : any) => {
       console.log(getValues('email'));
       e.preventDefault();
-      const email = getValues('email');   
+      const email = getValues('email'); 
       const auth = useFirebaseAuth();
         sendPasswordResetEmail(auth, email).then(() => {
         setError(false);
-        router.push('/auth/inputresetpass')
+        //router.push('/auth/inputresetpass')
+        console.log("safe"); 
+        reset({email: ''});
+        return(
+          <>
+          </>
+        );
       }).catch(error => {
-        setError(true);
+        setError(true)
+        console.clear();
       });
       e.target.reset();
     };
@@ -111,15 +124,32 @@ import { useForm } from 'react-hook-form'
                       <Text color='#F43F5E'>
                         Back to login page
                       </Text>
-                      
                     </Box>
                   </Center>
                 </Anchor>
-                <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} disabled={!isValid} type="submit" >Reset password</Button>
+                <Button 
+                className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} 
+                disabled={!isValid} 
+                type="submit"
+                >Reset password
+                </Button>
               </Group>
             </Paper>
           </Center>
-        </Container>
+        </Container>  
+        <Group position="center">
+      <Button
+        variant="outline"
+        onClick={() =>
+          showNotification({
+            title: 'Default notification',
+            message: 'Hey there, your code is awesome! 🤥',
+          })
+        }
+      >
+        Show notification
+      </Button>
+    </Group>
       </form>
     );
   }
