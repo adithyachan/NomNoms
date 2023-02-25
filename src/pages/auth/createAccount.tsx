@@ -39,6 +39,7 @@ export default function CreateAccount() {
 const provider = new GoogleAuthProvider();
  
 export async function CreateAccountWithGoogle() {
+  console.log("checking google")  
   const auth = useFirebaseAuth();
   signInWithPopup(auth, provider)
   .then((result) => {
@@ -58,7 +59,7 @@ export async function CreateAccountWithGoogle() {
     // The AuthCredential type that was used.
     const credential = GoogleAuthProvider.credentialFromError(error);
     // ...
-  });  
+  });
   return (
     <>
     < CreateAccountLayout/>
@@ -92,6 +93,7 @@ export async function CreateAccountWithFacebook() {
 
     // ...
   });
+  console.log("checking facebook")  
   return (
     <>
     < CreateAccountLayout/>
