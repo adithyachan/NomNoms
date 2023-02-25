@@ -12,6 +12,9 @@ import {
     Center,
     Box,
     Image,
+    MantineProvider,
+    ThemeIcon,
+    CheckIcon,
   } from '@mantine/core';
   import { IconArrowLeft } from '@tabler/icons';
 import { IconAlertTriangle } from '@tabler/icons';
@@ -24,6 +27,8 @@ import { useForm } from 'react-hook-form'
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
 import { IconCheck } from '@tabler/icons';
+import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
+
 
 
   const useStyles = createStyles((theme) => ({
@@ -62,8 +67,6 @@ import { IconCheck } from '@tabler/icons';
     const router = useRouter();
     const [isError, setError] = useState(Boolean);
 
-
-
     const handleReset = async (e : any) => {
       console.log(getValues('email'));
       e.preventDefault();
@@ -73,12 +76,13 @@ import { IconCheck } from '@tabler/icons';
         setError(false);
         //router.push('/auth/inputresetpass')
         console.log("safe"); 
-        reset({email: ''});
       }).catch(error => {
         setError(true)
         console.clear();
       });
       e.target.reset();
+      reset({email: ''});
+
     };
 
     const handleReturn = (e : any) => {
@@ -124,29 +128,39 @@ import { IconCheck } from '@tabler/icons';
                     </Box>
                   </Center>
                 </Anchor>
+
                 <Button 
                 className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} 
                 disabled={!isValid} 
                 type="submit"
+                onClick={() =>
+                  showNotification({
+                    styles: () => ({
+                      root: {
+                        backgroundColor: '#FFE4E6',
+                        borderColor: '#FFE4E6',
+                        '&::before': { backgroundColor: '#FFFFFF' },
+                      },
+        
+                      title: { color: '#F43F5E' },
+                      description: { color: '#F43F5E'},
+                      closeButton: {
+                        color: '#F43F5E',
+                        '&:hover': { backgroundColor: '#F43F5E' },
+                      },
+                      
+                    }),
+                    title: 'Email Sucessfully Sent!',
+                    message: 'You will recieve an email to reset your password shortly if you have an account with us.',
+                    autoClose: 4000,                    
+                  })
+                }
                 >Reset password
                 </Button>
               </Group>
             </Paper>
           </Center>
         </Container>  
-
-        <Button
-        variant="outline"
-        onClick={() =>
-          showNotification({
-            title: 'Default notification',
-            message: 'Hey there, your code is awesome! 🤥',
-          })
-        }
-      >
-        Show notification
-      </Button>
-
       </NotificationsProvider>
       </form>
     );
