@@ -2,7 +2,7 @@ import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import {
   TextInput,
@@ -30,40 +30,47 @@ import { GoogleButton, TwitterButton, FacebookButton} from "@/components/auth/So
 import { formatDiagnostic } from 'typescript';
 
 export default function AuthenticationForm(props: PaperProps) {
-  const [type, toggle] = useToggle(['login']);
+  const [type, toggle] = useToggle(['login', 'register']);
   const form = useForm({
     initialValues: {
       email: '',
       name: '',
       password: '',
+      confirmpassword: '',
       terms: true,
     },
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
+      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      confirmpassword: (val, values) =>
+        val !== values.password ? 'Passwords did not match' : null,
   },
   });
 
   //disable the button if the inputs are not valid
-    const HandleLogin = async (e : any) => {
-      console.log("logged in");
+    const handleCreate = async (e : any) => {
+      console.log("hello");
       const auth = useFirebaseAuth();
-    signInWithEmailAndPassword(auth, form.values.email, form.values.password)
-    .then((userCredential) => {
+      createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
+      .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
+        console.log("User was successfully created")
         // ...
-    })
-    .catch((error) => {
+      })
+      .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorMessage)
-    });
+        console.log("Account creation was unsuccessful")
+        // ..
+      });
+      console.log("working")
     }
 
     const provider = new GoogleAuthProvider();
 
-    const HandleGoogle = async (e: any) => {
+    const handleGoogle = async (e: any) => {
       console.log("checking google")
       const auth = useFirebaseAuth();
      signInWithPopup(auth, provider)
@@ -89,7 +96,7 @@ export default function AuthenticationForm(props: PaperProps) {
 
     const facebookprovider = new FacebookAuthProvider();
 
-    const HandleFacebook = async (e: any) => {
+    const handleFacebook = async (e: any) => {
       console.log("checking facebook")
       const auth = useFirebaseAuth();
   signInWithPopup(auth, facebookprovider)
@@ -116,8 +123,6 @@ export default function AuthenticationForm(props: PaperProps) {
     // ...
   });
     }
-
-    
 
 
   const useStyles = createStyles((theme) => ({
@@ -157,7 +162,7 @@ export default function AuthenticationForm(props: PaperProps) {
       
         
 
-     <form onSubmit={form.onSubmit(HandleLogin)}>
+     <form onSubmit={form.onSubmit(handleCreate)}>
 
       <Container size={500} my={50} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
@@ -169,6 +174,12 @@ export default function AuthenticationForm(props: PaperProps) {
           </Title>
           )}
 
+          {type === 'register' && (
+          <Text color="dimmed" size="sm" align="center">
+              Create an account below!
+            </Text>
+          )}
+
         <Stack>
 
           <TextInput
@@ -177,7 +188,7 @@ export default function AuthenticationForm(props: PaperProps) {
             placeholder="nomnoms@gmail.com"
             value={form.values.email}
             onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-            //error={form.errors.email && 'Invalid email'}
+            error={form.errors.email && 'Invalid email'}
           />
 
           <PasswordInput
@@ -186,9 +197,40 @@ export default function AuthenticationForm(props: PaperProps) {
             placeholder="Your password"
             value={form.values.password}
             onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-            //error={form.errors.password && 'Password should include at least 6 characters'}
+            error={form.errors.password && 'Password should include at least 6 characters'}
           />
+
+          {type === 'register' && (
+            <PasswordInput
+            required
+                label="Confirm Password"
+                placeholder="Confirm your password"
+                value={form.values.confirmpassword}
+                onChange={(event) => form.setFieldValue('confirmpassword', event.currentTarget.value)}
+                error={form.errors.confirmpassword && 'Passwords did not match'}
+            />
+          )}
+
+
+          {type === 'register' && (
+
+            
+                
+            <Checkbox
+              label="I accept terms and conditions"
+              checked={form.values.terms}
+              color = "pink"
+              onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
+            />
+
+            
+          )}
+
+      
         </Stack>
+
+        
+
 
         <Group position="apart" mt="xl">
           <Anchor
@@ -198,6 +240,9 @@ export default function AuthenticationForm(props: PaperProps) {
             onClick={() => toggle()}
             size="xs"
           >
+            {type === 'login'
+              ? "Don't have an account? Register" 
+              : 'Already have an account? Login'}
           </Anchor>
 
         
@@ -212,6 +257,13 @@ export default function AuthenticationForm(props: PaperProps) {
         
         </Container>
       </form>
+      {type === 'register' && (
+      <Text size="sm" weight={200} align="center">
+        By creating an account, you agree to our <Anchor href="https://mantine.dev/" target="_blank">
+          Terms of Service and Private Policy </Anchor>
+
+      </Text> 
+      )}
     </Paper>
    
   );

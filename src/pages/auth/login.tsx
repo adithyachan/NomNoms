@@ -1,4 +1,4 @@
-import LoginLayout from "@/layouts/auth/LoginLayout"
+import LoginLayout from "@/layouts/auth/CreateAccountLayout"
 
 export default function LoginAccount() {
 return(
@@ -7,4 +7,3 @@ return(
     </>
     );
 }
-

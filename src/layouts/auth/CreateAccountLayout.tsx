@@ -3,7 +3,7 @@ import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { signInAnonymously, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import {
   TextInput,
   PasswordInput,
@@ -92,6 +92,36 @@ export default function AuthenticationForm(props: PaperProps) {
     const credential = GoogleAuthProvider.credentialFromError(error);
     // ...
   });   
+    }
+
+    const facebookprovider = new FacebookAuthProvider();
+
+    const handleFacebook = async (e: any) => {
+      console.log("checking facebook")
+      const auth = useFirebaseAuth();
+  signInWithPopup(auth, facebookprovider)
+  .then((result) => {
+    // The signed-in user info.
+    const user = result.user;
+
+    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+    const credential = FacebookAuthProvider.credentialFromResult(result);
+    const accessToken = credential?.accessToken;
+
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+  })
+  .catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = FacebookAuthProvider.credentialFromError(error);
+
+    // ...
+  });
     }
 
 
