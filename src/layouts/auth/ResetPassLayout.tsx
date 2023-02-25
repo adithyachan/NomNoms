@@ -135,6 +135,11 @@ import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
                 type="submit"
                 onClick={() =>
                   showNotification({
+                    title: 'Email Sucessfully Sent!',
+                    message: 'You will recieve an email to reset your password shortly if you have an account with us.',
+                    autoClose: 4000,
+                    color: 'red',
+                    icon: <IconCheck size={16} />,
                     styles: () => ({
                       root: {
                         backgroundColor: '#FFE4E6',
@@ -148,11 +153,7 @@ import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
                         color: '#F43F5E',
                         '&:hover': { backgroundColor: '#F43F5E' },
                       },
-                      
-                    }),
-                    title: 'Email Sucessfully Sent!',
-                    message: 'You will recieve an email to reset your password shortly if you have an account with us.',
-                    autoClose: 4000,                    
+                    }),                    
                   })
                 }
                 >Reset password
@@ -161,6 +162,7 @@ import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
             </Paper>
           </Center>
         </Container>  
+        
       </NotificationsProvider>
       </form>
     );
