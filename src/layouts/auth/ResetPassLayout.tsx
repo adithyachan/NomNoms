@@ -65,7 +65,7 @@ import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
     const router = useRouter();
     const [isError, setError] = useState(Boolean);
 
-    const handleReset = async (e : any) => {
+    const HandleReset = async (e : any) => {
       console.log(getValues('email'));
       e.preventDefault();
       const email = getValues('email'); 
@@ -82,14 +82,14 @@ import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
 
     };
 
-    const handleReturn = (e : any) => {
+    const HandleReturn = (e : any) => {
       router.push('/')
     }
 
     const { classes } = useStyles();
 
     return (
-      <form onSubmit={handleReset}>
+      <form onSubmit={HandleReset}>
         <NotificationsProvider>
         <Container size={460} my={30} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
@@ -118,7 +118,7 @@ import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
                 <Anchor color="red" size="sm" className={classes.control}>
                   <Center inline>
                     <IconArrowLeft color='#F43F5E' size={12} stroke={1.5} />
-                    <Box onClick={handleReturn} ml={5}>
+                    <Box onClick={HandleReturn} ml={5}>
                       <Text color='#F43F5E'>
                         Back to login page
                       </Text>
