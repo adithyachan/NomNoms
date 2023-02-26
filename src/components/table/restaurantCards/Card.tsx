@@ -3,8 +3,7 @@ import { useRestaurantBusinessEndpoint } from '@/lib/utils/yelpAPI';
 import { Loader } from '@mantine/core';
 import { BackgroundImage, Center } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-
-
+import GetHours from './HoursOfOperation';
 
 //import RenderImage from './Image';
 export default function ShowCard(props : {id : string }) {
@@ -74,7 +73,7 @@ export default function ShowCard(props : {id : string }) {
       
       );
     } else {
-        console.log(businessData)
+        //console.log(businessData)
          const nameRestaurant = businessData.name
          const imageUrl = businessData.image_url
          const photos = businessData.photos
@@ -83,10 +82,11 @@ export default function ShowCard(props : {id : string }) {
          const cuisines = businessData.categories
          const cuisineList = new Array(cuisines.length)
          const operationTimes = businessData.hours
-         console.log(operationTimes)
          for(var i = 0;i < cuisines.length;i++) {
           cuisineList[i] = cuisines[i].title;
          }
+         const formattedHours = GetHours(operationTimes)
+         console.log(formattedHours)
 
          //console.log(cuisineList)
 
@@ -111,7 +111,7 @@ export default function ShowCard(props : {id : string }) {
         height: '50%',
         backgroundImage:`url(${imageUrl})`,
 
-        opacity : 0.75,
+        opacity : 1,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         borderRadius: 'inherit'

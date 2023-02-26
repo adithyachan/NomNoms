@@ -2,9 +2,7 @@ import Head from 'next/head'
 import { useState } from 'react'
 import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
 import JoinTable from '@/components/table/JoinTable'
-import {useRestaurantBusinessEndpoint, useRestaurantListEndpoint} from '@/lib/utils/yelpAPI'
-import LandingLayout from '@/layouts/LandingLayout'
-import ShowCard from '@/components/table/restaurantCards/Card'
+import GetRestaurants from '@/lib/utils/yelpAPI'
 export default function Home() {
   // start up firebase
   const app = useFirebaseApp()
@@ -34,16 +32,13 @@ export default function Home() {
       </Head>
       <main>
         {/* TODO: Create Basic Landing */}
+<<<<<<<<< Temporary merge branch 1
         <p>NomNoms</p>
-        <TestListHook /> <br />
-        <TestBusinessHook />
-        {/* <RenderImage url ="https://images.pexels.com/photos/1563356/pexels-photo-1563356.jpeg" name = "Scenery"/> */}
-        {/* <GetRestaurants zip="10019" radius="8000" categories="japanese"/> */}
         <JoinTable />
-        <ShowCard id = "pcb8yK9_28uWz5CyokjwSg" />
-        {/* <GetRestaurants zip="10019" radius="8000" categories="japanese"/> */}
-        {/*<GetRestaurant id="TN4RnyqHMSupRFot4Q-_EA"/> */}
-        
+        <GetRestaurants zip="10019" radius="8000" categories="japanese"/>
+=========
+        <LandingLayout />
+>>>>>>>>> Temporary merge branch 2
       </main>
     </>
   )
