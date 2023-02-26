@@ -9,7 +9,11 @@ import RenderImage from '@/components/table/restaurantCards/Image'
 =======
 import {useRestaurantBusinessEndpoint, useRestaurantListEndpoint} from '@/lib/utils/yelpAPI'
 import LandingLayout from '@/layouts/LandingLayout'
+<<<<<<< HEAD
 >>>>>>> 9da8de5 (Refactored utility file for API)
+=======
+import ShowCard from '@/components/table/restaurantCards/Card'
+>>>>>>> 2f23212 (fixing conflicts)
 export default function Home() {
   // start up firebase
   const app = useFirebaseApp()
@@ -45,10 +49,12 @@ export default function Home() {
         <LandingLayout />
 =======
         <p>NomNoms</p>
+<<<<<<< Updated upstream
         <TestListHook /> <br />
         <TestBusinessHook />
         {/* <RenderImage url ="https://images.pexels.com/photos/1563356/pexels-photo-1563356.jpeg" name = "Scenery"/> */}
         {/* <GetRestaurants zip="10019" radius="8000" categories="japanese"/> */}
+<<<<<<< HEAD
 <<<<<<< HEAD
         <GetRestaurant id="TN4RnyqHMSupRFot4Q-_EA"/>
 >>>>>>> ef9675a (finished testing api call)
@@ -58,6 +64,15 @@ export default function Home() {
 >>>>>>> 9da8de5 (Refactored utility file for API)
 =======
 >>>>>>> 1cca32b (Fixed custom API hooks)
+=======
+=======
+        <JoinTable />
+        <ShowCard name='restaurant' url= 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80' id = "qY1o1MhoRyN84RRhUJtvpQ" />
+        {/* <GetRestaurants zip="10019" radius="8000" categories="japanese"/> */}
+        {/*<GetRestaurant id="TN4RnyqHMSupRFot4Q-_EA"/> */}
+        
+>>>>>>> Stashed changes
+>>>>>>> 2f23212 (fixing conflicts)
       </main>
     </>
   )
