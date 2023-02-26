@@ -30,7 +30,7 @@ import { GoogleButton, TwitterButton, FacebookButton} from "@/components/auth/So
 import { formatDiagnostic } from 'typescript';
 
 export default function AuthenticationForm(props: PaperProps) {
-    const [type, toggle] = useToggle(['register', 'login']);
+    const [type, toggle] = useToggle(['login', 'register']);
 
   const form = useForm({
     initialValues: {

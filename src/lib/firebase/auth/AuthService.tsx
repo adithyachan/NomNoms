@@ -1,5 +1,5 @@
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase"
-import {signInWithPopup, createUserWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import {signInWithPopup, createUserWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signOut } from "firebase/auth";
 import { StringLiteral } from "typescript";
 
 
@@ -74,4 +74,11 @@ export async function CreateAccountWithFacebook() {
   
 }
 
-export{}
+export async function SignOutofAccount() {
+	const auth = useFirebaseAuth();
+    signOut(auth).then(() => {
+		// Sign-out successful.
+	  }).catch((error) => {
+		// An error happened.
+	  });
+}
