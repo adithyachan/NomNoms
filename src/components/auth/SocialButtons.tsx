@@ -12,10 +12,11 @@ export function FacebookButton(props: ButtonProps) {
     <Button
       leftIcon={<FacebookIcon />}
       sx={(theme) => ({
-        backgroundColor: '#4267B2',
-        color: '#fff',
+        backgroundColor: '#fff',
+        color: '#4267B2',
+        borderColor: theme.fn.lighten('gray', 0.82),
         '&:hover': {
-          backgroundColor: theme.fn.darken('#4267B2', 0.1),
+          backgroundColor: theme.fn.darken('#fff', 0.03),
         },
       })}
       {...props}
