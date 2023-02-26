@@ -43,9 +43,9 @@ export default function AuthenticationForm(props: PaperProps) {
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
-      confirmpassword: (val, values) =>
-        val !== values.password ? 'Passwords did not match' : null,
+      //password: (val) => (val.length <= 6 ? 'Password should include at least 7 characters' : null),
+      //confirmpassword: (val, values) =>
+        //val !== values.password ? 'Passwords did not match' : null,
   },
   });
 
@@ -183,14 +183,16 @@ export default function AuthenticationForm(props: PaperProps) {
 
         <Stack>
 
+        {type === 'login' && (
           <TextInput
             required
-            label="Email"
+            label="Email or username"
             placeholder="nomnoms@gmail.com"
             value={form.values.email}
             onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
             error={form.errors.email && 'Invalid email'}
           />
+        )}
 
           <PasswordInput
             required
