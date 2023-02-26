@@ -30,21 +30,17 @@ import { GoogleButton, TwitterButton, FacebookButton} from "@/components/auth/So
 import { formatDiagnostic } from 'typescript';
 
 export default function AuthenticationForm(props: PaperProps) {
-  const [type, toggle] = useToggle(['login', 'register']);
+  const [type, toggle] = useToggle(['login']);
   const form = useForm({
     initialValues: {
       email: '',
       name: '',
       password: '',
-      confirmpassword: '',
       terms: true,
     },
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
-      confirmpassword: (val, values) =>
-        val !== values.password ? 'Passwords did not match' : null,
   },
   });
 
@@ -121,6 +117,8 @@ export default function AuthenticationForm(props: PaperProps) {
   });
     }
 
+    
+
 
   const useStyles = createStyles((theme) => ({
     title: {
@@ -171,12 +169,6 @@ export default function AuthenticationForm(props: PaperProps) {
           </Title>
           )}
 
-          {type === 'register' && (
-          <Text color="dimmed" size="sm" align="center">
-              Create an account below!
-            </Text>
-          )}
-
         <Stack>
 
           <TextInput
@@ -185,7 +177,7 @@ export default function AuthenticationForm(props: PaperProps) {
             placeholder="nomnoms@gmail.com"
             value={form.values.email}
             onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-            error={form.errors.email && 'Invalid email'}
+            //error={form.errors.email && 'Invalid email'}
           />
 
           <PasswordInput
@@ -194,40 +186,9 @@ export default function AuthenticationForm(props: PaperProps) {
             placeholder="Your password"
             value={form.values.password}
             onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-            error={form.errors.password && 'Password should include at least 6 characters'}
+            //error={form.errors.password && 'Password should include at least 6 characters'}
           />
-
-          {type === 'register' && (
-            <PasswordInput
-            required
-                label="Confirm Password"
-                placeholder="Confirm your password"
-                value={form.values.confirmpassword}
-                onChange={(event) => form.setFieldValue('confirmpassword', event.currentTarget.value)}
-                error={form.errors.confirmpassword && 'Passwords did not match'}
-            />
-          )}
-
-
-          {type === 'register' && (
-
-            
-                
-            <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
-              color = "pink"
-              onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-            />
-
-            
-          )}
-
-      
         </Stack>
-
-        
-
 
         <Group position="apart" mt="xl">
           <Anchor
@@ -237,9 +198,6 @@ export default function AuthenticationForm(props: PaperProps) {
             onClick={() => toggle()}
             size="xs"
           >
-            {type === 'register'
-              ? 'Already have an account? Login'  
-              : "Don't have an account? Register" }
           </Anchor>
 
         
@@ -254,13 +212,6 @@ export default function AuthenticationForm(props: PaperProps) {
         
         </Container>
       </form>
-      {type === 'register' && (
-      <Text size="sm" weight={200} align="center">
-        By creating an account, you agree to our <Anchor href="https://mantine.dev/" target="_blank">
-          Terms of Service and Private Policy </Anchor>
-
-      </Text> 
-      )}
     </Paper>
    
   );
