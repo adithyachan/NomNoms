@@ -7,7 +7,7 @@ import { BackgroundImage, Center } from '@mantine/core';
 
 //import RenderImage from './Image';
 export default function ShowCard(props : {id : string }) {
-    const {data : businessData, error : businessError , isLoading: isLoadingBusiness} = useRestaurantBusinessEndpoint(props.id)
+  const {data : businessData, error : businessError , isLoading: isLoadingBusiness} = useRestaurantBusinessEndpoint(props.id)
 
   //  if(businessError) {
   //   console.log(businessError)
@@ -19,6 +19,7 @@ export default function ShowCard(props : {id : string }) {
   //   console.log(isLoadingBusiness)
   //   return <>isLoading</>
   //  } 
+  const aspectRatio = 16/9;
     if (businessError) {
         console.log(businessError)
         if (businessError.code == ("BUSINESS_NOT_FOUND")) {
@@ -35,7 +36,36 @@ export default function ShowCard(props : {id : string }) {
             ) 
         }
     } else if (isLoadingBusiness) {
-        return <Loader size={50}/>;
+      return (
+        <div
+      style={{
+        height : '100%',
+        borderRadius :'10px',
+        width: '100%',
+        maxWidth: 600,
+        paddingBottom: `${100 / aspectRatio}%`, 
+        position: 'relative', // Set the position property to allow the Card component to cover the entire container
+        //backgroundColor: '#f5d6d8', 
+      }}
+    >
+    <Card
+    
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '70%',
+        height: '50%',
+        //backgroundColor: '#f5d6d8',
+        borderRadius: 'inherit'
+      }}
+      shadow="sm" radius="lg" p = "lg"
+    >
+      <Center style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+      <Loader size={50} color="#FF5858"/>
+    </Center></Card></div>
+      
+      );
     } else {
         console.log(businessData)
          const nameRestaurant = businessData.name
@@ -43,7 +73,12 @@ export default function ShowCard(props : {id : string }) {
          const photos = businessData.photos
          const pricePoint = businessData.price
          const url = businessData.url
-         const aspectRatio = 16/9; // Set the aspect ratio of the container element
+         const cuisines = businessData.categories
+         const cuisineList = new Array(cuisines.length)
+         for(var i = 0;i < cuisines.length;i++) {
+          cuisineList[i] = cuisines[i].title;
+         }
+         //console.log(cuisineList)
 
   return (
     <div
@@ -52,19 +87,21 @@ export default function ShowCard(props : {id : string }) {
         borderRadius :'10px',
         width: '100%',
         maxWidth: 600,
-        paddingBottom: `${100 / aspectRatio}%`, // Set the paddingBottom property to maintain aspect ratio
+        paddingBottom: `${100 / aspectRatio}%`, 
         position: 'relative', // Set the position property to allow the Card component to cover the entire container
       }}
     >
     <Card
+
       style={{
         position: 'absolute',
         top: 0,
         left: 0,
         width: '70%',
         height: '50%',
-        backgroundImage: `url(${imageUrl})`,
-        opacity : 0.9,
+        backgroundImage:`url(${imageUrl})`,
+
+        opacity : 0.75,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         borderRadius: 'inherit'
@@ -80,20 +117,27 @@ export default function ShowCard(props : {id : string }) {
         style={{
           position: 'absolute',
           top: '50%',
-          left: 0,
+          left: 11,
           transform: 'translateY(-50%)'
         }}>
+        <Text className="css-1se8maq" style={{ color:"white", fontSize: '24px', fontWeight: 700 }}>{nameRestaurant}</Text>
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          top: '60%',
+          left: 11,
+          transform: 'translateY(-50%)'
+        }}>
+        <Text className="css-1se8maq" style={{ color:"white", fontSize: '12px', fontWeight: 600 }}>{cuisineList.join(', ')}</Text>
+      </div>
+      
 
-      <Group position="apart" mt="md" mb="xs">
-            <Text weight={500}>{nameRestaurant}</Text>
-              
-          </Group>  
-          </div>
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px' }}>
-      <Button component = "a" variant="light" color="pink" fullWidth mt="md" radius="md" href = {url}>
+      <div style={{ transform: 'translateX(-50%)' , position: 'absolute', bottom: 0,left : '50%', padding: '12px' }}>
+        <Button component = "a" variant="light" color="pink"  mt="md" radius="md" href = {url} size = "md">
           Go to site
         </Button>
-        </div>
+      </div>
     </Card>
     </div>
   );
@@ -101,16 +145,7 @@ export default function ShowCard(props : {id : string }) {
     
    
 
-  
 
-     
-        // <Button component = "a" variant="light" color="blue" fullWidth mt="md" radius="md" href = {url}>
-        //     Go to site
-        // </Button>
-        {/* </Center> */}
-        // </BackgroundImage> 
-          
-        //     </Card>
         
   }
 }
