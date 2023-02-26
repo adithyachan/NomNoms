@@ -1,12 +1,15 @@
-import { Card, Image, Text, Badge, Button, Group } from '@mantine/core';
+import { Card, Image, Text, Badge, Button, Group, Popover } from '@mantine/core';
 import { useRestaurantBusinessEndpoint } from '@/lib/utils/yelpAPI';
 import { Loader } from '@mantine/core';
 import { BackgroundImage, Center } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 
 
 
 //import RenderImage from './Image';
 export default function ShowCard(props : {id : string }) {
+  const [opened, { close, open }] = useDisclosure(false);
+
   const {data : businessData, error : businessError , isLoading: isLoadingBusiness} = useRestaurantBusinessEndpoint(props.id)
 
   //  if(businessError) {
@@ -61,7 +64,11 @@ export default function ShowCard(props : {id : string }) {
       }}
       shadow="sm" radius="lg" p = "lg"
     >
-      <Center style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+      <Center style={{ position: 'absolute',
+       top: 0, 
+       left: 0, 
+       width: '100%', 
+       height: '100%' }}>
       <Loader size={50} color="#FF5858"/>
     </Center></Card></div>
       
@@ -75,9 +82,12 @@ export default function ShowCard(props : {id : string }) {
          const url = businessData.url
          const cuisines = businessData.categories
          const cuisineList = new Array(cuisines.length)
+         const operationTimes = businessData.hours
+         console.log(operationTimes)
          for(var i = 0;i < cuisines.length;i++) {
           cuisineList[i] = cuisines[i].title;
          }
+
          //console.log(cuisineList)
 
   return (
@@ -108,7 +118,10 @@ export default function ShowCard(props : {id : string }) {
       }}
       shadow="sm" radius="lg" p = "lg"
     >
-      <div style={{ position: 'absolute', top: 0,  right: 0, padding: '12px' }}>
+      <div style={{ position: 'absolute',
+       top: 0,
+         right: 0, 
+         padding: '12px' }}>
       <Badge color="pink" variant="light">
               {pricePoint}
               </Badge>
@@ -120,7 +133,10 @@ export default function ShowCard(props : {id : string }) {
           left: 11,
           transform: 'translateY(-50%)'
         }}>
-        <Text className="css-1se8maq" style={{ color:"white", fontSize: '24px', fontWeight: 700 }}>{nameRestaurant}</Text>
+        <Text className="css-1se8maq" style={{ color:"white",
+         fontSize: '24px',
+          fontWeight: 700
+ }}>{nameRestaurant}</Text>
       </div>
       <div
         style={{
@@ -129,11 +145,36 @@ export default function ShowCard(props : {id : string }) {
           left: 11,
           transform: 'translateY(-50%)'
         }}>
-        <Text className="css-1se8maq" style={{ color:"white", fontSize: '12px', fontWeight: 600 }}>{cuisineList.join(', ')}</Text>
+        <Text className="css-1se8maq" style={{ 
+     color:"white", fontSize: '12px',
+      fontWeight: 600 }}>
+        {cuisineList.join(', ')}
+        </Text>
       </div>
-      
+      <div
+        style={{
+          position: 'absolute',
+          top: '70%',
+          left: -7,
+          transform: 'translateY(-50%)'
+        }}>
+      <Popover width={200} position="bottom" withArrow shadow="md" opened={opened}>
+      <Popover.Target>
+        <Button onMouseEnter={open} onMouseLeave={close} style={{ color: "white" , backgroundColor: 'transparent', borderColor: 'transparent' }}>
+        Hours of Operation
+        </Button>
+      </Popover.Target>
+      <Popover.Dropdown sx={{ pointerEvents: 'none' }}>
+        <Text  size="sm">Monday</Text>
+      </Popover.Dropdown>
+    </Popover>
+    </div>
 
-      <div style={{ transform: 'translateX(-50%)' , position: 'absolute', bottom: 0,left : '50%', padding: '12px' }}>
+      <div style={{ transform: 'translateX(-50%)' , 
+      position: 'absolute',
+       bottom: 0,
+       left : '50%',
+        padding: '12px' }}>
         <Button component = "a" variant="light" color="pink"  mt="md" radius="md" href = {url} size = "md">
           Go to site
         </Button>
