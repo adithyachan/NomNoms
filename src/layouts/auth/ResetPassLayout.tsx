@@ -57,8 +57,6 @@ import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
     },
   }));
   
-
-
   export default function ForgotPassword() {
     const { handleSubmit, register, getValues, formState: {isValid, errors}, reset } = useForm(
     { mode: 'onChange', defaultValues: {email: ''}});
@@ -75,7 +73,6 @@ import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
         sendPasswordResetEmail(auth, email).then(() => {
         setError(false);
         //router.push('/auth/inputresetpass')
-        console.log("safe"); 
       }).catch(error => {
         setError(true)
         console.clear();
