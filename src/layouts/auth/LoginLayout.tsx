@@ -2,7 +2,7 @@ import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import {
   TextInput,
@@ -28,19 +28,24 @@ import {
 } from '@mantine/core';
 import { GoogleButton, TwitterButton, FacebookButton} from "@/components/auth/SocialButtons"
 import { formatDiagnostic } from 'typescript';
+import { SignInEmailandPassword } from '@/lib/firebase/auth/LoginService';
 
 export default function AuthenticationForm(props: PaperProps) {
-  const [type, toggle] = useToggle(['login']);
+  const [type, toggle] = useToggle(['login', 'register']);
   const form = useForm({
     initialValues: {
       email: '',
       name: '',
       password: '',
+      confirmpassword: '',
       terms: true,
     },
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
+      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      confirmpassword: (val, values) =>
+        val !== values.password ? 'Passwords did not match' : null,
   },
   });
 
@@ -48,7 +53,7 @@ export default function AuthenticationForm(props: PaperProps) {
     const HandleLogin = async (e : any) => {
       console.log("logged in");
       const auth = useFirebaseAuth();
-    signInWithEmailAndPassword(auth, form.values.email, form.values.password)
+    SignInEmailandPassword(auth, form.values.email, form.values.password)
     .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
@@ -63,7 +68,7 @@ export default function AuthenticationForm(props: PaperProps) {
 
     const provider = new GoogleAuthProvider();
 
-    const HandleGoogle = async (e: any) => {
+    const handleGoogle = async (e: any) => {
       console.log("checking google")
       const auth = useFirebaseAuth();
      signInWithPopup(auth, provider)
@@ -89,7 +94,7 @@ export default function AuthenticationForm(props: PaperProps) {
 
     const facebookprovider = new FacebookAuthProvider();
 
-    const HandleFacebook = async (e: any) => {
+    const handleFacebook = async (e: any) => {
       console.log("checking facebook")
       const auth = useFirebaseAuth();
   signInWithPopup(auth, facebookprovider)
@@ -116,8 +121,6 @@ export default function AuthenticationForm(props: PaperProps) {
     // ...
   });
     }
-
-    
 
 
   const useStyles = createStyles((theme) => ({
