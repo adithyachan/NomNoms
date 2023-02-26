@@ -31,6 +31,7 @@ import { formatDiagnostic } from 'typescript';
 
 export default function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(['register', 'login']);
+  console.log(type)
   const form = useForm({
     initialValues: {
       email: '',
@@ -181,16 +182,28 @@ export default function AuthenticationForm(props: PaperProps) {
           )}
 
         <Stack>
+        {type === 'login' && (
+           <TextInput
+           required
+           label="Email or username"
+           placeholder="nomnoms@gmail.com"
+           value={form.values.email}
+           onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+           error={form.errors.email && 'Invalid email'}
+         />
+        )}
 
-          <TextInput
-            required
-            label="Email"
-            placeholder="nomnoms@gmail.com"
-            value={form.values.email}
-            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-            error={form.errors.email && 'Invalid email'}
-          />
-
+        {type === 'register' && (
+           <TextInput
+           required
+           label="Email"
+           placeholder="nomnoms@gmail.com"
+           value={form.values.email}
+           onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+           error={form.errors.email && 'Invalid email'}
+         />
+        )}
+         
           <PasswordInput
             required
             label="Password"
@@ -247,7 +260,6 @@ export default function AuthenticationForm(props: PaperProps) {
 
         
           <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} type="submit"  >{upperFirst(type)}</Button>
-
         </Group>
 
         <Group grow mb="md" mt="md">
