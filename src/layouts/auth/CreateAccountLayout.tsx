@@ -15,10 +15,10 @@ import {
   Anchor,
   Stack,
 } from '@mantine/core';
-import { GoogleButton, TwitterButton } from "@/components/auth/SocialButtons"
+import { GoogleButton, FacebookButton } from "@/components/auth/SocialButtons"
 
 export default function AuthenticationForm(props: PaperProps) {
-  const [type, toggle] = useToggle(['login', 'register']);
+  const [type, toggle] = useToggle(['register', 'login']);
   const form = useForm({
     initialValues: {
       email: '',
@@ -120,15 +120,15 @@ export default function AuthenticationForm(props: PaperProps) {
             size="xs"
           >
             {type === 'register'
-              ? 'Already have an account? Login'
-              : "Don't have an account? Register"}
+              ? "Don't have an account? Register"
+              : 'Already have an account? Login'}
           </Anchor>
           <Button type="submit">{upperFirst(type)}</Button>
         </Group>
 
         <Group grow mb="md" mt="md">
         <GoogleButton radius="xl">Google</GoogleButton>
-        <TwitterButton radius="xl">Twitter</TwitterButton>
+        <FacebookButton radius="xl">Facebook</FacebookButton>
       </Group>
 
         
