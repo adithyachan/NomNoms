@@ -69,7 +69,7 @@ export default function Home() {
 =======
 >>>>>>> 30c8b81 (Fixed loading screen, extracted information from api call, improved card design)
         <JoinTable />
-        <ShowCard name='restaurant' url= 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80' id = "qY1o1MhoRyN84RRhUJtvpQ" />
+        <ShowCard id = "pcb8yK9_28uWz5CyokjwSg" />
         {/* <GetRestaurants zip="10019" radius="8000" categories="japanese"/> */}
         {/*<GetRestaurant id="TN4RnyqHMSupRFot4Q-_EA"/> */}
         
