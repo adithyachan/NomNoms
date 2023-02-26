@@ -35,18 +35,15 @@ export default function Home() {
       <main>
         {/* TODO: Create Basic Landing */}
         <p>NomNoms</p>
-<<<<<<< Updated upstream
         <TestListHook /> <br />
         <TestBusinessHook />
         {/* <RenderImage url ="https://images.pexels.com/photos/1563356/pexels-photo-1563356.jpeg" name = "Scenery"/> */}
         {/* <GetRestaurants zip="10019" radius="8000" categories="japanese"/> */}
-=======
         <JoinTable />
         <ShowCard name='restaurant' url= 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80' id = "qY1o1MhoRyN84RRhUJtvpQ" />
         {/* <GetRestaurants zip="10019" radius="8000" categories="japanese"/> */}
         {/*<GetRestaurant id="TN4RnyqHMSupRFot4Q-_EA"/> */}
         
->>>>>>> Stashed changes
       </main>
     </>
   )
