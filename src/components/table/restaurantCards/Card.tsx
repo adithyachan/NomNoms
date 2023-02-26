@@ -42,41 +42,75 @@ export default function ShowCard(props : {id : string }) {
          const imageUrl = businessData.image_url
          const photos = businessData.photos
          const pricePoint = businessData.price
-        return (
-            <Card shadow="sm" p="sm"  >
-              <BackgroundImage
-        src={photos[0]}
-        radius="sm"
-      >
-        {/* <Center p="md"> */}
-            
-            {/* <RenderImage url={'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80'} name={'ABC'}></RenderImage> */}
-          
-            {/* <Image
-            src={imageUrl}
-            height={160}
-            alt={nameRestaurant}
-            /> */}
+         const url = businessData.url
+         const aspectRatio = 16/9; // Set the aspect ratio of the container element
 
-        <Group position="apart" mt="md" mb="xs">
+  return (
+    <div
+      style={{
+        height : '100%',
+        borderRadius :'10px',
+        width: '100%',
+        maxWidth: 600,
+        paddingBottom: `${100 / aspectRatio}%`, // Set the paddingBottom property to maintain aspect ratio
+        position: 'relative', // Set the position property to allow the Card component to cover the entire container
+      }}
+    >
+    <Card
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '70%',
+        height: '50%',
+        backgroundImage: `url(${imageUrl})`,
+        opacity : 0.9,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        borderRadius: 'inherit'
+      }}
+      shadow="sm" radius="lg" p = "lg"
+    >
+      <div style={{ position: 'absolute', top: 0,  right: 0, padding: '12px' }}>
+      <Badge color="pink" variant="light">
+              {pricePoint}
+              </Badge>
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: 0,
+          transform: 'translateY(-50%)'
+        }}>
+
+      <Group position="apart" mt="md" mb="xs">
             <Text weight={500}>{nameRestaurant}</Text>
-            <Badge color="pink" variant="light">
-            {pricePoint}
-            </Badge>
-        </Group>
-
-        <Text size="sm" color="dimmed">
-            With Fjord Tours you can explore more of the magical fjord landscapes with tours and
-            activities on and around the fjords of Norway
-        </Text>
-
-        <Button variant="light" color="blue" fullWidth mt="md" radius="md">
-            Book classic tour now
+              
+          </Group>  
+          </div>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px' }}>
+      <Button component = "a" variant="light" color="pink" fullWidth mt="md" radius="md" href = {url}>
+          Go to site
         </Button>
+        </div>
+    </Card>
+    </div>
+  );
+ 
+    
+   
+
+  
+
+     
+        // <Button component = "a" variant="light" color="blue" fullWidth mt="md" radius="md" href = {url}>
+        //     Go to site
+        // </Button>
         {/* </Center> */}
-        </BackgroundImage> 
-            
-            </Card>
-        );
+        // </BackgroundImage> 
+          
+        //     </Card>
+        
   }
 }
