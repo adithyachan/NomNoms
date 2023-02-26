@@ -106,7 +106,7 @@ export default function Hero() {
 
           <Button
             component="a"
-            href="http://localhost:3000/auth/createAccount"
+            href="http://localhost:3000/auth/login"
             size="xl"
             variant="default"
             className={classes.control}
