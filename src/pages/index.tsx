@@ -1,8 +1,7 @@
 import Head from 'next/head'
 import { useState } from 'react'
 import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
-import JoinTable from '@/components/table/JoinTable'
-import GetRestaurants from '@/lib/utils/yelpAPI'
+import { useRestaurantBusinessEndpoint, useRestaurantListEndpoint} from '@/lib/utils/yelpAPI'
 export default function Home() {
   // start up firebase
   const app = useFirebaseApp()
@@ -32,13 +31,9 @@ export default function Home() {
       </Head>
       <main>
         {/* TODO: Create Basic Landing */}
-<<<<<<<<< Temporary merge branch 1
         <p>NomNoms</p>
-        <JoinTable />
-        <GetRestaurants zip="10019" radius="8000" categories="japanese"/>
-=========
-        <LandingLayout />
->>>>>>>>> Temporary merge branch 2
+        
+
       </main>
     </>
   )
