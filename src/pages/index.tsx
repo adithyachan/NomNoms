@@ -1,7 +1,7 @@
 import LandingLayout from '@/layouts/LandingLayout'
 import Head from 'next/head'
 import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
-import JoinTable from '@/components/table/JoinTable'
+
 import GetRestaurants from '@/lib/utils/yelpAPI'
 export default function Home() {
   // start up firebase
@@ -17,6 +17,7 @@ export default function Home() {
       </Head>
       <main>
         {/* TODO: Create Basic Landing */}
+
         <LandingLayout />
       </main>
     </>

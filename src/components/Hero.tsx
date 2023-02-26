@@ -73,7 +73,7 @@ export default function Hero() {
   const { classes } = useStyles();
 
   return (
-    <div className={classes.wrapper}>
+    <div className={`${classes.wrapper} bg-gradient-to-b from-rose-200 to-white`}>
       <Container size={700} className={classes.inner}>
 
         <Image width={500} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>

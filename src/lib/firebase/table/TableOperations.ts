@@ -17,9 +17,8 @@ const tableConverter = {
         };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot) => {
-      const data = snapshot.data();
-      console.log(data)
-      return new Table(data.name, data.lastAccessed, data.users, data.leader, data.expiration);
+      const data = (snapshot.data() as ITable);
+      return new Table(data);
   }
 };
 
@@ -31,13 +30,14 @@ const tableConverter = {
 export const ReadTable = async (docName: string) => {
   const firestore = useFirebaseFirestore()
   try {
-    const docRef = doc(firestore, collectionName, docName).withConverter(tableConverter)
-    const table = tableConverter.fromFirestore((await ReadDocumentWithConverter(docRef))!)
+    const docRef = doc(firestore, collectionName, docName)
+    const data = await ReadDocumentWithConverter(docRef)
+    const table = tableConverter.fromFirestore(data!)
     return table
   }
   catch (e) {
-    console.log("Error reading table: " + e)
-    return undefined
+    console.error("Error reading table: " + e)
+    throw e
   }
 }
 
@@ -59,8 +59,8 @@ export const ReadTables = async () => {
     return tables
   }
   catch (e) {
-    console.log("Error reading table: " + e)
-    return undefined
+    console.error("Error reading table: " + e)
+    throw e
   }
 }
 
@@ -73,11 +73,12 @@ export const WriteTable = async (data: ITable) => {
   const firestore = useFirebaseFirestore()
   try {
     const docRef = doc(collection(firestore, collectionName)).withConverter(tableConverter);
-    const table = (await WriteDocumentWithConverter(docRef, data))
+    const table = await WriteDocumentWithConverter(docRef, data)
+    return docRef.id
   }
   catch (e) {
     console.error("Error reading table: " + e)
-    return undefined
+    throw e
   }
 }
 
@@ -90,6 +91,7 @@ export const DeleteTable = async (docName: string) => {
     const table = (await DeleteDocument(collectionName, docName))
   }
   catch (e) {
-    console.log("Error deleting table: " + e)
+    console.error("Error deleting table: " + e)
+    throw e
   }
 }
