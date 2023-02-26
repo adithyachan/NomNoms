@@ -45,7 +45,7 @@ export default function AuthenticationForm(props: PaperProps) {
   });
 
   //disable the button if the inputs are not valid
-    const handleLogin = async (e : any) => {
+    const HandleLogin = async (e : any) => {
       console.log("logged in");
       const auth = useFirebaseAuth();
     signInWithEmailAndPassword(auth, form.values.email, form.values.password)
@@ -63,7 +63,7 @@ export default function AuthenticationForm(props: PaperProps) {
 
     const provider = new GoogleAuthProvider();
 
-    const handleGoogle = async (e: any) => {
+    const HandleGoogle = async (e: any) => {
       console.log("checking google")
       const auth = useFirebaseAuth();
      signInWithPopup(auth, provider)
@@ -89,7 +89,7 @@ export default function AuthenticationForm(props: PaperProps) {
 
     const facebookprovider = new FacebookAuthProvider();
 
-    const handleFacebook = async (e: any) => {
+    const HandleFacebook = async (e: any) => {
       console.log("checking facebook")
       const auth = useFirebaseAuth();
   signInWithPopup(auth, facebookprovider)
@@ -157,7 +157,7 @@ export default function AuthenticationForm(props: PaperProps) {
       
         
 
-     <form onSubmit={form.onSubmit(handleLogin)}>
+     <form onSubmit={form.onSubmit(HandleLogin)}>
 
       <Container size={500} my={50} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
