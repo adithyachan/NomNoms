@@ -8,7 +8,7 @@ import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 
 const provider = new GoogleAuthProvider();
 
-const handleGoogle = async (e: any) => {
+const HandleGoogle = async (e: any) => {
   console.log("checking google")
   const auth = useFirebaseAuth();
  signInWithPopup(auth, provider)
@@ -34,7 +34,7 @@ const credential = GoogleAuthProvider.credentialFromError(error);
 
 const facebookprovider = new FacebookAuthProvider();
 
-    const handleFacebook = async (e: any) => {
+    const HandleFacebook = async (e: any) => {
       console.log("checking facebook")
       const auth = useFirebaseAuth();
   signInWithPopup(auth, facebookprovider)
@@ -64,13 +64,13 @@ const facebookprovider = new FacebookAuthProvider();
 
 
 export function GoogleButton(props: ButtonProps) {
-  return (<Button onClick= {handleGoogle} leftIcon={<GoogleIcon />} variant="default" color="gray" {...props} />);
+  return (<Button onClick= {HandleGoogle} leftIcon={<GoogleIcon />} variant="default" color="gray" {...props} />);
 }
 
 export function FacebookButton(props: ButtonProps) {
   return (
     <Button
-      onClick={handleFacebook}
+      onClick={HandleFacebook}
       leftIcon={<FacebookIcon />}
       sx={(theme) => ({
         backgroundColor: '#fff',
