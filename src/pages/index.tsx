@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { useState } from 'react'
 import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
 import { useRestaurantBusinessEndpoint, useRestaurantListEndpoint} from '@/lib/utils/yelpAPI'
+import ShowCard from '@/components/table/restaurantCards/Card'
 export default function Home() {
   // start up firebase
   const app = useFirebaseApp()
@@ -32,7 +33,9 @@ export default function Home() {
       <main>
         {/* TODO: Create Basic Landing */}
         <p>NomNoms</p>
-        
+      <TestListHook />
+      <TestBusinessHook />
+       <ShowCard id = "xUAUR4WEsYWaqGZU8MARwQ"/>
 
       </main>
     </>

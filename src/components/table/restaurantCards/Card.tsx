@@ -81,11 +81,16 @@ export default function ShowCard(props : {id : string }) {
          const url = businessData.url
          const cuisines = businessData.categories
          const cuisineList = new Array(cuisines.length)
-         const operationTimes = businessData.hours
+         const operationTimes = businessData.hours[0]
+         //console.log(operationTimes.open)
+         //console.log(operationTimes.open.length)
          for(var i = 0;i < cuisines.length;i++) {
           cuisineList[i] = cuisines[i].title;
          }
-         const formattedHours = GetHours(operationTimes)
+         var data = JSON.stringify(operationTimes.open)
+         //console.log(typeof(JSON.parse(data)))
+         //console.log(typeof(data))
+         const formattedHours = GetHours(data)
          console.log(formattedHours)
 
          //console.log(cuisineList)
