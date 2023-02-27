@@ -1,8 +1,7 @@
-import LandingLayout from '@/layouts/LandingLayout'
 import Head from 'next/head'
 import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
-import JoinTable from '@/components/table/tableSelection/joinTable/JoinTable'
-import GetRestaurants from '@/lib/utils/yelpAPI'
+import LandingLayout from '@/layouts/LandingLayout'
+
 export default function Home() {
   // start up firebase
   const app = useFirebaseApp()
@@ -16,8 +15,6 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        {/* TODO: Create Basic Landing */}
-
         <LandingLayout />
       </main>
     </>

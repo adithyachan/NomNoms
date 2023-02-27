@@ -31,6 +31,7 @@ import { formatDiagnostic } from 'typescript';
 
 export default function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(['register', 'login']);
+  console.log(type)
   const form = useForm({
     initialValues: {
       email: '',
@@ -42,7 +43,8 @@ export default function AuthenticationForm(props: PaperProps) {
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      password: (val) => (val.length < 7 ? 'Password should include at least 6 characters' : null),
+
       confirmpassword: (val, values) =>
         val !== values.password ? 'Passwords did not match' : null,
   },
@@ -182,15 +184,28 @@ export default function AuthenticationForm(props: PaperProps) {
 
         <Stack>
 
-          <TextInput
-            required
-            label="Email"
-            placeholder="nomnoms@gmail.com"
-            value={form.values.email}
-            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-            error={form.errors.email && 'Invalid email'}
-          />
+        {type === 'login' && (
+           <TextInput
+           required
+           label="Email or username"
+           placeholder="nomnoms@gmail.com"
+           value={form.values.email}
+           onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+           error={form.errors.email && 'Invalid email'}
+         />
+        )}
 
+        {type === 'register' && (
+           <TextInput
+           required
+           label="Email"
+           placeholder="nomnoms@gmail.com"
+           value={form.values.email}
+           onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+           error={form.errors.email && 'Invalid email'}
+         />
+        )}
+         
           <PasswordInput
             required
             label="Password"

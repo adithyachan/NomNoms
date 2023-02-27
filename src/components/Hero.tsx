@@ -76,7 +76,7 @@ export default function Hero() {
     <div className={`${classes.wrapper} bg-gradient-to-b from-rose-200 to-white`}>
       <Container size={700} className={classes.inner}>
 
-        <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
+        <Image width={500} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
         <h1 className={classes.title}>
           {`Can't  `}
           <Text component="span" color="red" inherit>
@@ -95,7 +95,7 @@ export default function Hero() {
         <Group className={classes.controls}>
           <Button
             component = "a"
-            href="http://localhost:3000/auth/createAccount#:~:text=Don%27t%20have%20an-,account,-%3F%20Register"
+            href="http://localhost:3000/auth/createAccount"
             size="xl"
             className={classes.control}
             variant="filled"

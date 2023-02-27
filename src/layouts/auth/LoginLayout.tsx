@@ -46,7 +46,6 @@ export default function AuthenticationForm(props: PaperProps) {
 
   //disable the button if the inputs are not valid
     const HandleLogin = async (e : any) => {
-        console.log("Logged in")
         const auth = useFirebaseAuth();
         signInWithEmailAndPassword(auth, form.values.email, form.values.password)
         .then((userCredential) => {
