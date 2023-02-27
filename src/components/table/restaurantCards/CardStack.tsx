@@ -8,9 +8,10 @@ import { BackgroundImage, Center } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 
 export default function CardStack({ids} : any) {
-  if (ids.length == 0) return (<Text size="md" color="dimmed">Card stack is empty!</Text> )
   let index = 0;
   const [id, setID] = useState(ids[index])
+  if (ids.length == 0) return (<Text size="md" color="dimmed">Card stack is empty!</Text> )
+
 
   return (
     <>
