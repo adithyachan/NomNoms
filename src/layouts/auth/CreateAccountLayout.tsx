@@ -44,6 +44,7 @@ export default function AuthenticationForm(props: PaperProps) {
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) => (val.length < 7 ? 'Password should include at least 6 characters' : null),
+
       confirmpassword: (val, values) =>
         val !== values.password ? 'Passwords did not match' : null,
   },
@@ -182,6 +183,7 @@ export default function AuthenticationForm(props: PaperProps) {
           )}
 
         <Stack>
+
         {type === 'login' && (
            <TextInput
            required

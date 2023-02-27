@@ -1,6 +1,11 @@
 import { FirebaseOptions, initializeApp, getApp, getApps} from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore"
+import firebase from "firebase/compat/app";
+import "firebase/auth";
+import 'firebase/auth';
+import "firebase/database";
+
 
 // set up config
 const firebaseConfig: FirebaseOptions = {
@@ -57,3 +62,5 @@ export function useFirebaseAuth() {
   return auth
 
 }
+
+export default firebase;
