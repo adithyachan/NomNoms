@@ -2,7 +2,6 @@ import { Button, ButtonProps, Group } from '@mantine/core';
 import { GithubIcon, DiscordIcon, TwitterIcon } from '@mantine/ds';
 import { GoogleIcon } from './GoogleIcon';
 import { FacebookIcon } from './FacebookIcon';
-import { CreateAccountWithFacebook, CreateAccountWithGoogle } from '@/pages/auth/createAccount';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 
