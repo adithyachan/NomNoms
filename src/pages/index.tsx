@@ -1,6 +1,6 @@
 import Head from 'next/head'
-import { useState } from 'react'
 import { useFirebaseApp } from '../lib/firebase/hooks/useFirebase'
+import LandingLayout from '@/layouts/LandingLayout'
 
 export default function Home() {
   // start up firebase
