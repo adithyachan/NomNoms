@@ -10,6 +10,7 @@
     "cypress": "cypress open"
   },
   "dependencies": {
+    "@coreui/react": "^4.6.0",
     "@emotion/react": "^11.10.5",
     "@emotion/server": "^11.10.0",
     "@mantine/core": "^5.10.4",
