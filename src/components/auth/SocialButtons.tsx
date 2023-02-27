@@ -46,6 +46,9 @@ const facebookprovider = new FacebookAuthProvider();
     const credential = FacebookAuthProvider.credentialFromResult(result);
     const accessToken = credential?.accessToken;
 
+    console.log("working facebook");
+
+
     // IdP data available using getAdditionalUserInfo(result)
     // ...
   })
@@ -57,6 +60,8 @@ const facebookprovider = new FacebookAuthProvider();
     const email = error.customData.email;
     // The AuthCredential type that was used.
     const credential = FacebookAuthProvider.credentialFromError(error);
+    console.log(errorMessage);
+
 
     // ...
   });

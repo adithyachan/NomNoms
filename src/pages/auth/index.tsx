@@ -6,7 +6,10 @@ import { useState } from "react";
 
 
 export default function Login() {
-  //create-account
-
+  return (
+    <>
+      create account
+    </>
+  );
 }
- 
+

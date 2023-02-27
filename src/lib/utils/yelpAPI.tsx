@@ -9,16 +9,10 @@ const options = {
 }
 const fetcher = (url: string) => fetch(url, options).then(res => res.json());
 
-const GetRestaurants = ({zip, radius, categories}: any) => {
-  const {data, error, isLoading} = useSWR(`/api/businesses?limit=50&location=${zip}&radius=${radius}&categories=${categories}`, fetcher);
+export function useRestaurantListEndpoint(zip: number, radius: number, categories: string) {
+  return useSWR(`/api/businesses?limit=50&location=${zip}&radius=${radius}&categories=${categories}`, fetcher);
+}
 
-  if (error) {
-    console.log(error);
-    return (<div>failed to load</div>);
-  }
-  if (isLoading) return (<div>Loading...</div>);
-  
-  console.log(data);
-  return <p>Successfully fetched from Yelp API</p>
-};
-export default GetRestaurants;
+export function useRestaurantBusinessEndpoint(id: string) {
+  return useSWR(`/api/business?id=${id}`, fetcher);
+}
