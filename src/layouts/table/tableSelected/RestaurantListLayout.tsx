@@ -5,7 +5,6 @@ export default function RestaurantListLayout() {
   return(
     <>
     {/* TODO: Add restuarant preview after preference selection*/}
-    <Title order={1}>Restaurant Preview</Title>
     <RestaurantPreview />
     </>
   );
