@@ -67,8 +67,8 @@ import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
     const [isError, setError] = useState(Boolean);
 
     const HandleReset = async (e : any) => {
-      console.log(getValues('email'));
       e.preventDefault();
+      console.log(getValues('email'));
       const email = getValues('email'); 
       const auth = useFirebaseAuth();
         sendPasswordResetEmail(auth, email).then(() => {
