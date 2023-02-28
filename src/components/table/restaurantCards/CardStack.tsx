@@ -10,7 +10,7 @@ import { useDisclosure } from '@mantine/hooks';
 
 
 export default function CardStack({ids, setUserVotes} : any) {
-  const cards = ids.map((id: string) => <ShowCard id={id}/>)
+  const cards = ids.map((id: string) => <ShowCard key={id} id={id}/>)
   const [index, setIndex] = useState(0)
   const [card, setCard] = useState(cards[index])
   const [canFinish, setCanFinish] = useState(false)
@@ -25,7 +25,7 @@ export default function CardStack({ids, setUserVotes} : any) {
   cards.push(
     <div style={{height: '410px', width: '410px'}}>
       <Card withBorder radius='md' style={{height: '100%'}}>
-        <Text weight={500}>You're all done!</Text>
+        <Text weight={500}>You&apos;re all done!</Text>
         <Text size="sm" color="dimmed">
           You may either go back and change your votes, or hit finish to submit.
         </Text>
