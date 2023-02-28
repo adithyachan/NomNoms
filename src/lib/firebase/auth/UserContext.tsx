@@ -5,8 +5,9 @@ import { useFirebaseAuth } from "../hooks/useFirebase";
 //setting an authentication state observer and getting user data
 // when user successfully signs in, get information about the user in the observer
 
-const auth = useFirebaseAuth();
-export async function getUserStateChange() {
+
+export async function useUserStateChange() {
+    const auth = useFirebaseAuth();
     onAuthStateChanged(auth, (user) => {
         if (user) {
             // User is signed in, see docs for a list of available properties

@@ -52,9 +52,9 @@ export default function AuthenticationForm(props: PaperProps) {
 
   //disable the button if the inputs are not valid
     const HandleAuth = async (e : any) => {
+      const auth = useFirebaseAuth();
       if (type == 'register') {
         console.log("register");
-        const auth = useFirebaseAuth();
         createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
         .then((userCredential) => {
           // Signed in 
@@ -70,7 +70,6 @@ export default function AuthenticationForm(props: PaperProps) {
         });
         console.log("auth working")
       } else if (type == 'login') {
-        const auth = useFirebaseAuth();
         signInWithEmailAndPassword(auth, form.values.email, form.values.password)
         .then((userCredential) => {
             // Signed in 
@@ -88,9 +87,9 @@ export default function AuthenticationForm(props: PaperProps) {
     const provider = new GoogleAuthProvider();
 
     const HandleGoogle = async (e: any) => {
+      const auth = useFirebaseAuth();
       if (type == 'register') {
           console.log("checking google")
-            const auth = useFirebaseAuth();
           signInWithPopup(auth, provider)
           .then((result) => {
           // This gives you a Google Access Token. You can use it to access the Google API.
