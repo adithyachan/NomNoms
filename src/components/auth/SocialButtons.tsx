@@ -2,7 +2,6 @@ import { Button, ButtonProps, Group } from '@mantine/core';
 import { GithubIcon, DiscordIcon, TwitterIcon } from '@mantine/ds';
 import { GoogleIcon } from './GoogleIcon';
 import { FacebookIcon } from './FacebookIcon';
-import { CreateAccountWithFacebook, CreateAccountWithGoogle } from '@/pages/auth/createAccount';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 
@@ -45,7 +44,9 @@ const facebookprovider = new FacebookAuthProvider();
     // This gives you a Facebook Access Token. You can use it to access the Facebook API.
     const credential = FacebookAuthProvider.credentialFromResult(result);
     const accessToken = credential?.accessToken;
+
     console.log("working facebook");
+
 
     // IdP data available using getAdditionalUserInfo(result)
     // ...
@@ -59,6 +60,7 @@ const facebookprovider = new FacebookAuthProvider();
     // The AuthCredential type that was used.
     const credential = FacebookAuthProvider.credentialFromError(error);
     console.log(errorMessage);
+
 
     // ...
   });

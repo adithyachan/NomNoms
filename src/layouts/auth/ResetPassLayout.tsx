@@ -27,6 +27,7 @@ import { useForm } from 'react-hook-form'
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
 import { IconCheck } from '@tabler/icons';
+import { IconX } from '@tabler/icons';
 import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
 
 
@@ -66,24 +67,69 @@ import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
     const [isError, setError] = useState(Boolean);
 
     const HandleReset = async (e : any) => {
-      console.log(getValues('email'));
       e.preventDefault();
+      console.log(getValues('email'));
       const email = getValues('email'); 
       const auth = useFirebaseAuth();
         sendPasswordResetEmail(auth, email).then(() => {
         setError(false);
+        showNotification({
+          title: 'Check your inbox!',
+          message: 'An email to reset your password has been sent.',
+          autoClose: 3000,
+          color: 'teal',
+          icon: <IconCheck size={16} />,
+          
+          styles: () => ({
+            /*
+            root: {
+              backgroundColor: '#FFE4E6',
+              borderColor: '#FFE4E6',
+              '&::before': { backgroundColor: '#FFFFFF' },
+            },
+            */
+            //title: { color: '#F43F5E' },
+            //description: { color: '#F43F5E'},
+            closeButton: {
+              color: '#F43F5E',
+              '&:hover': { backgroundColor: '#F43F5E' },
+            },
+          }),            
+        })
         //router.push('/auth/inputresetpass')
       }).catch(error => {
         setError(true)
         console.clear();
+        showNotification({
+          title: 'Error!',
+          message: 'An error occured while sending an email.',
+          autoClose: 3000,
+          color: 'red',
+          icon: <IconX size={16} />,
+          
+          styles: () => ({
+            /*
+            root: {
+              backgroundColor: '#FFE4E6',
+              borderColor: '#FFE4E6',
+              '&::before': { backgroundColor: '#FFFFFF' },
+            },
+            */
+            //title: { color: '#F43F5E' },
+            //description: { color: '#F43F5E'},
+            closeButton: {
+              color: '#F43F5E',
+              '&:hover': { backgroundColor: '#F43F5E' },
+            },
+          }),            
+        })
       });
-      e.target.reset();
       reset({email: ''});
-
+      e.target.reset();
     };
 
     const HandleReturn = (e : any) => {
-      router.push('/')
+      router.push('/auth/login')
     }
 
     const { classes } = useStyles();
@@ -130,29 +176,7 @@ import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
                 className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} 
                 disabled={!isValid} 
                 type="submit"
-                onClick={() =>
-                  showNotification({
-                    title: 'Email Sucessfully Sent!',
-                    message: 'You will recieve an email to reset your password shortly if you have an account with us.',
-                    autoClose: 4000,
-                    color: 'red',
-                    icon: <IconCheck size={16} />,
-                    styles: () => ({
-                      root: {
-                        backgroundColor: '#FFE4E6',
-                        borderColor: '#FFE4E6',
-                        '&::before': { backgroundColor: '#FFFFFF' },
-                      },
-        
-                      title: { color: '#F43F5E' },
-                      description: { color: '#F43F5E'},
-                      closeButton: {
-                        color: '#F43F5E',
-                        '&:hover': { backgroundColor: '#F43F5E' },
-                      },
-                    }),                    
-                  })
-                }
+                
                 >Reset password
                 </Button>
               </Group>

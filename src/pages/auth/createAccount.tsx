@@ -38,22 +38,3 @@ export default function CreateAccount() {
   );
 }
 
-const provider = new GoogleAuthProvider();
- 
-export async function CreateAccountWithGoogle() {
-  return (
-    <>
-    < CreateAccountLayout/>
-    </>
-  ); 
-}
-
-const facebookprovider = new FacebookAuthProvider();
-export async function CreateAccountWithFacebook() {
-  const auth = useFirebaseAuth(); 
-  return (
-    <>
-    < CreateAccountLayout/>
-    </>
-  ); 
-}
