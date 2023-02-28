@@ -68,7 +68,7 @@ export default function AuthenticationForm(props: PaperProps) {
           console.log("Account creation was unsuccessful")
           // ..
         });
-        console.log("working")
+        console.log("auth working")
       } else if (type == 'login') {
         const auth = useFirebaseAuth();
         signInWithEmailAndPassword(auth, form.values.email, form.values.password)
