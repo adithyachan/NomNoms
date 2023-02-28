@@ -1,5 +1,6 @@
 import { createStyles, Container, Text, Button, Group, Image } from '@mantine/core';
 import { IconLogin } from '@tabler/icons';
+import { useRouter } from "next/router";
 
 const BREAKPOINT = '@media (max-width: 755px)';
 
@@ -72,6 +73,16 @@ const useStyles = createStyles((theme) => ({
 export default function Hero() {
   const { classes } = useStyles();
 
+  const router = useRouter();
+
+  const LogIn = () =>{
+    router.push("/auth");
+  }
+
+  const SignIn = () => {
+    router.push("/auth");
+  }
+
   return (
     <div className={`${classes.wrapper} bg-gradient-to-b from-rose-200 to-white`}>
       <Container size={700} className={classes.inner}>
@@ -95,22 +106,22 @@ export default function Hero() {
         <Group className={classes.controls}>
           <Button
             component = "a"
-            href="http://localhost:3000/auth/createAccount"
             size="xl"
             className={classes.control}
             variant="filled"
             color="red"
+            onClick={() => SignIn()}
           >
             Sign Up
           </Button>
 
           <Button
-            component="a"
-            href="http://localhost:3000/auth/login"
+            component= "a"
             size="xl"
             variant="default"
             className={classes.control}
             leftIcon={<IconLogin size={20}/>}
+            onClick={() => LogIn()}
           >
             Log In
           </Button>
