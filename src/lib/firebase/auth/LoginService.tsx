@@ -1,5 +1,7 @@
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase"
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
+import { useUserStateChange } from "./UserContext";
 
 export async function SignInEmailandPassword(email:string, password:string) {
     const auth = useFirebaseAuth();

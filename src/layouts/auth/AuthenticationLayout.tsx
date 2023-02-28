@@ -28,10 +28,10 @@ import {
 } from '@mantine/core';
 import { GoogleButton, TwitterButton, GithubButton} from "@/components/auth/SocialButtons"
 import { formatDiagnostic } from 'typescript';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(['register', 'login']);
-  console.log(type)
   const form = useForm({
     initialValues: {
       email: '',
@@ -51,79 +51,67 @@ export default function AuthenticationForm(props: PaperProps) {
   });
 
   //disable the button if the inputs are not valid
-    const HandleCreate = async (e : any) => {
-      console.log("hello");
+    const HandleAuth = async (e : any) => {
       const auth = useFirebaseAuth();
-      createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
-      .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        console.log("User was successfully created")
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("Account creation was unsuccessful")
-        // ..
-      });
-      console.log("working")
+      if (type == 'register') {
+        console.log("register");
+        createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          console.log("User was successfully created")
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log("Account creation was unsuccessful")
+          // ..
+        });
+        console.log("auth working")
+      } else if (type == 'login') {
+        signInWithEmailAndPassword(auth, form.values.email, form.values.password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            console.log("user is logged in")
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+        });
+      }
     }
 
     const provider = new GoogleAuthProvider();
 
     const HandleGoogle = async (e: any) => {
-      console.log("checking google")
       const auth = useFirebaseAuth();
-     signInWithPopup(auth, provider)
-   .then((result) => {
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential?.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });   
-    }
+      if (type == 'register') {
+          console.log("checking google")
+          signInWithPopup(auth, provider)
+          .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential?.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+          // IdP data available using getAdditionalUserInfo(result)
+          // ...
+        }).catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // The email of the user's account used.
+          const email = error.customData.email;
+          // The AuthCredential type that was used.
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          // ...
+        });   
+      } else if (type == 'login') {
 
-    const facebookprovider = new FacebookAuthProvider();
-
-    const HandleFacebook = async (e: any) => {
-      console.log("checking facebook")
-      const auth = useFirebaseAuth();
-  signInWithPopup(auth, facebookprovider)
-  .then((result) => {
-    // The signed-in user info.
-    const user = result.user;
-
-    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-    const credential = FacebookAuthProvider.credentialFromResult(result);
-    const accessToken = credential?.accessToken;
-
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-  })
-  .catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = FacebookAuthProvider.credentialFromError(error);
-
-    // ...
-  });
+      }
     }
 
 
@@ -161,10 +149,8 @@ export default function AuthenticationForm(props: PaperProps) {
 
     <Paper radius="md" p="xl" withBorder {...props}>
      
-      
-        
-
-     <form onSubmit={form.onSubmit(HandleCreate)}>
+    
+     <form onSubmit={form.onSubmit(HandleAuth)}>
 
       <Container size={500} my={50} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
@@ -229,8 +215,7 @@ export default function AuthenticationForm(props: PaperProps) {
 
           {type === 'register' && (
 
-            
-                
+          
             <Checkbox
               label="I accept terms and conditions"
               checked={form.values.terms}
@@ -241,12 +226,7 @@ export default function AuthenticationForm(props: PaperProps) {
             
           )}
 
-      
         </Stack>
-
-        
-
-
         <Group position="apart" mt="xl">
           <Anchor
             component="button"
@@ -262,13 +242,13 @@ export default function AuthenticationForm(props: PaperProps) {
 
         
           <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} type="submit"  >{upperFirst(type)}</Button>
+
         </Group>
 
         <Group grow mb="md" mt="md">
         <GoogleButton radius="xl">Google</GoogleButton>
         <GithubButton radius="xl">GitHub</GithubButton>
           </Group>
-
         
         </Container>
       </form>

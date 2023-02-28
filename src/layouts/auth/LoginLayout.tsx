@@ -41,49 +41,19 @@ export default function AuthenticationForm(props: PaperProps) {
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
+  
   },
   });
 
+  
   //disable the button if the inputs are not valid
     const HandleLogin = async (e : any) => {
-        const auth = useFirebaseAuth();
-        signInWithEmailAndPassword(auth, form.values.email, form.values.password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-        });
+
     }
 
     const provider = new GoogleAuthProvider();
 
-    const HandleGoogle = async (e: any) => {
-      console.log("checking google")
-      const auth = useFirebaseAuth();
-     signInWithPopup(auth, provider)
-   .then((result) => {
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential?.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });   
-    }
+
 
     const facebookprovider = new FacebookAuthProvider();
 
@@ -148,11 +118,8 @@ export default function AuthenticationForm(props: PaperProps) {
 
   return (
 
-    <Paper radius="md" p="xl" withBorder {...props}>
-     
-      
-        
 
+    <Paper radius="md" p="xl" withBorder {...props}>
      <form onSubmit={form.onSubmit(HandleLogin)}>
 
       <Container size={500} my={50} 
@@ -160,7 +127,6 @@ export default function AuthenticationForm(props: PaperProps) {
           <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
 
         <Stack>
-
           <TextInput
             required
             label="Email"
