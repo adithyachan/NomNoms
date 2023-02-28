@@ -4,6 +4,7 @@ import { GoogleIcon } from './GoogleIcon';
 import { FacebookIcon } from './FacebookIcon';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
+import { CreateAccountWithGitHub } from '@/lib/firebase/auth/AuthService';
 
 const provider = new GoogleAuthProvider();
 
@@ -124,6 +125,7 @@ export function GithubButton(props: ButtonProps) {
   return (
     <Button
       {...props}
+      onClick={CreateAccountWithGitHub}
       leftIcon={<GithubIcon size={16} />}
       sx={(theme) => ({
         backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],

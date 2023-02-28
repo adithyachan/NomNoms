@@ -26,7 +26,7 @@ import {
   Stack,
   Autocomplete,
 } from '@mantine/core';
-import { GoogleButton, TwitterButton, FacebookButton} from "@/components/auth/SocialButtons"
+import { GoogleButton, TwitterButton, GithubButton} from "@/components/auth/SocialButtons"
 import { formatDiagnostic } from 'typescript';
 
 export default function AuthenticationForm(props: PaperProps) {
@@ -266,7 +266,7 @@ export default function AuthenticationForm(props: PaperProps) {
 
         <Group grow mb="md" mt="md">
         <GoogleButton radius="xl">Google</GoogleButton>
-        <FacebookButton radius="xl">Facebook</FacebookButton>
+        <GithubButton radius="xl">GitHub</GithubButton>
           </Group>
 
         
