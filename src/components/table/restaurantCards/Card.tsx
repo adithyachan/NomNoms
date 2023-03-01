@@ -94,18 +94,19 @@ export default function ShowCard(props : {id : string }) {
        top: 0,
          right: 0, 
          padding: '12px' }}>
-      <Badge color="pink" variant="light">
+      <Badge color="pink" variant="light" size = "md">
               {pricePoint}
               </Badge>
       </div>
       <div
         style={{
           position: 'absolute',
-          top: '50%',
+          
+          top: '10%',
           left: 11,
           transform: 'translateY(-50%)'
         }}>
-        <Text className="css-1se8maq" style={{ color:"white",
+        <Text className="css-1se8maq" style={{ color:"pink", borderColor : "purple", //borderSpacing : '10px', borderInlineColor : "purple", 
          fontSize: '24px',
           fontWeight: 700
  }}>{nameRestaurant}</Text>
@@ -123,7 +124,7 @@ export default function ShowCard(props : {id : string }) {
         {cuisineList.join(', ')}
         </Text>
       </div>
-      
+     
       <Modal
           centered
           withCloseButton={false} 
@@ -134,7 +135,7 @@ export default function ShowCard(props : {id : string }) {
       overlayOpacity={0.55}
       overlayBlur={3}
       overflow="inside" 
-      style = {{ position : "fixed"
+      style = {{ position : "absolute"
      
         } }
       // style = {{height : "410px", position : "absolute",
@@ -149,6 +150,7 @@ export default function ShowCard(props : {id : string }) {
       <tbody>{rows}</tbody>
     </Table>
       </Modal>
+      
     
     
       <div
