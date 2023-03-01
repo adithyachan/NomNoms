@@ -1,3 +1,5 @@
+/*
+
 import { User } from "@/types/User";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useState, useEffect } from "react";
@@ -6,7 +8,6 @@ import { useFirebaseAuth } from "../hooks/useFirebase";
 
 //setting an authentication state observer and getting user data
 // when user successfully signs in, get information about the user in the observer
-
 
 export async function AuthProvider () {
     const auth = useFirebaseAuth();
@@ -34,11 +35,13 @@ export async function AuthProvider () {
     
 }
 
-/*
+*/
+
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { useFirebaseApp, useFirebaseAuth } from "../hooks/useFirebase";
+import { useFirebaseAuth } from "../hooks/useFirebase";
+
 
 interface UserType {
   email: string | null;
@@ -47,8 +50,7 @@ interface UserType {
 
 const AuthContext = createContext({});
 
-
-export const UserAuth = () => useContext<any>(AuthContext);
+export const UseAuth = () => useContext<any>(AuthContext);
 
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserType>({ email: null, uid: null });
@@ -67,14 +69,12 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
       }
     });
     setLoading(false);
-
     return () => unsubscribe();
-  }, [auth]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user }}>
       {loading ? null : children}
     </AuthContext.Provider>
   );
-};
-*/
+}
