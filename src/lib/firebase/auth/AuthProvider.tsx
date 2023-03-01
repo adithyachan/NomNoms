@@ -40,6 +40,7 @@ export async function AuthProvider () {
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { useFirebaseAuth } from "../hooks/useFirebase";
+import LoadingLayout from "@/layouts/LoadingLayout";
 
 
 interface UserType {
@@ -73,7 +74,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
 
   return (
     <AuthContext.Provider value={{ user }}>
-      {loading ? null : children}
+      {loading ? <LoadingLayout></LoadingLayout> : children}
     </AuthContext.Provider>
   );
 }
