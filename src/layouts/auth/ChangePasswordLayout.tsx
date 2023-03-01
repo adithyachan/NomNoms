@@ -15,12 +15,12 @@ import { Box,
   import { useInputState } from '@mantine/hooks';
   import { IconCheck, IconX } from '@tabler/icons';
   import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
-  import { confirmPasswordReset } from "firebase/auth";
-  import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-  import { Router, useRouter } from "next/router";
+  import {  EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth";
+  import { useState } from 'react';
+  import { useRouter } from "next/router";
   import { showNotification } from '@mantine/notifications';
   import { NotificationsProvider } from '@mantine/notifications';
-  
+  import { UseAuth } from "@/lib/firebase/auth/AuthProvider"; 
   
   function PasswordRequirement({ meets, label }: { meets: boolean; label: string }) {
     return (
@@ -68,10 +68,13 @@ import { Box,
   
   export default function ChangePassword() {
       const { classes } =  useStyles();
-      const [value, setValue] = useInputState('');
-      const strength = getStrength(value);
+      const [newPass, setNewPass] = useInputState('');
+      const [oldPass, setOldPass] = useInputState('');
+      const strength = getStrength(newPass);
+      const auth = useFirebaseAuth();
+      const user = UseAuth();
       const checks = requirements.map((requirement, index) => (
-        <PasswordRequirement key={index} label={requirement.label} meets={requirement.re.test(value)} />
+        <PasswordRequirement key={index} label={requirement.label} meets={requirement.re.test(newPass)} />
       ));
       
       const bars = Array(4)
@@ -80,7 +83,7 @@ import { Box,
           <Progress
             styles={{ bar: { transitionDuration: '0ms' } }}
             value={
-              value.length > 0 && index === 0 ? 100 : strength >= ((index + 1) / 4) * 100 ? 100 : 0
+                newPass.length > 0 && index === 0 ? 100 : strength >= ((index + 1) / 4) * 100 ? 100 : 0
             }
             color={strength > 80 ? 'teal' : strength > 50 ? 'yellow' : 'red'}
             key={index}
@@ -91,14 +94,90 @@ import { Box,
         const router = useRouter();
         const [isLoading, setIsLoading] = useState(true);
         
-  
-        const HandleReset = async (e : any) => {
-            e.preventDefault();
 
+        const Reauthenticate = async (e : any) => {
+            var user = auth.currentUser;
+            var cred = EmailAuthProvider.credential(user?.email!, oldPass);
+            return reauthenticateWithCredential(user!, cred);
+        }
+
+        const HandleChange = async (e : any) => {
+            e.preventDefault();
+            if (oldPass != newPass) {
+                Reauthenticate(oldPass).then(() => {
+                    var user = auth.currentUser;
+                    updatePassword(user!, newPass).then(() => {
+                    console.log("Password updated!");
+                    showNotification({
+                        title: 'Password Successfully Changed!',
+                        message: 'Redirecting to login page',
+                        autoClose: 3000,
+                        color: 'teal',
+                        icon: <IconCheck size={16} />,
+                        styles: () => ({
+                          closeButton: {
+                            color: '#F43F5E',
+                            '&:hover': { backgroundColor: '#F43F5E' },
+                          },
+                        }),            
+                      })
+                      setTimeout(() => {
+                        router.push('/tables');
+                      }, 3000)
+                    }).catch((error) => { 
+                        console.log(error); 
+                        showNotification({
+                            title: 'Password Successfull changed!',
+                            message: 'Redirecting to main page',
+                            autoClose: 3000,
+                            color: 'teal',
+                            icon: <IconCheck size={16} />,
+                            styles: () => ({
+                              closeButton: {
+                                color: '#F43F5E',
+                                '&:hover': { backgroundColor: '#F43F5E' },
+                              },
+                            }),            
+                          })
+                          setTimeout(() => {
+                            router.push('/tables');
+                          }, 3000)
+                    });
+                }).catch((error) => { 
+                    console.log(error); 
+                    showNotification({
+                        title: 'Error!',
+                        message: 'An error occured while changing your password.',
+                        autoClose: 3000,
+                        color: 'red',
+                        icon: <IconX size={16} />,
+                        styles: () => ({
+                          closeButton: {
+                            color: '#F43F5E',
+                            '&:hover': { backgroundColor: '#F43F5E' },
+                          },
+                        }),            
+                      })
+                });
+            } else {
+                showNotification({
+                    title: 'Error!',
+                    message: "New Password can't match old password.",
+                    autoClose: 3000,
+                    color: 'red',
+                    icon: <IconX size={16} />,
+                    styles: () => ({
+                      closeButton: {
+                        color: '#F43F5E',
+                        '&:hover': { backgroundColor: '#F43F5E' },
+                      },
+                    }),            
+                  })
+            }
         }
       return (
         <>
-          <form onSubmit={HandleReset}>
+          <form onSubmit={HandleChange}>
           <NotificationsProvider>
           <Container size={460} my={30} 
             className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
@@ -111,16 +190,16 @@ import { Box,
                 </Text>
             <Paper withBorder shadow="md" p={25} radius="md" mt="xl" className='bg-rose-200'> 
                 <PasswordInput
-                  value={value}
-                  onChange={setValue}
+                  value={oldPass}
+                  onChange={setOldPass}
                   placeholder="Old password"
                   label="Enter your old password"
                   required
                 />
               <div>
                 <PasswordInput
-                  value={value}
-                  onChange={setValue}
+                  value={newPass}
+                  onChange={setNewPass}
                   placeholder="New password"
                   label="Enter a new password"
                   required
@@ -129,7 +208,7 @@ import { Box,
                   {bars}
                 </Group>
           
-                <PasswordRequirement label="Has at least 6 characters" meets={value.length > 5} />
+                <PasswordRequirement label="Has at least 6 characters" meets={newPass.length > 5} />
                 {checks}
               </div>
               <Space h="md"></Space>
@@ -138,7 +217,7 @@ import { Box,
                   className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} 
                   disabled={!(strength > 80)} 
                   type="submit"
-                  >Reset password
+                  >Change password
                 </Button>
               </Group>
             </Paper>
