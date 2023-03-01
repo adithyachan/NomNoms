@@ -30,6 +30,7 @@ import {
 import { GoogleButton, TwitterButton, GithubButton} from "@/components/auth/SocialButtons"
 import { formatDiagnostic } from 'typescript';
 import { useRouter } from "next/router";
+import  { UseAuth } from "@/lib/firebase/auth/AuthProvider"
 
 export default function LogInForm (props: PaperProps) {
   //Router
@@ -68,8 +69,7 @@ export default function LogInForm (props: PaperProps) {
     signInWithEmailAndPassword(auth, form.values.email, form.values.password)
     .then((userCredential) => {
         console.log("login is working");
-        const user = userCredential.user;
-
+        router.push('/tables')
         // ...
     })
     .catch((error) => {
