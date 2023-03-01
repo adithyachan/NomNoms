@@ -15,7 +15,6 @@ export async function AuthProvider () {
             const checkUser = auth.currentUser;
             console.log("this is the checkUser result: " + checkUser)
             if (checkUser) {
-            // User is signed in, see docs for a list of available properties
             // https://firebase.google.com/docs/reference/js/firebase.User
             const uid = user.uid;
             console.log("This is the user's id:" +  uid);

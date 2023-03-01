@@ -1,6 +1,7 @@
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase"
 import {signInWithPopup, createUserWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signOut, GithubAuthProvider } from "firebase/auth";
 import { StringLiteral } from "typescript";
+import { sendEmailVerification, signInAnonymously } from "firebase/auth";
 
 
 export async function CreateAccountEmailandPassword(email:string, password:string) {
@@ -9,6 +10,7 @@ export async function CreateAccountEmailandPassword(email:string, password:strin
    .then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
+
 	console.log("User was sucessfully created")
     
   })
@@ -19,6 +21,7 @@ export async function CreateAccountEmailandPassword(email:string, password:strin
     // ..
   });
 }
+
 
 export async function SignUpWithGoogle() {
 	const provider = new GoogleAuthProvider();
@@ -95,6 +98,21 @@ export async function CreateAccountWithGitHub() {
     const email = error.customData.email;
     // The AuthCredential type that was used.
     const credential = GithubAuthProvider.credentialFromError(error);
+    // ...
+  });
+}
+
+export async function SignInAsGuest() {
+  const auth = useFirebaseAuth();
+  signInAnonymously(auth)
+  .then(() => {
+    // Signed in..
+    console.log("signed in as guest");
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorMessage)
     // ...
   });
 }
