@@ -123,9 +123,9 @@ export default function ShowCard(props : {id : string }) {
         {cuisineList.join(', ')}
         </Text>
       </div>
-      <div style = {{//position : 'absolute',  /*alignItems: 'center', *//*transform: 'translate(50%,50%)'*/
-        }}>
+      
       <Modal
+          centered
           withCloseButton={false} 
           size="auto"
         opened={opening}
@@ -134,11 +134,13 @@ export default function ShowCard(props : {id : string }) {
       overlayOpacity={0.55}
       overlayBlur={3}
       overflow="inside" 
-
-      style = {{height : "410px",
-      //transform: "translate(0%, 0%)",
+      style = {{ position : "fixed"
+     
+        } }
+      // style = {{height : "410px", position : "absolute",
+      // transform: "translate(100%, 100%)",
       
-      width: "410px" }}
+      // width: "410px" }}
 
       
       >
@@ -148,7 +150,7 @@ export default function ShowCard(props : {id : string }) {
     </Table>
       </Modal>
     
-      </div>
+    
       <div
         style={{
           zIndex : 2,
