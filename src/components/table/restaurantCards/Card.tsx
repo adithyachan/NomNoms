@@ -1,13 +1,18 @@
-import { Card, Image, Text, Badge, Button, Group, Popover } from '@mantine/core';
+import { Card, Image, Text, Badge, Button, Group, Popover, Overlay,useMantineTheme, Modal  } from '@mantine/core';
 import { useRestaurantBusinessEndpoint } from '@/lib/utils/yelpAPI';
 import { Loader } from '@mantine/core';
 import { BackgroundImage, Center } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import GetHours from './HoursOfOperation';
+import { Table } from '@mantine/core';
+import { useState } from 'react';
+
 
 //import RenderImage from './Image';
 export default function ShowCard(props : {id : string }) {
-  const [opened, { close, open }] = useDisclosure(false);
+  const theme = useMantineTheme();
+  //const [opened, { close, open }] = useDisclosure(false);
+  const [opening, setOpened] = useState(false);
 
   const {data : businessData, error : businessError , isLoading: isLoadingBusiness} = useRestaurantBusinessEndpoint(props.id)
 
@@ -39,41 +44,13 @@ export default function ShowCard(props : {id : string }) {
         }
     } else if (isLoadingBusiness) {
       return (
-        <div
-      style={{
-        height : '100%',
-        borderRadius :'10px',
-        width: '100%',
-        maxWidth: 600,
-        paddingBottom: `${100 / aspectRatio}%`, 
-        position: 'relative', // Set the position property to allow the Card component to cover the entire container
-        //backgroundColor: '#f5d6d8', 
-      }}
-    >
-    <Card
-    
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '70%',
-        height: '50%',
-        //backgroundColor: '#f5d6d8',
-        borderRadius: 'inherit'
-      }}
-      shadow="sm" radius="lg" p = "lg"
-    >
-      <Center style={{ position: 'absolute',
-       top: 0, 
-       left: 0, 
-       width: '100%', 
-       height: '100%' }}>
-      <Loader size={50} color="#FF5858"/>
-    </Center></Card></div>
-      
+        <div style={{ height: '410px', width: '410px'}} >
+      <Card shadow="sm" radius="md" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Loader size={50} color="#FF5858"/>
+      </Card>
+    </div>      
       );
     } else {
-        //console.log(businessData)
          const nameRestaurant = businessData.name
          const imageUrl = businessData.image_url
          const photos = businessData.photos
@@ -82,63 +59,54 @@ export default function ShowCard(props : {id : string }) {
          const cuisines = businessData.categories
          const cuisineList = new Array(cuisines.length)
          const operationTimes = businessData.hours[0]
-         //console.log(operationTimes.open)
-         //console.log(operationTimes.open.length)
          for(var i = 0;i < cuisines.length;i++) {
           cuisineList[i] = cuisines[i].title;
          }
          var data = JSON.stringify(operationTimes.open)
-         //console.log(typeof(JSON.parse(data)))
-         //console.log(typeof(data))
          const formattedHours = GetHours(data)
-         console.log(formattedHours)
-
-         //console.log(cuisineList)
-
+         const ths = (
+          <tr>
+            <th>Day</th>
+            <th>Hours</th>
+          </tr>
+        );
+        const rows = formattedHours.map((individual) => (
+          <tr key={individual.name}>
+            <td>{individual.day}</td>
+            <td>{individual.timing}</td>
+          </tr>
+        ));
   return (
-    <div
-      style={{
-        height : '100%',
-        borderRadius :'10px',
-        width: '100%',
-        maxWidth: 600,
-        paddingBottom: `${100 / aspectRatio}%`, 
-        position: 'relative', // Set the position property to allow the Card component to cover the entire container
-      }}
-    >
-    <Card
+    <div style={{ height: '410px', width: '410px' }}>
+      <Card shadow="sm" radius="md" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            backgroundImage:`url(${imageUrl})`,
+            opacity : 1,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            borderRadius: 'inherit',
+           position : 'relative'
+             }}>
+        <Overlay
+        gradient={`linear-gradient(105deg, ${theme.black} 20%, #312f2f 50%, ${theme.colors.gray[4]} 100%)`} zIndex={0} opacity = '0.5'
+      />
 
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '70%',
-        height: '50%',
-        backgroundImage:`url(${imageUrl})`,
-
-        opacity : 1,
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        borderRadius: 'inherit'
-      }}
-      shadow="sm" radius="lg" p = "lg"
-    >
       <div style={{ position: 'absolute',
        top: 0,
          right: 0, 
          padding: '12px' }}>
-      <Badge color="pink" variant="light">
+      <Badge color="pink" variant="light" size = "md">
               {pricePoint}
               </Badge>
       </div>
       <div
         style={{
           position: 'absolute',
-          top: '50%',
+          
+          top: '10%',
           left: 11,
           transform: 'translateY(-50%)'
         }}>
-        <Text className="css-1se8maq" style={{ color:"white",
+        <Text className="css-1se8maq" style={{ color:"pink", borderColor : "purple", //borderSpacing : '10px', borderInlineColor : "purple", 
          fontSize: '24px',
           fontWeight: 700
  }}>{nameRestaurant}</Text>
@@ -156,42 +124,73 @@ export default function ShowCard(props : {id : string }) {
         {cuisineList.join(', ')}
         </Text>
       </div>
+     
+      <Modal
+          centered
+          withCloseButton={false} 
+          size="auto"
+        opened={opening}
+        onClose={() => setOpened(false)}
+        overlayColor={theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[2]}
+      overlayOpacity={0.55}
+      overlayBlur={3}
+      overflow="inside" 
+      style = {{ position : "absolute"
+     
+        } }
+      // style = {{height : "410px", position : "absolute",
+      // transform: "translate(100%, 100%)",
+      
+      // width: "410px" }}
+
+      
+      >
+         <Table   style = {{backgroundColor : "transparent", color: "black" }} fontSize = "xs" horizontalSpacing={-10} verticalSpacing={-10} >
+      
+      <tbody>{rows}</tbody>
+    </Table>
+      </Modal>
+      
+    
+    
       <div
         style={{
+          zIndex : 2,
           position: 'absolute',
           top: '70%',
           left: -7,
-          transform: 'translateY(-50%)'
+          transform: 'translateY(-50%)',
+          //height: '100%'
         }}>
-      <Popover width={200} position="bottom" withArrow shadow="md" opened={opened}>
+          <Button style={{ backgroundColor: 'transparent'}} onClick={() => setOpened(true)}>Hours of Operation</Button>
+         
+           
+      {/* <Popover   width={220} position="right" withArrow opened={opened} >
       <Popover.Target>
-        <Button onMouseEnter={open} onMouseLeave={close} style={{ color: "white" , backgroundColor: 'transparent', borderColor: 'transparent' }}>
+        <Button onMouseEnter={open} onMouseLeave={close} style={{color: "white" , backgroundColor: 'transparent', borderColor: 'transparent' }}>
         Hours of Operation
         </Button>
       </Popover.Target>
-      <Popover.Dropdown sx={{ pointerEvents: 'none' }}>
-        <Text  size="sm">Monday</Text>
+      <Popover.Dropdown style = {{  backgroundColor : "transparent" }} sx={{ pointerEvents: 'none' }}>
+        <Table   style = {{backgroundColor : "transparent", color: "white" }} fontSize = "xs" horizontalSpacing={-10} verticalSpacing={-10} >
+      
+          <tbody>{rows}</tbody>
+        </Table>
       </Popover.Dropdown>
-    </Popover>
+    </Popover> */}
     </div>
 
-      <div style={{ transform: 'translateX(-50%)' , 
+      <div style={{ zIndex:1, transform: 'translateX(-50%)' , 
       position: 'absolute',
        bottom: 0,
        left : '50%',
         padding: '12px' }}>
-        <Button component = "a" variant="light" color="pink"  mt="md" radius="md" href = {url} size = "md">
+        <Button component = "a" variant="light" color="pink"  mt="md" radius="md" href = {url} size = "md" >
           Go to site
         </Button>
       </div>
-    </Card>
-    </div>
-  );
- 
-    
-   
-
-
-        
-  }
+    </Card> 
+</div>
+);    
+}
 }
