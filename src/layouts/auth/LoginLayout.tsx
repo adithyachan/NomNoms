@@ -25,6 +25,7 @@ import {
   Anchor,
   Stack,
   Autocomplete,
+  Center,
 } from '@mantine/core';
 import { GoogleButton, TwitterButton, GithubButton} from "@/components/auth/SocialButtons"
 import { formatDiagnostic } from 'typescript';
@@ -57,9 +58,11 @@ export default function LogInForm (props: PaperProps) {
   const HandleRegister = (e : any) => {
     router.push('/auth/register')
   }
-
+  const HandleForgot = (e : any) => {
+    router.push('/auth/resetpass')
+  }
   
-  //disable the button if the inputs are not valid
+  //disable the button if the inputs are not valid  
   const HandleLogin = async (e : any) => {
     const auth = useFirebaseAuth();
     signInWithEmailAndPassword(auth, form.values.email, form.values.password)
@@ -171,19 +174,19 @@ export default function LogInForm (props: PaperProps) {
             onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
             error={form.errors.password && 'Password should include at least 6 characters'}
           />
-
-
         </Stack>
-        <Group position="apart" mt="xl">
-          <Anchor
+        <Anchor
             component="button"
             type="button"
             color="pink"
             size="xs"
-            onClick={HandleRegister}
+            onClick={HandleForgot}
           >
-          <div>Don&apos;t have an account? Register</div>
+          <div>Forgot Password?</div>
           </Anchor>
+
+        <Group position="right">
+
           
           <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} 
           type="submit"  
@@ -192,10 +195,23 @@ export default function LogInForm (props: PaperProps) {
         </Group>
 
 
-        <Group grow mb="md" mt="md">
+        <Group grow mb="md" mt="xl">
         <GoogleButton radius="xl">Google</GoogleButton>
         <GithubButton radius="xl">GitHub</GithubButton>
-          </Group>
+        </Group>
+
+        <Center>
+        <Anchor
+            component="button"
+            type="button"
+            color="pink"
+            size="xs"
+            onClick={HandleRegister}
+          >
+          <div>Don&apos;t have an account? Register</div>
+          </Anchor>
+        </Center>
+
         </Container>
     </Paper>
   </form> 
