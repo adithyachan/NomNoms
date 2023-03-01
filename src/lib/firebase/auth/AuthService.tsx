@@ -2,6 +2,7 @@ import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase"
 import {signInWithPopup, createUserWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signOut, GithubAuthProvider } from "firebase/auth";
 import { StringLiteral } from "typescript";
 import { sendEmailVerification, signInAnonymously } from "firebase/auth";
+import { isAdmin } from "@firebase/util";
 
 
 export async function CreateAccountEmailandPassword(email:string, password:string) {

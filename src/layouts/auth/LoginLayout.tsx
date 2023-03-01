@@ -61,6 +61,22 @@ export default function LogInForm (props: PaperProps) {
   const HandleForgot = (e : any) => {
     router.push('/auth/resetpass')
   }
+
+  const HandleGuestSignIn = async (e : any) => {
+    const auth = useFirebaseAuth();
+    
+    signInAnonymously(auth)
+    .then(() => {
+        // Signed in..
+        console.log("signed in as guest");
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage)
+        // ...
+    });
+  }
   
   //disable the button if the inputs are not valid  
   const HandleLogin = async (e : any) => {
@@ -201,6 +217,22 @@ export default function LogInForm (props: PaperProps) {
         </Group>
 
         <Center>
+          <Anchor
+            component="button"
+            type="button"
+            color="pink"
+            size="xs"
+            onClick={HandleGuestSignIn}
+          >
+
+
+
+          <div>Continue as Guest</div>
+          </Anchor>
+
+          
+        </Center>
+        <Center>
         <Anchor
             component="button"
             type="button"
@@ -210,7 +242,13 @@ export default function LogInForm (props: PaperProps) {
           >
           <div>Don&apos;t have an account? Register</div>
           </Anchor>
-        </Center>
+          </Center>
+
+         
+
+  
+         
+
 
         </Container>
     </Paper>
