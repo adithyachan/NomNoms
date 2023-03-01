@@ -3,7 +3,7 @@ import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider} from "firebase/auth";
 import {
   TextInput,
   PasswordInput,
@@ -27,7 +27,7 @@ import {
   Autocomplete,
   Center,
 } from '@mantine/core';
-import { GoogleButton, TwitterButton, GithubButton} from "@/components/auth/SocialButtons"
+import { GoogleButton, TwitterButton, GithubButton, GoogleButtonLogin, GithubButtonLogin} from "@/components/auth/SocialButtons"
 import { formatDiagnostic } from 'typescript';
 import { useRouter } from "next/router";
 import  { UseAuth } from "@/lib/firebase/auth/AuthProvider"
@@ -153,39 +153,7 @@ export default function LogInForm (props: PaperProps) {
   }
 
   const provider = new GoogleAuthProvider();
-
-
-
-  const facebookprovider = new FacebookAuthProvider();
-
-  const HandleFacebook = async (e: any) => {
-      console.log("checking facebook")
-      const auth = useFirebaseAuth();
-      signInWithPopup(auth, facebookprovider)
-      .then((result) => {
-        // The signed-in user info.
-        const user = result.user;
-
-        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-        const credential = FacebookAuthProvider.credentialFromResult(result);
-        const accessToken = credential?.accessToken;
-
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = FacebookAuthProvider.credentialFromError(error);
-
-        // ...
-      });
-  }
-
+  const Githubprovider = new GithubAuthProvider();
 
   const useStyles = createStyles((theme) => ({
     title: {
@@ -266,8 +234,8 @@ export default function LogInForm (props: PaperProps) {
 
 
         <Group grow mb="md" mt="xl">
-        <GoogleButton radius="xl">Google</GoogleButton>
-        <GithubButton radius="xl">GitHub</GithubButton>
+        <GoogleButtonLogin radius="xl">Google</GoogleButtonLogin>
+        <GithubButtonLogin radius="xl">GitHub</GithubButtonLogin>
         </Group>
 
         <Center>
