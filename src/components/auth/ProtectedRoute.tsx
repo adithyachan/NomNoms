@@ -14,6 +14,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     }
   }, [router, user]);
 
-  return <div>{valid ? children : null}</div>;
+  return <div>{user ? children : null}</div>;
 };
 export default ProtectedRoute;
