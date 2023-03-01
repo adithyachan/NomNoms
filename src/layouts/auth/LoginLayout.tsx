@@ -64,7 +64,7 @@ export default function LogInForm (props: PaperProps) {
     const auth = useFirebaseAuth();
     signInWithEmailAndPassword(auth, form.values.email, form.values.password)
     .then((userCredential) => {
-
+        console.log("login is working");
         const user = userCredential.user;
 
         // ...
@@ -74,6 +74,7 @@ export default function LogInForm (props: PaperProps) {
       if (!checkUser) {
         const errorCode = error.code;
         const errorMessage = error.message;
+        console.log(errorMessage);
       }
     });
     resetForm();
