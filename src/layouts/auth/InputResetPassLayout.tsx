@@ -16,7 +16,7 @@ import { useInputState } from '@mantine/hooks';
 import { IconCheck, IconX } from '@tabler/icons';
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
 import { confirmPasswordReset } from "firebase/auth";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Router, useRouter } from "next/router";
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
@@ -100,8 +100,6 @@ export default function ResetPassword() {
         }
       })
 
-
-
       const HandleReset = async (e : any) => {
         e.preventDefault();
         const auth = useFirebaseAuth();
@@ -143,6 +141,8 @@ export default function ResetPassword() {
         e.target.reset();
       }
     return (
+      <>
+      {oobCode.current && 
         <form onSubmit={HandleReset}>
         <NotificationsProvider>
         <Container size={460} my={30} 
@@ -183,5 +183,7 @@ export default function ResetPassword() {
         </Container>
         </NotificationsProvider>
         </form>
+      }
+    </>
     );
 }

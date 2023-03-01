@@ -182,8 +182,7 @@ import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
               </Group>
             </Paper>
           </Center>
-        </Container>  
-        
+        </Container>     
       </NotificationsProvider>
       </form>
     );
