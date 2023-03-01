@@ -27,6 +27,9 @@ import {
   Autocomplete,
 } from '@mantine/core';
 import { GoogleButton, TwitterButton, GithubButton} from "@/components/auth/SocialButtons"
+import { showNotification } from '@mantine/notifications';
+import { NotificationsProvider } from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons';
 import { formatDiagnostic } from 'typescript';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
@@ -82,13 +85,40 @@ export default function CreateAccount (props: PaperProps) {
       console.log("auth working")
       setTimeout(() => {
         router.push('/auth/login');
-      }, 3000)
+      }, 10)
+
 
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log("Account creation was unsuccessful")
+      console.log(errorMessage)
+      if (errorMessage === "Firebase: Error (auth/email-already-in-use).") {
+        showNotification({
+          title: 'Sorry, this email is already registered with NomNoms!',
+          message: 'Please enter another email! ',
+          autoClose: 3000,
+          color: 'red',
+          icon: <IconX size={16} />,
+          
+          styles: () => ({
+            /*
+            root: {
+              backgroundColor: '#FFE4E6',
+              borderColor: '#FFE4E6',
+              '&::before': { backgroundColor: '#FFFFFF' },
+            },
+            */
+            //title: { color: '#F43F5E' },
+            //description: { color: '#F43F5E'},
+            closeButton: {
+              color: '#F43F5E',
+              '&:hover': { backgroundColor: '#F43F5E' },
+            },
+          }),            
+        })
+      }
+
       // ..
       resetForm();
       console.log("auth working")
@@ -156,6 +186,7 @@ export default function CreateAccount (props: PaperProps) {
   return (
     <form onSubmit={form.onSubmit(HandleCreate)}>
     <Paper radius="md" p="xl" withBorder {...props}>
+    <NotificationsProvider>
       <Container size={500} my={50} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
           <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
@@ -172,7 +203,7 @@ export default function CreateAccount (props: PaperProps) {
 
            <TextInput
            required
-           label="Email"
+           label="Email address"
            placeholder="nomnoms@gmail.com"
            value={form.values.email}
            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
@@ -234,7 +265,7 @@ export default function CreateAccount (props: PaperProps) {
         By creating an account, you agree to our <Anchor href="https://mantine.dev/" target="_blank">
           Terms of Service and Private Policy </Anchor>
       </Text> 
-
+    </NotificationsProvider>
     </Paper>
     </form>
    
