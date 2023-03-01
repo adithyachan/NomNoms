@@ -76,11 +76,11 @@ export default function Hero() {
   const router = useRouter();
 
   const LogIn = () =>{
-    router.push("/auth");
+    router.push("/auth/login");
   }
 
   const SignIn = () => {
-    router.push("/auth");
+    router.push("/auth/register");
   }
 
   return (
