@@ -1,15 +1,12 @@
 import ShowCard from "./Card";
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX } from '@tabler/icons'
 
-import { Card, Image, Text, Badge, Button, Group, Popover, Tooltip, Progress } from '@mantine/core';
-import { useRestaurantBusinessEndpoint } from '@/lib/utils/yelpAPI';
-import { Loader } from '@mantine/core';
-import { BackgroundImage, Center } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { Card, Text, Button, Tooltip, Progress } from '@mantine/core';
 
 
-export default function CardStack({ids, setUserVotes} : any) {
+export default function CardStack({ids, setUserVotes, user} : any) {
+
   const cards = ids.map((id: string) => <ShowCard key={id} id={id}/>)
   const [index, setIndex] = useState(0)
   const [card, setCard] = useState(cards[index])
@@ -25,9 +22,12 @@ export default function CardStack({ids, setUserVotes} : any) {
   cards.push(
     <div style={{height: '410px', width: '410px'}}>
       <Card withBorder radius='md' style={{height: '100%'}}>
-        <Text weight={500}>You&apos;re all done!</Text>
+        <div style={{padding: '5px'}}></div>
+        <Text weight={500}>That&apos;s it!</Text>
+        <div style={{padding: '5px'}}></div>
         <Text size="sm" color="dimmed">
-          You may either go back and change your votes, or hit finish to submit.
+          You may either go back and change your votes, or hit the check to submit
+          and wait for the rest of your tablemates to finish their votes.
         </Text>
       </Card>
     </div>
@@ -40,6 +40,7 @@ export default function CardStack({ids, setUserVotes} : any) {
       setCanFinish(true);
   }, [index])
 
+  
   function handleYesClick() {
     if (index < cards.length - 1) {
       setIndex(index + 1);
@@ -73,14 +74,16 @@ export default function CardStack({ids, setUserVotes} : any) {
       return (
         <Tooltip label="Finish voting on all the cards before submitting!">
           <span>
-            <Button disabled variant='outline' radius='xl' color="gray">Done</Button>
+            <Button size="lg" disabled variant='light' radius='xl'>
+              <IconCheck color='blue' size={20} stroke={1.5} />
+            </Button>
           </span>
         </Tooltip>
       )
     } else {
       return (
-        <Button onClick={handleFinishClick} variant='outline' radius='xl' color="blue">
-          Done
+        <Button size="lg" onClick={handleFinishClick} variant='light' radius='xl' color="blue">
+          <IconCheck color='blue' size={20} stroke={1.5} />
         </Button>
       )
     }
@@ -88,14 +91,14 @@ export default function CardStack({ids, setUserVotes} : any) {
   function YesButton() {
     if (index == cards.length - 1) {
       return (
-        <Button disabled variant='outline' radius='xl' color="green">
-          <IconThumbUp color='green' size={12} stroke={2} />
+        <Button size="lg" disabled variant='light' radius='xl' color="green">
+          <IconThumbUp color='green' size={20} stroke={1.5} />
         </Button>
       )
     } else {
       return (
-        <Button onClick={handleYesClick} variant='outline' radius='xl' color="green">
-          <IconThumbUp color='green' size={12} stroke={2} />
+        <Button size="lg" onClick={handleYesClick} variant='light' radius='xl' color="green">
+          <IconThumbUp color='green' size={20} stroke={1.5} />
         </Button>
       )
     }
@@ -103,14 +106,14 @@ export default function CardStack({ids, setUserVotes} : any) {
   function NoButton() {
     if (index == cards.length - 1) {
       return (
-        <Button disabled variant='outline' radius='xl' color="red">
-          <IconThumbDown color='red' size={12} stroke={2} />
+        <Button size="lg" disabled variant='light' radius='xl' color="red">
+          <IconThumbDown color='red' size={20} stroke={1.5} />
         </Button>
       )
     } else {
       return (
-        <Button onClick={handleNoClick} variant='outline' radius='xl' color="red">
-          <IconThumbDown color='red' size={12} stroke={2} />
+        <Button size="lg" onClick={handleNoClick} variant='light' radius='xl' color="red">
+          <IconThumbDown color='red' size={20} stroke={1.5} />
         </Button>
       )
     }
@@ -118,32 +121,39 @@ export default function CardStack({ids, setUserVotes} : any) {
   function BackButton() {
     if (index == 0) {
       return (
-        <Button disabled variant='outline' radius='xl' color="yellow">
-          <IconArrowBack color='orange' size={12} stroke={2} />
+        <Button size="lg" disabled variant='light' radius='xl' color="yellow">
+          <IconArrowBack color='orange' size={20} stroke={1.5} />
         </Button>
       )
     } else {
       return (
-        <Button onClick={handleBackClick} variant='outline' radius='xl' color="yellow">
-          <IconArrowBack color='orange' size={12} stroke={2} />
+        <Button size="lg" onClick={handleBackClick} variant='light' radius='xl' color="yellow">
+          <IconArrowBack color='orange' size={20} stroke={1.5} />
         </Button>
       )
     }
   }
-  
+
   if (ids == undefined || ids.length == 0) return (<Text size="md" color="dimmed">Card stack is empty!</Text> )
 
   else{
     return (
       <>
+        
         <Progress color="red" value={((index / (cards.length - 1)) * 100)} />
-        {card}
-        <div style={{display: 'flex', gap: 10}}>
-          <BackButton />
-          <YesButton />
-          <NoButton />
-          <FinishButton />
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           
+          <div style={{paddingTop: '100px'}}>
+
+            {card}
+            <div style={{paddingTop: '10px', justifyContent: 'center', alignItems: 'center', display: 'flex', gap: 35}}>
+              <BackButton />
+              <YesButton />
+              <NoButton />
+              <FinishButton />
+              
+            </div>
+          </div>
         </div>
       </>
     )
