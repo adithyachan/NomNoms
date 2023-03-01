@@ -30,8 +30,11 @@ import { GoogleButton, TwitterButton, GithubButton} from "@/components/auth/Soci
 import { formatDiagnostic } from 'typescript';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
-export default function AuthenticationForm(props: PaperProps) {
-  const [type, toggle] = useToggle(['register', 'login']);
+import { useRouter } from "next/router";
+
+
+export default function CreateAccount (props: PaperProps) {
+  //Form 
   const form = useForm({
     initialValues: {
       email: '',
@@ -40,55 +43,63 @@ export default function AuthenticationForm(props: PaperProps) {
       confirmpassword: '',
       terms: true,
     },
-
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) => (val.length < 7 ? 'Password should include at least 6 characters' : null),
 
       confirmpassword: (val, values) =>
         val !== values.password ? 'Passwords did not match' : null,
-  },
+    },
   });
+  //Router
+  const router = useRouter();
+  //Reset Form Values
+  const resetForm = () => {
+    form.values.email = '';
+    form.values.name = '',
+    form.values.password = '',
+    form.values.confirmpassword = '',
+    form.values.terms = true
+  }
 
-  //disable the button if the inputs are not valid
-    const HandleAuth = async (e : any) => {
-      const auth = useFirebaseAuth();
-      if (type == 'register') {
-        console.log("register");
-        createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
-        .then((userCredential) => {
-          // Signed in 
-          const user = userCredential.user;
-          console.log("User was successfully created")
-          // ...
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log("Account creation was unsuccessful")
-          // ..
-        });
-        console.log("auth working")
-      } else if (type == 'login') {
-        signInWithEmailAndPassword(auth, form.values.email, form.values.password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            console.log("user is logged in")
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-        });
-      }
-    }
+  //route user to login page
+  const HandleLogin = (e : any) => {
+    router.push('/auth/login')
+  }
+
+
+  //HandleCreate 
+  const HandleCreate = async (e : any) => {
+    const auth = useFirebaseAuth();
+    console.log("register");
+    createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      console.log("User was successfully created")
+      // ...
+      resetForm();
+      console.log("auth working")
+      setTimeout(() => {
+        router.push('/auth/login');
+      }, 3000)
+
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log("Account creation was unsuccessful")
+      // ..
+      resetForm();
+      console.log("auth working")
+    });
+
+  }
 
     const provider = new GoogleAuthProvider();
 
     const HandleGoogle = async (e: any) => {
       const auth = useFirebaseAuth();
-      if (type == 'register') {
           console.log("checking google")
           signInWithPopup(auth, provider)
           .then((result) => {
@@ -109,9 +120,6 @@ export default function AuthenticationForm(props: PaperProps) {
           const credential = GoogleAuthProvider.credentialFromError(error);
           // ...
         });   
-      } else if (type == 'login') {
-
-      }
     }
 
 
@@ -146,42 +154,22 @@ export default function AuthenticationForm(props: PaperProps) {
   
 
   return (
-
+    <form onSubmit={form.onSubmit(HandleCreate)}>
     <Paper radius="md" p="xl" withBorder {...props}>
-     
-    
-     <form onSubmit={form.onSubmit(HandleAuth)}>
-
       <Container size={500} my={50} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
           <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
-          {type === 'register' && (
 
           <Title className= {classes.title} align = "center">
               Not a Nomster yet?
           </Title>
-          )}
 
-          {type === 'register' && (
           <Text color="dimmed" size="sm" align="center">
               Create an account below!
             </Text>
-          )}
 
         <Stack>
 
-        {type === 'login' && (
-           <TextInput
-           required
-           label="Email or username"
-           placeholder="nomnoms@gmail.com"
-           value={form.values.email}
-           onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-           error={form.errors.email && 'Invalid email'}
-         />
-        )}
-
-        {type === 'register' && (
            <TextInput
            required
            label="Email"
@@ -190,7 +178,6 @@ export default function AuthenticationForm(props: PaperProps) {
            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
            error={form.errors.email && 'Invalid email'}
          />
-        )}
          
           <PasswordInput
             required
@@ -201,7 +188,6 @@ export default function AuthenticationForm(props: PaperProps) {
             error={form.errors.password && 'Password should include at least 6 characters'}
           />
 
-          {type === 'register' && (
             <PasswordInput
             required
                 label="Confirm Password"
@@ -210,12 +196,7 @@ export default function AuthenticationForm(props: PaperProps) {
                 onChange={(event) => form.setFieldValue('confirmpassword', event.currentTarget.value)}
                 error={form.errors.confirmpassword && 'Passwords did not match'}
             />
-          )}
-
-
-          {type === 'register' && (
-
-          
+        
             <Checkbox
               label="I accept terms and conditions"
               checked={form.values.terms}
@@ -223,8 +204,6 @@ export default function AuthenticationForm(props: PaperProps) {
               onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
             />
 
-            
-          )}
 
         </Stack>
         <Group position="apart" mt="xl">
@@ -232,34 +211,32 @@ export default function AuthenticationForm(props: PaperProps) {
             component="button"
             type="button"
             color="pink"
-            onClick={() => toggle()}
             size="xs"
+            onClick={HandleLogin}
           >
-            {type === 'register'
-              ? 'Already have an account? Login'  
-              : "Don't have an account? Register" }
+          Already have an account? Login
           </Anchor>
-
-        
-          <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} type="submit"  >{upperFirst(type)}</Button>
+          
+          <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} 
+          type="submit"  
+          >Register</Button>
 
         </Group>
+
 
         <Group grow mb="md" mt="md">
         <GoogleButton radius="xl">Google</GoogleButton>
         <GithubButton radius="xl">GitHub</GithubButton>
           </Group>
-        
         </Container>
-      </form>
-      {type === 'register' && (
+
       <Text size="sm" weight={200} align="center">
         By creating an account, you agree to our <Anchor href="https://mantine.dev/" target="_blank">
           Terms of Service and Private Policy </Anchor>
-
       </Text> 
-      )}
+
     </Paper>
+    </form>
    
   );
 }
