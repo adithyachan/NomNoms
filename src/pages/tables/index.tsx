@@ -6,8 +6,6 @@ export default function TablePage() {
 
   return (
     <ProtectedRoute>
-
-
     <>
       <TableSelectionLayout />
     </>
