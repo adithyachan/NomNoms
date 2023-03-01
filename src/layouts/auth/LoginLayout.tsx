@@ -181,7 +181,7 @@ export default function LogInForm (props: PaperProps) {
             size="xs"
             onClick={HandleRegister}
           >
-          Don't have an account? Register
+          <div>Don&apos;t have an account? Register</div>
           </Anchor>
           
           <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} 
