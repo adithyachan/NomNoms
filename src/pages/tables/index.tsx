@@ -5,7 +5,7 @@ import TableSelectionLayout from "@/layouts/table/tableSelection/TableSelectionL
 export default function TablePage() {
 
   return (
-    <ProtectedRoute>
+   <ProtectedRoute>
 
 
     <>
