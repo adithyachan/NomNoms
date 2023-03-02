@@ -1,5 +1,5 @@
 import { ITable, Table } from "@/types/Table";
-import { collection, doc, QueryDocumentSnapshot } from "firebase/firestore";
+import { collection, doc, QueryDocumentSnapshot, onSnapshot, query, DocumentSnapshot } from "firebase/firestore";
 import { ReadDocumentWithConverter, ReadCollectionWithConverter, WriteDocumentWithConverter, DeleteDocument } from "../FirestoreOperations";
 import { useFirebaseFirestore } from "../hooks/useFirebase";
 
@@ -9,6 +9,7 @@ const collectionName = "tables";
 const tableConverter = {
   toFirestore: (table: Table) => {
       return {
+          id: table.id,
           name: table.name,
           lastAccessed: table.lastAccessed,
           users: table.users,
@@ -17,7 +18,7 @@ const tableConverter = {
           expiration: table.expiration
         };
   },
-  fromFirestore: (snapshot: QueryDocumentSnapshot) => {
+  fromFirestore: (snapshot: QueryDocumentSnapshot | DocumentSnapshot) => {
       const data = (snapshot.data() as ITable);
       return new Table(data);
   }
@@ -28,13 +29,16 @@ const tableConverter = {
  * @param docName The table id
  * @returns 
  */
-export const ReadTable = async (docName: string) => {
+export const ReadTable = (docName: string, setDoc: any) => {
   const firestore = useFirebaseFirestore()
   try {
-    const docRef = doc(firestore, collectionName, docName)
-    const data = await ReadDocumentWithConverter(docRef)
-    const table = tableConverter.fromFirestore(data!)
-    return table
+    const unsub = onSnapshot(doc(firestore, collectionName, docName), (doc) => {
+      const converted = tableConverter.fromFirestore(doc)
+      setDoc(converted)
+      console.log(converted)
+    });
+
+    return unsub
   }
   catch (e) {
     console.error("Error reading table: " + e)
@@ -46,18 +50,21 @@ export const ReadTable = async (docName: string) => {
  * Reads all tables
  * @returns object containing all tables as type {[id: string] : Table}
  */
-export const ReadTables = async () => {
+export const ReadTables =  (setDocs: any) => {
   const firestore = useFirebaseFirestore()
   try {
-    const collectionRef = collection(firestore, collectionName)
-    const tables: {[id: string]: Table} = {};
-    (await ReadCollectionWithConverter(collectionRef))?.forEach(
-      (table: QueryDocumentSnapshot) => {
-        tables[table.id] = tableConverter.fromFirestore(table)
-      }
-    );
+    const q = query(collection(firestore, collectionName));
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      const docs: Table[] = [];
+      querySnapshot.forEach((doc) => {
+          const converted = tableConverter.fromFirestore(doc)
+          docs.push(converted);
+      });
+      setDocs(docs)
+      console.log(docs);
+    });
 
-    return tables
+    return unsub
   }
   catch (e) {
     console.error("Error reading table: " + e)
@@ -74,8 +81,9 @@ export const WriteTable = async (data: ITable) => {
   const firestore = useFirebaseFirestore()
   try {
     const docRef = doc(collection(firestore, collectionName)).withConverter(tableConverter);
+    data.id = docRef.id
     const table = await WriteDocumentWithConverter(docRef, data)
-    return docRef.id
+    return table
   }
   catch (e) {
     console.error("Error reading table: " + e)

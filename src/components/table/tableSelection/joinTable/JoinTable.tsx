@@ -11,18 +11,8 @@ export default function JoinTable() {
   const [ID, setID] = useState("")
   const [valid, setValid] = useState(false)
 
-  const [tables, setTables] = useState<{[id: string]: Table}>()
+  const [tables, setTables] = useState<Table[]>()
   const [error, setError] = useState("")
-
-  const getTables = async () => {
-    try {
-      const tables = await ReadTables()
-      setTables(tables)
-    }
-    catch (e: any) {
-      setTables({})
-    }
-  }
 
   const checkValid = (id: string) => {
     let actual_id = id
@@ -41,7 +31,7 @@ export default function JoinTable() {
     setError("")
     setValid(true)
     if (tables) {
-      setValid(Object.keys(tables).includes(actual_id))
+      setValid(tables.map((table) => table.id).includes(actual_id))
     }
     else {
       setError("Invalid table link or code")
@@ -49,7 +39,14 @@ export default function JoinTable() {
   }
 
   useEffect(()=>{
-    getTables()
+    try {
+      const unsub = ReadTables(setTables)
+      return unsub
+    }
+    catch {
+      setTables([])
+    }
+    
   }, [])
 
   return (

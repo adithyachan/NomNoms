@@ -6,17 +6,15 @@ import { Table } from "@/types/Table";
 import LoadingLayout from "@/layouts/LoadingLayout";
 
 export default function UserTablesLayout() {
-  const [tables, setTables] = useState<{[id: string]: Table}>({})
+  const [tables, setTables] = useState<Table[]>()
   const [loading, setLoading] = useState(false)
-
-  const getTables = async () => {
-    setTables(await ReadTables())
-  }
 
   useEffect(() => {
     setLoading(true)
-    getTables()
+    const unsub = ReadTables(setTables)
     setLoading(false)
+
+    return unsub
   }, [])
 
   return(
@@ -29,10 +27,10 @@ export default function UserTablesLayout() {
            <ScrollArea type="hover" className="h-60" scrollbarSize={0}>
             <Center>
               <Grid columns={24} className="m-1">
-                {Object.keys(tables).map(
-                  (id) =>
-                  <Grid.Col key={id} span={22} sm={12}>
-                    <TableCard table={tables[id]} id={id} />
+                {tables?.map(
+                  (table) =>
+                  <Grid.Col key={table.id} span={22} sm={12}>
+                    <TableCard table={table} id={table.id} />
                   </Grid.Col>
                 )}
               </Grid>

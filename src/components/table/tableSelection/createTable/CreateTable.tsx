@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Button, Center, TextInput, Tooltip, createStyles, Container } from "@mantine/core"
+import { Button, Center, TextInput, Tooltip, Container } from "@mantine/core"
 import { useInputState, useDisclosure } from '@mantine/hooks';
 
 import { Table, ITable } from "@/types/Table"
@@ -33,6 +33,7 @@ export default function CreateTable() {
 
   const handleTableCreation = async () => {
     const tableJSON: ITable = {
+      id: "",
       name: value,
       lastAccessed: Timestamp.fromDate(new Date()),
       users: [],
@@ -52,7 +53,7 @@ export default function CreateTable() {
       setZip('')
       setPrice('')
       setCuisine('')
-      setCode(code)
+      setCode(code!)
       codeHandlers.open()
     }
     catch (e: any) {

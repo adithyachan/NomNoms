@@ -10,48 +10,34 @@ import { ReadTable } from "@/lib/firebase/table/TableOperations";
 // Layouts
 import TableSelectedLayout from "@/layouts/table/tableSelected/TableSelectedLayout";
 import LoadingLayout from "@/layouts/LoadingLayout";
+import { useEffect, useState } from "react";
 
-
-
-// Look for the table on page load
-export async function getStaticProps (context: GetStaticPropsContext) {
-  const table = await ReadTable(context.params?.tableid as string);
-
-  if (!table) {
-    return {
-      notFound: true
-    }
-  }
-
-  const tableJSON = JSON.stringify(table)
-
-  return {
-    props: {
-      tableJSON
-    }
-  }
-}
-
-// Load static paths and fallback
-export function getStaticPaths() {
-  return {
-    fallback: true,
-    paths: [],
-  }
-}
-
-export default function TablePage({ tableJSON }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function TablePage() {
   const router = useRouter()
+  const { tableid } = router.query
+  const [valid, setValid] = useState(false)
+  const [table, setTable] = useState()
+
+  useEffect(() => {
+    if (tableid) {
+      try {
+        console.log("here")
+        const unsub = ReadTable(tableid as string, setTable)
+        setValid(true)
+        return unsub
+      }
+      catch (err) {
+        console.log(err)
+      }
+    }
+  }, [tableid])
 
   // Check if page is loaded yet
-  if (router.isFallback) {
+  if (!table) {
     return <LoadingLayout fullscreen logo/>;
   }
 
-  // Create Table 
-  const table = JSON.parse(tableJSON)
-
-  if (!table) {
+  if (!valid) {
     return (
       <>
         <Head>
@@ -61,8 +47,6 @@ export default function TablePage({ tableJSON }: InferGetStaticPropsType<typeof 
       </>
     );
   }
-  
-  //TODO: Check if current authenticated user is in the users list for this table and if they are not, add them and show a confirmation
 
   return <TableSelectedLayout table={ table }/>
 }
