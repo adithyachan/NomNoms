@@ -1,14 +1,12 @@
-import { Card, Image, Text, Badge, Button, Group, Popover, Overlay,useMantineTheme, Modal  } from '@mantine/core';
+import { Card,  Text, Badge, Button, Group, Popover, Overlay,useMantineTheme, Modal ,Rating } from '@mantine/core';
 import { useRestaurantBusinessEndpoint } from '@/lib/utils/yelpAPI';
 import { Loader } from '@mantine/core';
-import { BackgroundImage, Center } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import GetHours from './HoursOfOperation';
 import { Table } from '@mantine/core';
 import { useState } from 'react';
 import { IconCheck, IconX } from '@tabler/icons';
 
-// open in new tab, fix loading background, error message, background of modal, exists
+
 //import RenderImage from './Image';
 export default function ShowCard(props : {id : string }) {
   const theme = useMantineTheme();
@@ -27,77 +25,104 @@ export default function ShowCard(props : {id : string }) {
   //   console.log(isLoadingBusiness)
   //   return <>isLoading</>
   //  } 
-  const aspectRatio = 16/9;
     if (businessError) {
         console.log(businessError)
         if (businessError.code == ("BUSINESS_NOT_FOUND")) {
-            return (
-                <Text size="md" color="dimmed">
-                    The business was not found
-                </Text> 
-            )
+          return (
+            <div style={{ height: '410px', 
+              width: '410px',
+              alignItems: 'center' }} >
+              <Text size="md" 
+                color="dimmed" >
+                  The business was not found
+              </Text> 
+            </div>
+          )
         } else {
-            return (
-                <Text size="md" color="dimmed">
-                    There was an error in the API call
-                </Text> 
-            ) 
+          return (
+            <div style={{ height: '410px', 
+              width: '410px', 
+              alignItems: 'center' }} >
+              <Text size="md" 
+                color="dimmed">
+                  There was an error in the API call
+              </Text> 
+            </div>
+          ) 
         }
-    } else if (isLoadingBusiness) {
-      return (
-        <div style={{ height: '410px', width: '410px'}} >
-      <Card shadow="sm" radius="md" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Loader size={50} color="#FF5858"/>
-      </Card>
-    </div>      
-      );
-    } else {
-         const nameRestaurant = businessData.name
-         var imageUrl =  businessData.image_url
-         if (imageUrl == undefined) {
+      } else if (isLoadingBusiness) {
+        return (
+          <div  style={{ height: '410px', 
+            width: '410px'}} >
+            <Card className='bg-gradient-to-r from-pink-100 via-white to-pink-100 ' 
+              shadow="sm" 
+                radius="md" 
+                style={{ height: '100%', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center' }}>
+              <Loader size={50} 
+                color="#FF5858"/>
+            </Card>
+           </div>      
+        );
+      } else {
+        const rating = businessData.rating
+        var ratingExists = true
+        if (rating == undefined) {
+          ratingExists = false
+        }
+        const reviewNo = businessData.review_count
+        var reviewExists = true
+        if (reviewNo == undefined) {
+          reviewExists = false
+        }
+        const nameRestaurant = businessData.name
+        var imageUrl =  businessData.image_url
+        if (imageUrl == undefined) {
           imageUrl = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-         }
+        }
          //const photos = businessData.photos
-         const pricePoint = businessData.price
-         var priceExists = true
-         if (pricePoint == undefined) {
+        const pricePoint = businessData.price
+        var priceExists = true
+        if (pricePoint == undefined) {
           priceExists = false
-         }
-         const url = businessData.url
-         var urlExists = true
-         if (url == undefined) {
+        }
+        const url = businessData.url
+        var urlExists = true
+        if (url == undefined) {
           urlExists = false
-         }
-         const cuisines = businessData.categories
-         var cuisineExists = true
-         var cuisineLength = cuisines.length
-         if (cuisines == undefined) {
+        }
+        const cuisines = businessData.categories
+        var cuisineExists = true
+        var cuisineLength = 0
+        if (cuisines == undefined) {
           cuisineExists = false
-          cuisineLength = 1
-
-         }
-         const cuisineList = new Array(cuisineLength)
-         
-         const openTimes = businessData.hours[0].is_open_now
-         var boolExists = true
-         if (openTimes == undefined) {
+          cuisineLength = 0
+        } else {
+          cuisineLength = cuisines.length
+        }
+        const cuisineList = new Array(cuisineLength) 
+        const openTimes = businessData.hours[0].is_open_now
+        var boolExists = true
+        if (openTimes == undefined) {
           boolExists = false
-         }
-         //console.log(businessData.hours[0])
+        }
+        //console.log(businessData.hours[0])
          
-         const operationTimes = businessData.hours[0]
-         var timeExists = true
-         if (operationTimes == undefined) {
+        const operationTimes = businessData.hours[0]
+        var timeExists = true
+        if (operationTimes == undefined) {
           timeExists = false
-         }
-         for(var i = 0;i < cuisines.length;i++) {
+        }
+        for(var i = 0;i < cuisines.length;i++) {
           cuisineList[i] = cuisines[i].title;
-         }
-         var data = JSON.stringify(operationTimes.open)
-         const formattedHours = GetHours(data)
-         const ths = (
-          <tr>
-            <th>Day</th>
+        }
+        var data = JSON.stringify(operationTimes.open)
+        const formattedHours = GetHours(data)
+        const ths = (
+          <tr style = {{borderBottomColor : 'pink'}}>
+            <th >Day</th>
             <th>Hours</th>
           </tr>
         );
@@ -107,9 +132,12 @@ export default function ShowCard(props : {id : string }) {
             <td>{individual.timing}</td>
           </tr>
         ));
-  return (
-    <div style={{ height: '450px', width: '450px'}}>
-      <Card shadow="sm" radius="lg" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        return (
+          <div style={{ height: '450px',
+            width: '450px'}}>
+            <Card shadow="sm" 
+            radius="lg" 
+            style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
             backgroundImage:`url(${imageUrl})`,
             opacity : 1,
             backgroundPosition: 'center',
@@ -128,7 +156,7 @@ export default function ShowCard(props : {id : string }) {
          right: 0, 
          padding: '12px' }}>
           {priceExists && 
-      <Badge  color='green' variant="light" size = "lg">
+      <Badge  color='green'   variant="light" size = "lg">
               {pricePoint}
               </Badge>
     }
@@ -162,13 +190,14 @@ export default function ShowCard(props : {id : string }) {
         style={{ 
         
       fontSize: '12px',
-      fontWeight: 600 }}>
+      fontWeight: 800 }}>
         {cuisineList.join(', ')}
         </Text>
         }
       </div>
      
       <Modal
+        
           centered
           withCloseButton={false} 
           size="auto"
@@ -188,16 +217,16 @@ export default function ShowCard(props : {id : string }) {
 
       
       >
-         <Table   style = {{backgroundColor : "transparent", color: "black" }} fontSize = "xs" horizontalSpacing={-10} verticalSpacing={-10} >
+         <Table  /*border-color='pink'*/ style = {{color: "black" }} fontSize = "xs" horizontalSpacing={-10} verticalSpacing={-10} >
       
-      <tbody>{rows}</tbody>
+      <tbody /*style = {{borderColor : 'pink'}}*/>{rows}</tbody>
     </Table>
       </Modal>
       
       <div
       style = {{position:'absolute',
       top:'60%',
-      left: 22,
+      left: 23,
       //transform : 'translateY(-50%)',
       }}>
         {boolExists  && 
@@ -223,19 +252,39 @@ export default function ShowCard(props : {id : string }) {
         )
          }
       </div>
-    
+      
+      <div
+      style = {{position:'absolute',
+      top:'61%',
+      right: 23,
+      //transform : 'translateY(-50%)',
+      }}
+      >
+       {ratingExists && <Rating defaultValue={rating} fractions = {2} readOnly size = "md"/>}
+      </div>
+
+      <div
+        style={{
+        
+          position: 'absolute',
+          top: '68%',
+          left: 320,
+        }}>
+          
+          {reviewExists && <Text className='text-pink-200' style= {{ color : 'white' , fontWeight : 800, fontSize : '10px'}}>{reviewNo} reviews</Text>}
+          </div> 
     
       <div
         style={{
           zIndex : 2,
           position: 'absolute',
           top: '70%',
-          left: -7,
+          left: 8,
           transform: 'translateY(-50%)',
           //height: '100%'
         }}>
           {timeExists && 
-          <Button style={{ backgroundColor: 'transparent'}} onClick={() => setOpened(true)}>Business Hours</Button>
+          <Button className='text-pink-200' style={{ color : 'white', fontWeight : 800, fontSize : '10px',backgroundColor: 'transparent'}} onClick={() => setOpened(true)}>Business Hours</Button>
          
           }
       {/* <Popover   width={220} position="right" withArrow opened={opened} >
@@ -258,8 +307,10 @@ export default function ShowCard(props : {id : string }) {
        bottom: 10,
        left : '50%',
         padding: '12px' }}>
+        
+
           {urlExists &&
-        <Button component = "a" variant="light" color="pink"  mt="md" radius="md" href = {url} size = "md" >
+        <Button component = "a"  target = '_blank' color='pink' opacity={0.8} variant="light"  mt="md" radius="md" href = {url} size = "md" >
           Go to site
         </Button>
       }
