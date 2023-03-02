@@ -2,52 +2,146 @@ import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, EmailAuthProvider } from 'firebase/auth';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { useRouter } from 'next/router';
+import { WriteDocument } from '@/lib/firebase/FirestoreOperations'; 
+import { getAuth, linkWithCredential } from "firebase/auth";
+
 import {
   TextInput,
+  PasswordInput,
   Text,
+  Title,
   createStyles,
   Paper,
   Group,
   PaperProps,
   Button,
   Image,
+  MantineProvider,
   Container,
+  Divider,
+  useMantineColorScheme,
+  ColorSchemeProvider,
+  NavLink,
+  Checkbox,
   Anchor,
   Stack,
   Autocomplete,
+  Center
 } from '@mantine/core';
+import { GoogleButton, TwitterButton, GithubButton} from "@/components/auth/SocialButtons"
+import { showNotification } from '@mantine/notifications';
+import { NotificationsProvider } from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons';
+import { formatDiagnostic } from 'typescript';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from "next/router";
 
-import { EmailAuthProvider } from "firebase/auth";
 
-
-export default function AuthenticationForm(props: PaperProps) {
-  const [type, toggle] = useToggle(['NomNom!', 'login']);
-  console.log(type)
+export default function CreateAccount (props: PaperProps) {
+  //Form 
   const form = useForm({
     initialValues: {
-      username: '',
       email: '',
+      name: '',
       password: '',
+      confirmpassword: '',
       terms: true,
     },
     validate: {
-      username: (val) => (!/\S/.test(val) ? null : 'Username should be one word'),
-  },
+      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
+      password: (val) => (val.length < 6 ? 'Password should include at least 6 characters' : null),
+
+      confirmpassword: (val, values) =>
+        val !== values.password ? 'Passwords did not match' : null,
+    },
   });
-
+  //Router
   const router = useRouter();
-  //disable the button if the inputs are not valid
-    const handleCreate = async (e : any) => {
-      const credential = EmailAuthProvider.credential(form.values.email, form.values.password);
-      setTimeout(() => {
-        router.push('/tables');
-      }, 10)
-      console.log("working")
-    }
+  //Reset Form Values
+  const resetForm = () => {
+    form.values.email = '';
+    form.values.name = '',
+    form.values.password = '',
+    form.values.confirmpassword = '',
+    form.values.terms = true
+  }
 
+  //route user to login page
+  const HandleLogin = (e : any) => {
+    router.push('/auth/login')
+  }
+
+  const auth = useFirebaseAuth();
+  //HandleCreate 
+  const HandleLink = async (e : any) => {
+    
+    //console.log("register");
+    const credential = EmailAuthProvider.credential(form.values.email, form.values.password);
+    //createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
+    //const auth = getAuth();
+    if (auth.currentUser == null) {
+      return undefined
+    }
+    linkWithCredential(auth.currentUser, credential)
+    .then((usercred) => {
+    const user = usercred.user;
+    console.log("Account linking success", user);
+  }).catch((error) => {
+    console.log("Account linking error", error);
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage)
+      // if (errorMessage === "Firebase: Error (auth/email-already-in-use).") {
+      //   showNotification({
+      //     title: 'Sorry, this email is already registered with NomNoms!',
+      //     message: 'Please enter another email! ',
+      //     autoClose: 3000,
+      //     color: 'red',
+      //     icon: <IconX size={16} />,
+          
+      //     styles: () => ({
+      //       closeButton: {
+      //         color: '#F43F5E',
+      //         '&:hover': { backgroundColor: '#F43F5E' },
+      //       },
+      //     }),            
+      //   })
+      // }
+
+      // ..
+      resetForm();
+      //console.log("auth working")
+    });
+
+  }
+
+    const provider = new GoogleAuthProvider();
+
+    const HandleGoogle = async (e: any) => {
+      const auth = useFirebaseAuth();
+          console.log("checking google")
+          signInWithPopup(auth, provider)
+          .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential?.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+          // IdP data available using getAdditionalUserInfo(result)
+          // ...
+        }).catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // The email of the user's account used.
+          const email = error.customData.email;
+          // The AuthCredential type that was used.
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          // ...
+        });   
+    }
 
 
   const useStyles = createStyles((theme) => ({
@@ -81,64 +175,80 @@ export default function AuthenticationForm(props: PaperProps) {
   
 
   return (
-
+    <form onSubmit={form.onSubmit(HandleLink)}>
     <Paper radius="md" p="xl" withBorder {...props}>
-     
-      
-        
-
-     <form onSubmit={form.onSubmit(handleCreate)}>
-
+    <NotificationsProvider>
       <Container size={500} my={50} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
           <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
-         
 
-          {type === 'register' && (
-          <Text color="dimmed" size="xs" align="center" >
-              Enter username below or use default username!
+          <Text color="dimmed" size="sm" align="center">
+          Want to add an email and password to your account?
             </Text>
-          )}
-
-         <TextInput
-           required
-           label="TYestinfg"
-           placeholder="spicyburrito"
-           value={form.values.username}
-           onChange={(event) => form.setFieldValue('username', event.currentTarget.value)}
-           error={form.errors.username && 'Username should be one word'}
-         />
 
         <Stack>
-    
 
-      
-        </Stack>
+           <TextInput
+           required
+           label="Email address"
+           placeholder="nomnoms@gmail.com"
+           value={form.values.email}
+           onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+           error={form.errors.email && 'Invalid email'}
+         />
+         
+          <PasswordInput
+            required
+            label="Password"
+            placeholder="Your password"
+            value={form.values.password}
+            onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+            error={form.errors.password && 'Password should include at least 6 characters'}
+          />
 
+            <PasswordInput
+            required
+                label="Confirm Password"
+                placeholder="Confirm your password"
+                value={form.values.confirmpassword}
+                onChange={(event) => form.setFieldValue('confirmpassword', event.currentTarget.value)}
+                error={form.errors.confirmpassword && 'Passwords did not match'}
+            />
         
 
 
-        <Group position="apart" mt="xl">
+        </Stack>
+        <Group 
+        position="apart" mt="xl" >
+          <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} 
+          type="submit"
+          >Register</Button>
+
+          {/* <Center>
           <Anchor
             component="button"
             type="button"
             color="pink"
-            onClick={() => toggle()}
             size="xs"
+            //onClick={HandleGuestSignIn}
           >
-      
+
+
+
+          <div>Continue as Guest</div>
           </Anchor>
 
-        
-          <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} type="submit"  >{upperFirst(type)}</Button>
+        </Center> */}
+
         </Group>
 
 
-        
+        <Group grow mb="md" mt="md">
+          </Group>
         </Container>
-      </form>
-    
+    </NotificationsProvider>
     </Paper>
+    </form>
    
   );
 }
