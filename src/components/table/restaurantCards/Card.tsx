@@ -6,8 +6,9 @@ import { useDisclosure } from '@mantine/hooks';
 import GetHours from './HoursOfOperation';
 import { Table } from '@mantine/core';
 import { useState } from 'react';
+import { IconCheck, IconX } from '@tabler/icons';
 
-
+// open in new tab, fix loading background, error message, background of modal, exists
 //import RenderImage from './Image';
 export default function ShowCard(props : {id : string }) {
   const theme = useMantineTheme();
@@ -52,13 +53,43 @@ export default function ShowCard(props : {id : string }) {
       );
     } else {
          const nameRestaurant = businessData.name
-         const imageUrl = businessData.image_url
-         const photos = businessData.photos
+         var imageUrl =  businessData.image_url
+         if (imageUrl == undefined) {
+          imageUrl = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+         }
+         //const photos = businessData.photos
          const pricePoint = businessData.price
+         var priceExists = true
+         if (pricePoint == undefined) {
+          priceExists = false
+         }
          const url = businessData.url
+         var urlExists = true
+         if (url == undefined) {
+          urlExists = false
+         }
          const cuisines = businessData.categories
-         const cuisineList = new Array(cuisines.length)
+         var cuisineExists = true
+         var cuisineLength = cuisines.length
+         if (cuisines == undefined) {
+          cuisineExists = false
+          cuisineLength = 1
+
+         }
+         const cuisineList = new Array(cuisineLength)
+         
+         const openTimes = businessData.hours[0].is_open_now
+         var boolExists = true
+         if (openTimes == undefined) {
+          boolExists = false
+         }
+         //console.log(businessData.hours[0])
+         
          const operationTimes = businessData.hours[0]
+         var timeExists = true
+         if (operationTimes == undefined) {
+          timeExists = false
+         }
          for(var i = 0;i < cuisines.length;i++) {
           cuisineList[i] = cuisines[i].title;
          }
@@ -77,52 +108,64 @@ export default function ShowCard(props : {id : string }) {
           </tr>
         ));
   return (
-    <div style={{ height: '410px', width: '410px' }}>
-      <Card shadow="sm" radius="md" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+    <div style={{ height: '450px', width: '450px'}}>
+      <Card shadow="sm" radius="lg" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
             backgroundImage:`url(${imageUrl})`,
             opacity : 1,
             backgroundPosition: 'center',
             backgroundSize: 'cover',
-            borderRadius: 'inherit',
+           // borderRadius: 'inherit',
            position : 'relative'
              }}>
         <Overlay
         gradient={`linear-gradient(105deg, ${theme.black} 20%, #312f2f 50%, ${theme.colors.gray[4]} 100%)`} zIndex={0} opacity = '0.5'
       />
 
-      <div style={{ position: 'absolute',
+      <div 
+      
+      style={{ position: 'absolute',
        top: 0,
          right: 0, 
          padding: '12px' }}>
-      <Badge color="pink" variant="light" size = "md">
+          {priceExists && 
+      <Badge  color='green' variant="light" size = "lg">
               {pricePoint}
               </Badge>
+    }
       </div>
       <div
         style={{
           position: 'absolute',
           
-          top: '10%',
+          top: '15%',
           left: 11,
           transform: 'translateY(-50%)'
         }}>
-        <Text className="css-1se8maq" style={{ color:"pink", borderColor : "purple", //borderSpacing : '10px', borderInlineColor : "purple", 
+        <Text className="text-5xl p-4  font-bold  from-pink-300 via-pink-50 to-pink-300 bg-gradient-to-r bg-clip-text text-transparent" style={{  borderColor : "purple", //borderSpacing : '10px', borderInlineColor : "purple", 
          fontSize: '24px',
           fontWeight: 700
  }}>{nameRestaurant}</Text>
       </div>
       <div
+      
         style={{
+          
           position: 'absolute',
-          top: '60%',
+          top: '25%',
           left: 11,
           transform: 'translateY(-50%)'
         }}>
-        <Text className="css-1se8maq" style={{ 
-     color:"white", fontSize: '12px',
+          {cuisineExists && 
+        <Text 
+        //className='text-5xl p-4 text-center font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent'
+        className='p-4 text-pink-200' 
+        style={{ 
+        
+      fontSize: '12px',
       fontWeight: 600 }}>
         {cuisineList.join(', ')}
         </Text>
+        }
       </div>
      
       <Modal
@@ -151,6 +194,35 @@ export default function ShowCard(props : {id : string }) {
     </Table>
       </Modal>
       
+      <div
+      style = {{position:'absolute',
+      top:'60%',
+      left: 22,
+      //transform : 'translateY(-50%)',
+      }}>
+        {boolExists  && 
+         openTimes ? (
+          // <div  style={{   display : 'flex'}}/*style={{position : 'relative'}}*/> 
+          <Group position='left' spacing={-100} style={{display:'flex'}}>
+            <IconCheck  color= "green" size = '30px' strokeWidth={3} />
+        <Text  className='text-lime-500  font-bold ' style={{  fontSize: '18px',
+      fontWeight: 800}}>
+          Open
+        </Text> 
+        </Group>
+        // </div>
+        )
+         : (
+          <Group position='left' spacing={-100} style={{display:'flex'}}>
+            <IconX  color= "red" size = '22.5px'  />
+        <Text className='text-red-500 font-bold ' style={{fontSize: '18px',
+        fontWeight: 800}}>
+          Closed
+        </Text>
+        </Group>
+        )
+         }
+      </div>
     
     
       <div
@@ -162,9 +234,10 @@ export default function ShowCard(props : {id : string }) {
           transform: 'translateY(-50%)',
           //height: '100%'
         }}>
-          <Button style={{ backgroundColor: 'transparent'}} onClick={() => setOpened(true)}>Hours of Operation</Button>
+          {timeExists && 
+          <Button style={{ backgroundColor: 'transparent'}} onClick={() => setOpened(true)}>Business Hours</Button>
          
-           
+          }
       {/* <Popover   width={220} position="right" withArrow opened={opened} >
       <Popover.Target>
         <Button onMouseEnter={open} onMouseLeave={close} style={{color: "white" , backgroundColor: 'transparent', borderColor: 'transparent' }}>
@@ -182,12 +255,14 @@ export default function ShowCard(props : {id : string }) {
 
       <div style={{ zIndex:1, transform: 'translateX(-50%)' , 
       position: 'absolute',
-       bottom: 0,
+       bottom: 10,
        left : '50%',
         padding: '12px' }}>
+          {urlExists &&
         <Button component = "a" variant="light" color="pink"  mt="md" radius="md" href = {url} size = "md" >
           Go to site
         </Button>
+      }
       </div>
     </Card> 
 </div>
