@@ -4,6 +4,7 @@ import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import { IconRefresh, IconX } from '@tabler/icons';
 import {
   TextInput,
   PasswordInput,
@@ -31,6 +32,8 @@ import { formatDiagnostic } from 'typescript';
 import { randomFill } from 'crypto';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { Input, Tooltip } from '@mantine/core';
+import { IconBrandTwitter, IconAlertCircle } from '@tabler/icons';
 
 export default function AuthenticationForm(props: PaperProps) {
   //const [type, toggle] = useToggle(['NomNom!']);
@@ -96,14 +99,24 @@ export default function AuthenticationForm(props: PaperProps) {
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
           <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
          
-          <Text color="dimmed" size="xs" align="center" >
+          {/* <Text color="dimmed" size="xs" align="center" >
               Enter username below or use the randomize button!
-            </Text>
+            </Text> */}
         
          <TextInput
            required
            label="Username"
            placeholder="SpicyBurrito"
+           rightSection={
+            <Tooltip 
+            label="Randomize"
+            onClick={GetValue}
+            position="top-end" withArrow>
+              <div>
+                <IconRefresh size="1rem" style={{ display: 'block', opacity: 0.5 }} />
+              </div>
+            </Tooltip>
+          }
            value={username}
            onChange={(event) => setUsername(event.target.value)}
            //error={form.errors.email && 'Invalid email'}
@@ -133,7 +146,7 @@ export default function AuthenticationForm(props: PaperProps) {
           className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} type="submit"  >NomNom!</Button>
         </Group>
 
-        <Anchor
+        {/* <Anchor
             component="button"
             color="pink"
             //onClick={() => console.log('here')}
@@ -142,7 +155,7 @@ export default function AuthenticationForm(props: PaperProps) {
       
           </Anchor>
           <Button onClick={GetValue}
-          className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`}>Randomize</Button>
+          className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`}>Randomize</Button> */}
         </Container>
       </form>
     
