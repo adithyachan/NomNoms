@@ -4,7 +4,7 @@ import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { WriteDocument } from '@/lib/firebase/FirestoreOperations';
+import { WriteDocument } from '@/lib/firebase/FirestoreOperations'; 
 
 import {
   TextInput,
@@ -83,7 +83,7 @@ export default function CreateAccount (props: PaperProps) {
       const user = userCredential.user;
       var UID = userCredential.user.uid;
       console.log("User was successfully created")
-      //WriteDocument("users", User. ,"test")
+      //WriteDocument("users", UID , UID)
       // ...
       resetForm();
       console.log("auth working")

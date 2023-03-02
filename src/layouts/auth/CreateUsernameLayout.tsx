@@ -51,6 +51,15 @@ export default function AuthenticationForm(props: PaperProps) {
   //const [type, toggle] = useToggle(['NomNom!']);
   const [username, setUsername] = useState("");
   const router = useRouter();
+  const form = useForm({
+    initialValues: {
+      username: ''
+    },
+    validate: {
+      username: (val) => (!/\S/.test(val) ? null : 'Username should be one word'),
+  },
+  });
+
   //disable the button if the inputs are not valid
     const HandleCreate = async (e : any) => {
       e.preventDefault();
@@ -70,6 +79,16 @@ export default function AuthenticationForm(props: PaperProps) {
       //   alert("Username exists")
       //   return undefined
       // } 
+      // if () {
+      //   alert("Username should be one word")
+      //   return undefined
+      // }
+      var temp = 0  
+      !/\s/.test(username) ? null : temp = 1
+      if (temp == 1){
+        alert("Username should be one word")
+        return undefined
+      }
       console.log("working")
       console.log("working")
       console.log(username)
@@ -147,7 +166,7 @@ export default function AuthenticationForm(props: PaperProps) {
           }
            value={username}
            onChange={(event) => setUsername(event.target.value)}
-           //error={form.errors.email && 'Invalid email'}
+           
          />
 
         <Stack>
@@ -164,8 +183,9 @@ export default function AuthenticationForm(props: PaperProps) {
             component="button"
             type="submit"
             color="pink"
-            //onClick={() => handleCreate}
+            //onClick={() => GetValue}
             size="xs"
+            
           >
       
           </Anchor>

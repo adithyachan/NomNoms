@@ -20,22 +20,28 @@ import {
   Autocomplete,
 } from '@mantine/core';
 
+import { EmailAuthProvider } from "firebase/auth";
+
+
 export default function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(['NomNom!', 'login']);
   console.log(type)
   const form = useForm({
     initialValues: {
       username: '',
+      email: '',
+      password: '',
       terms: true,
     },
     validate: {
-      username: (val) => (val.length > 7 ? null : 'Username should be one word'),
+      username: (val) => (!/\S/.test(val) ? null : 'Username should be one word'),
   },
   });
 
   const router = useRouter();
   //disable the button if the inputs are not valid
     const handleCreate = async (e : any) => {
+      const credential = EmailAuthProvider.credential(form.values.email, form.values.password);
       setTimeout(() => {
         router.push('/tables');
       }, 10)
@@ -96,11 +102,11 @@ export default function AuthenticationForm(props: PaperProps) {
 
          <TextInput
            required
-           label="Username"
+           label="TYestinfg"
            placeholder="spicyburrito"
            value={form.values.username}
            onChange={(event) => form.setFieldValue('username', event.currentTarget.value)}
-           //error={form.errors.email && 'Invalid email'}
+           error={form.errors.username && 'Username should be one word'}
          />
 
         <Stack>
