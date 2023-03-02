@@ -27,7 +27,7 @@ import {
   Autocomplete,
   Center,
 } from '@mantine/core';
-import { GoogleButton, TwitterButton, GithubButton, GoogleButtonLogin, GithubButtonLogin} from "@/components/auth/SocialButtons"
+import { GoogleButton, TwitterButton, GithubButton, GoogleButtonLogin, GithubButtonLogin, GoogleButtonLink, GithubButtonLink} from "@/components/auth/SocialButtons"
 import { formatDiagnostic } from 'typescript';
 import { useRouter } from "next/router";
 import  { UseAuth } from "@/lib/firebase/auth/AuthProvider"
@@ -193,83 +193,18 @@ export default function LogInForm (props: PaperProps) {
       <Container size={500} my={50} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
           <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
-
-        <Stack>
-           <TextInput
-           required
-           label="Email address or username"
-           placeholder="nomnoms@gmail.com"
-           value={form.values.email}
-           onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-           error={form.errors.email && 'Invalid email'}
-         />
-         
-          <PasswordInput
-            required
-            label="Password"
-            placeholder="Your password"
-            value={form.values.password}
-            onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-            error={form.errors.password && 'Password should include at least 6 characters'}
-          />
-        </Stack>
-        <Anchor
-            component="button"
-            type="button"
-            color="pink"
-            size="xs"
-            onClick={HandleForgot}
-          >
-          <div>Forgot Password?</div>
-          </Anchor>
-
         <Group position="right">
 
-          
-          <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} 
-          type="submit"  
-          >Login</Button>
-
         </Group>
 
+        <Text color="dimmed" size="sm" align="center">
+          Want to add google or github to your account?
+            </Text>
 
         <Group grow mb="md" mt="xl">
-        <GoogleButtonLogin radius="xl">Google</GoogleButtonLogin>
-        <GithubButtonLogin radius="xl">GitHub</GithubButtonLogin>
-        </Group>
-
-        <Center>
-          <Anchor
-            component="button"
-            type="button"
-            color="pink"
-            size="xs"
-            onClick={HandleGuestSignIn}
-          >
-
-
-
-          <div>Continue as Guest</div>
-          </Anchor>
-
-        </Center>
-        <Center>
-        <Anchor
-            component="button"
-            type="button"
-            color="pink"
-            size="xs"
-            onClick={HandleRegister}
-          >
-          <div>Don&apos;t have an account? Register</div>
-          </Anchor>
-          </Center>
-
-         
-
-  
-         
-
+        <GoogleButtonLink radius="xl">Google</GoogleButtonLink>
+        <GithubButtonLink radius="xl">GitHub</GithubButtonLink>
+        </Group>         
 
         </Container>
         </NotificationsProvider>

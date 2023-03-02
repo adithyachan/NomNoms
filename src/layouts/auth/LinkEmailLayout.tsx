@@ -2,9 +2,10 @@ import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, EmailAuthProvider } from 'firebase/auth';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import { WriteDocument } from '@/lib/firebase/FirestoreOperations'; 
+import { getAuth, linkWithCredential } from "firebase/auth";
 
 import {
   TextInput,
@@ -27,6 +28,7 @@ import {
   Anchor,
   Stack,
   Autocomplete,
+  Center
 } from '@mantine/core';
 import { GoogleButton, TwitterButton, GithubButton} from "@/components/auth/SocialButtons"
 import { showNotification } from '@mantine/notifications';
@@ -71,61 +73,46 @@ export default function CreateAccount (props: PaperProps) {
     router.push('/auth/login')
   }
 
-
+  const auth = useFirebaseAuth();
   //HandleCreate 
-  const HandleCreate = async (e : any) => {
-    const auth = useFirebaseAuth();
-    console.log("register");
-
-    createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
-    .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
-      var UID = userCredential.user.uid;
-      console.log("User was successfully created")
-      //WriteDocument("users", UID , UID)
-      // ...
-      resetForm();
-      console.log("auth working")
-      setTimeout(() => {
-        router.push('/auth/login');
-      }, 10)
-
-
-    })
-    .catch((error) => {
+  const HandleLink = async (e : any) => {
+    
+    //console.log("register");
+    const credential = EmailAuthProvider.credential(form.values.email, form.values.password);
+    //createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
+    //const auth = getAuth();
+    if (auth.currentUser == null) {
+      return undefined
+    }
+    linkWithCredential(auth.currentUser, credential)
+    .then((usercred) => {
+    const user = usercred.user;
+    console.log("Account linking success", user);
+  }).catch((error) => {
+    console.log("Account linking error", error);
       const errorCode = error.code;
       const errorMessage = error.message;
       console.log(errorMessage)
-      if (errorMessage === "Firebase: Error (auth/email-already-in-use).") {
-        showNotification({
-          title: 'Sorry, this email is already registered with NomNoms!',
-          message: 'Please enter another email! ',
-          autoClose: 3000,
-          color: 'red',
-          icon: <IconX size={16} />,
+      // if (errorMessage === "Firebase: Error (auth/email-already-in-use).") {
+      //   showNotification({
+      //     title: 'Sorry, this email is already registered with NomNoms!',
+      //     message: 'Please enter another email! ',
+      //     autoClose: 3000,
+      //     color: 'red',
+      //     icon: <IconX size={16} />,
           
-          styles: () => ({
-            /*
-            root: {
-              backgroundColor: '#FFE4E6',
-              borderColor: '#FFE4E6',
-              '&::before': { backgroundColor: '#FFFFFF' },
-            },
-            */
-            //title: { color: '#F43F5E' },
-            //description: { color: '#F43F5E'},
-            closeButton: {
-              color: '#F43F5E',
-              '&:hover': { backgroundColor: '#F43F5E' },
-            },
-          }),            
-        })
-      }
+      //     styles: () => ({
+      //       closeButton: {
+      //         color: '#F43F5E',
+      //         '&:hover': { backgroundColor: '#F43F5E' },
+      //       },
+      //     }),            
+      //   })
+      // }
 
       // ..
       resetForm();
-      console.log("auth working")
+      //console.log("auth working")
     });
 
   }
@@ -188,19 +175,15 @@ export default function CreateAccount (props: PaperProps) {
   
 
   return (
-    <form onSubmit={form.onSubmit(HandleCreate)}>
+    <form onSubmit={form.onSubmit(HandleLink)}>
     <Paper radius="md" p="xl" withBorder {...props}>
     <NotificationsProvider>
       <Container size={500} my={50} 
           className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
           <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
 
-          <Title className= {classes.title} align = "center">
-              Not a Nomster yet?
-          </Title>
-
           <Text color="dimmed" size="sm" align="center">
-              Create an account below!
+          Want to add an email and password to your account?
             </Text>
 
         <Stack>
@@ -232,43 +215,37 @@ export default function CreateAccount (props: PaperProps) {
                 error={form.errors.confirmpassword && 'Passwords did not match'}
             />
         
-            <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
-              color = "pink"
-              onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-            />
 
 
         </Stack>
-        <Group position="apart" mt="xl">
+        <Group 
+        position="apart" mt="xl" >
+          <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} 
+          type="submit"
+          >Register</Button>
+
+          {/* <Center>
           <Anchor
             component="button"
             type="button"
             color="pink"
             size="xs"
-            onClick={HandleLogin}
+            //onClick={HandleGuestSignIn}
           >
-          Already have an account? Login
+
+
+
+          <div>Continue as Guest</div>
           </Anchor>
-          
-          <Button className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} 
-          type="submit"  
-          >Register</Button>
+
+        </Center> */}
 
         </Group>
 
 
         <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl">Google</GoogleButton>
-        <GithubButton radius="xl">GitHub</GithubButton>
           </Group>
         </Container>
-
-      <Text size="sm" weight={200} align="center">
-        By creating an account, you agree to our <Anchor href="https://mantine.dev/" target="_blank">
-          Terms of Service and Private Policy </Anchor>
-      </Text> 
     </NotificationsProvider>
     </Paper>
     </form>
