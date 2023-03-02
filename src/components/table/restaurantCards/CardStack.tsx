@@ -20,7 +20,7 @@ export default function CardStack({ids, setUserVotes, user} : any) {
   const [votes, setVotes] = useState(ids.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {}))
 
   cards.push(
-    <div style={{height: '410px', width: '410px'}}>
+    <div style={{height: '450px', width: '450px'}}>
       <Card withBorder radius='md' style={{height: '100%'}}>
         <div style={{padding: '5px'}}></div>
         <Text weight={500}>That&apos;s it!</Text>
