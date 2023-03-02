@@ -5,6 +5,11 @@ export interface ITable {
   lastAccessed: Timestamp,
   users: string[],
   leader: string,
+  prefs: {
+    zip: string,
+    price: string,
+    cuisine: string,
+  },
   expiration: Timestamp,
 }
 
@@ -13,6 +18,11 @@ export class Table implements ITable {
   lastAccessed: Timestamp;
   users: string[];
   leader: string;
+  prefs: {
+    zip: string;
+    price: string;
+    cuisine: string;
+  };
   expiration: Timestamp;
 
   constructor(json: ITable) {
@@ -20,6 +30,7 @@ export class Table implements ITable {
       this.lastAccessed = (new Timestamp(json.lastAccessed.seconds, json.lastAccessed.nanoseconds));
       this.users = json.users;
       this.leader = json.leader;
+      this.prefs = json.prefs;
       this.expiration = (new Timestamp(json.expiration.seconds, json.expiration.nanoseconds));
   };
 }

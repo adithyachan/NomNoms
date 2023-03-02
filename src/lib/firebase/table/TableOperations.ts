@@ -13,6 +13,7 @@ const tableConverter = {
           lastAccessed: table.lastAccessed,
           users: table.users,
           leader: table.leader,
+          prefs: table.prefs,
           expiration: table.expiration
         };
   },
