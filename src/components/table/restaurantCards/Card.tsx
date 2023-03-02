@@ -28,102 +28,116 @@ export default function ShowCard(props : {id : string }) {
     if (businessError) {
         console.log(businessError)
         if (businessError.code == ("BUSINESS_NOT_FOUND")) {
-            return (
-              <div style={{ height: '410px', width: '410px', alignItems: 'center' }} >
-                <Text size="md" color="dimmed" >
-                    The business was not found
-                </Text> 
-                </div>
-            )
+          return (
+            <div style={{ height: '410px', 
+              width: '410px',
+              alignItems: 'center' }} >
+              <Text size="md" 
+                color="dimmed" >
+                  The business was not found
+              </Text> 
+            </div>
+          )
         } else {
-            return (
-              <div style={{ height: '410px', width: '410px', alignItems: 'center' }} >
-                <Text size="md" color="dimmed">
-                    There was an error in the API call
-                </Text> 
-                </div>
-            ) 
+          return (
+            <div style={{ height: '410px', 
+              width: '410px', 
+              alignItems: 'center' }} >
+              <Text size="md" 
+                color="dimmed">
+                  There was an error in the API call
+              </Text> 
+            </div>
+          ) 
         }
-    } else if (isLoadingBusiness) {
-      return (
-        <div  style={{ height: '410px', width: '410px'}} >
-      <Card className='bg-gradient-to-r from-pink-100 via-white to-pink-100 ' shadow="sm" radius="md" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Loader size={50} color="#FF5858"/>
-      </Card>
-    </div>      
-      );
-    } else {
+      } else if (isLoadingBusiness) {
+        return (
+          <div  style={{ height: '410px', 
+            width: '410px'}} >
+            <Card className='bg-gradient-to-r from-pink-100 via-white to-pink-100 ' 
+              shadow="sm" 
+                radius="md" 
+                style={{ height: '100%', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center' }}>
+              <Loader size={50} 
+                color="#FF5858"/>
+            </Card>
+           </div>      
+        );
+      } else {
         const rating = businessData.rating
         var ratingExists = true
         if (rating == undefined) {
           ratingExists = false
         }
-
         const reviewNo = businessData.review_count
         var reviewExists = true
         if (reviewNo == undefined) {
           reviewExists = false
         }
-         const nameRestaurant = businessData.name
-         var imageUrl =  businessData.image_url
-         if (imageUrl == undefined) {
+        const nameRestaurant = businessData.name
+        var imageUrl =  businessData.image_url
+        if (imageUrl == undefined) {
           imageUrl = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-         }
+        }
          //const photos = businessData.photos
-         const pricePoint = businessData.price
-         var priceExists = true
-         if (pricePoint == undefined) {
+        const pricePoint = businessData.price
+        var priceExists = true
+        if (pricePoint == undefined) {
           priceExists = false
-         }
-         const url = businessData.url
-         var urlExists = true
-         if (url == undefined) {
+        }
+        const url = businessData.url
+        var urlExists = true
+        if (url == undefined) {
           urlExists = false
-         }
-         const cuisines = businessData.categories
-         var cuisineExists = true
-         var cuisineLength = 0
-         if (cuisines == undefined) {
+        }
+        const cuisines = businessData.categories
+        var cuisineExists = true
+        var cuisineLength = 0
+        if (cuisines == undefined) {
           cuisineExists = false
           cuisineLength = 0
-
-         } else {
+        } else {
           cuisineLength = cuisines.length
-         }
-         const cuisineList = new Array(cuisineLength)
-         
-         const openTimes = businessData.hours[0].is_open_now
-         var boolExists = true
-         if (openTimes == undefined) {
+        }
+        const cuisineList = new Array(cuisineLength) 
+        const openTimes = businessData.hours[0].is_open_now
+        var boolExists = true
+        if (openTimes == undefined) {
           boolExists = false
-         }
-         //console.log(businessData.hours[0])
+        }
+        //console.log(businessData.hours[0])
          
-         const operationTimes = businessData.hours[0]
-         var timeExists = true
-         if (operationTimes == undefined) {
+        const operationTimes = businessData.hours[0]
+        var timeExists = true
+        if (operationTimes == undefined) {
           timeExists = false
-         }
-         for(var i = 0;i < cuisines.length;i++) {
+        }
+        for(var i = 0;i < cuisines.length;i++) {
           cuisineList[i] = cuisines[i].title;
-         }
-         var data = JSON.stringify(operationTimes.open)
-         const formattedHours = GetHours(data)
-         const ths = (
+        }
+        var data = JSON.stringify(operationTimes.open)
+        const formattedHours = GetHours(data)
+        const ths = (
           <tr style = {{borderBottomColor : 'pink'}}>
             <th >Day</th>
             <th>Hours</th>
           </tr>
         );
         const rows = formattedHours.map((individual) => (
-          <tr   key={individual.name}>
+          <tr key={individual.name}>
             <td>{individual.day}</td>
             <td>{individual.timing}</td>
           </tr>
         ));
-  return (
-    <div style={{ height: '450px', width: '450px'}}>
-      <Card shadow="sm" radius="lg" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        return (
+          <div style={{ height: '450px',
+            width: '450px'}}>
+            <Card shadow="sm" 
+            radius="lg" 
+            style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
             backgroundImage:`url(${imageUrl})`,
             opacity : 1,
             backgroundPosition: 'center',
