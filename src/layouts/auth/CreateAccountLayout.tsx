@@ -4,6 +4,8 @@ import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import { WriteDocument } from '@/lib/firebase/FirestoreOperations';
+
 import {
   TextInput,
   PasswordInput,
@@ -32,7 +34,6 @@ import { NotificationsProvider } from '@mantine/notifications';
 import { IconCheck, IconX } from '@tabler/icons';
 import { formatDiagnostic } from 'typescript';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-
 import { useRouter } from "next/router";
 
 
@@ -75,11 +76,14 @@ export default function CreateAccount (props: PaperProps) {
   const HandleCreate = async (e : any) => {
     const auth = useFirebaseAuth();
     console.log("register");
+
     createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
+      var UID = userCredential.user.uid;
       console.log("User was successfully created")
+      //WriteDocument("users", User. ,"test")
       // ...
       resetForm();
       console.log("auth working")

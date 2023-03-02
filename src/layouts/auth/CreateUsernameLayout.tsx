@@ -1,6 +1,6 @@
 import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
-import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
+import { useFirebaseAuth, useFirebaseFirestore } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
@@ -34,6 +34,18 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Input, Tooltip } from '@mantine/core';
 import { IconBrandTwitter, IconAlertCircle } from '@tabler/icons';
+import {
+  collection, 
+  doc, 
+  getDocs, 
+  getDoc, 
+  deleteDoc,
+  addDoc,
+  setDoc, 
+  DocumentReference,
+  CollectionReference} from "firebase/firestore";
+import { ReadDocument } from '@/lib/firebase/FirestoreOperations';
+
 
 export default function AuthenticationForm(props: PaperProps) {
   //const [type, toggle] = useToggle(['NomNom!']);
@@ -42,6 +54,22 @@ export default function AuthenticationForm(props: PaperProps) {
   //disable the button if the inputs are not valid
     const HandleCreate = async (e : any) => {
       e.preventDefault();
+      const firestore = useFirebaseFirestore()
+  // Get document with name
+  const query = await getDoc(doc(firestore, "users", username))
+
+  // Check if document exists
+  if (!query.exists()) {
+  } else {
+  // document does not exist
+  alert("Username exists")
+  return undefined
+  }
+      
+      // if (ReadDocument("users", username) == undefined) {
+      //   alert("Username exists")
+      //   return undefined
+      // } 
       console.log("working")
       console.log("working")
       console.log(username)
