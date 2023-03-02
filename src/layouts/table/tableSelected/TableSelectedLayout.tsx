@@ -10,14 +10,13 @@ export default function TableSelectedLayout(props: {table: Table}) {
       {/* Create Grid with 3 columns, 1st & 3rd are smaller. Middle is larger */}
       <Grid>
         <Grid.Col span={3}>
-          <TablePrefSidebar />
+          <TablePrefSidebar table={props.table} />
         </Grid.Col>
         <Grid.Col span={6}>
-          <Title order={2}>{props.table.name}</Title>
-          <RestaurantListLayout />
+          <RestaurantListLayout table={props.table} />
         </Grid.Col>
         <Grid.Col span={3}>
-          <TableUserSidebar />
+          <TableUserSidebar table={props.table} />
         </Grid.Col>
       </Grid>
     </Container>
