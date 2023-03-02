@@ -6,6 +6,8 @@ import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthPro
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 import { CreateAccountWithGitHub } from '@/lib/firebase/auth/AuthService';
 import { useRouter } from "next/router";
+import { getAuth, linkWithPopup } from "firebase/auth";
+//const provider = new GoogleAuthProvider();
 
 const provider = new GoogleAuthProvider();
 const Gprovider = new GithubAuthProvider();
@@ -114,6 +116,31 @@ export function GoogleButtonLogin(props: ButtonProps) {
   return (<Button onClick= {HandleGoogleLogin} leftIcon={<GoogleIcon />} variant="default" color="gray" {...props} />);
 }
 
+export function GoogleButtonLink(props: ButtonProps) {
+  const router = useRouter();
+  
+
+  const HandleGoogleLink = async (e: any) => {
+    console.log("checking google")
+    const auth = useFirebaseAuth();
+    if (auth.currentUser == null) {
+      return undefined
+    }
+    console.log("here now")
+    linkWithPopup(auth.currentUser, provider).then((result) => {
+      // Accounts successfully linked.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const user = result.user;
+      // ...
+    }).catch((error) => {
+      // Handle Errors here.
+      // ...
+    });   
+
+  }
+  return (<Button onClick= {HandleGoogleLink} leftIcon={<GoogleIcon />} variant="default" color="gray" {...props} />);
+}
+
 
 export function GithubButton(props: ButtonProps) {
   const router = useRouter();
@@ -189,6 +216,40 @@ export function GithubButtonLogin(props: ButtonProps) {
     <Button
       {...props}
       onClick={HandleGithubLogin}
+      leftIcon={<GithubIcon size={16} />}
+      sx={(theme) => ({
+        backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
+        color: '#fff',
+        '&:hover': {
+          backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
+        },
+      })}
+    />
+  );
+}
+
+export function GithubButtonLink(props: ButtonProps) {
+  const router = useRouter();
+  const HandleGithubLink = async (e: any) => {
+	const auth = useFirebaseAuth();
+  if (auth.currentUser == null) {
+    return undefined
+  }
+  console.log("here now")
+  linkWithPopup(auth.currentUser, Gprovider).then((result) => {
+    // Accounts successfully linked.
+    const credential = GithubAuthProvider.credentialFromResult(result);
+    const user = result.user;
+    // ...
+  }).catch((error) => {
+    // Handle Errors here.
+    // ...
+  });   
+  }
+  return (
+    <Button
+      {...props}
+      onClick={HandleGithubLink}
       leftIcon={<GithubIcon size={16} />}
       sx={(theme) => ({
         backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
