@@ -19,8 +19,14 @@ const tableConverter = {
         };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot | DocumentSnapshot) => {
+    try {
       const data = (snapshot.data() as ITable);
       return new Table(data);
+    }
+    catch (err) {
+      throw err
+    }
+      
   }
 };
 

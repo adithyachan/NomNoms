@@ -30,7 +30,7 @@ import {
 import { GoogleButton, TwitterButton, GithubButton, GoogleButtonLogin, GithubButtonLogin} from "@/components/auth/SocialButtons"
 import { formatDiagnostic } from 'typescript';
 import { useRouter } from "next/router";
-import  { UseAuth } from "@/lib/firebase/auth/AuthProvider"
+import  { UseAuth } from "@/providers/AuthProvider"
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
 import { IconCheck, IconX } from '@tabler/icons';

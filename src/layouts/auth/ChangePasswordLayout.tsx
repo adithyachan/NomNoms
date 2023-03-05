@@ -20,7 +20,7 @@ import { useState } from 'react';
 import { useRouter } from "next/router";
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
-import { UseAuth } from "@/lib/firebase/auth/AuthProvider"; 
+import { UseAuth } from "@/providers/AuthProvider"; 
 
 function PasswordRequirement({ meets, label }: { meets: boolean; label: string }) {
   return (
