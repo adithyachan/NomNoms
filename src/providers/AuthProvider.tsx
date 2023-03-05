@@ -8,9 +8,9 @@ interface UserType {
   uid: string | null;
 }
 
-const AuthContext = createContext({});
+const AuthContext = createContext<{ user: UserType }>({user: { email: null, uid: null }});
 
-export const useUser = () => useContext<any>(AuthContext);
+export const useUser = () => useContext(AuthContext);
 
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserType>({ email: null, uid: null });
@@ -28,7 +28,6 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         setUser({ email: null, uid: null });
       }
     });
-    setLoading(false);
     return unsubscribe;
   }, []);
 

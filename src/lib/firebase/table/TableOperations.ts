@@ -98,6 +98,24 @@ export const WriteTable = async (data: ITable) => {
 }
 
 /**
+ * Writes a Table object to the firestore
+ * @param data Table object to write
+ * @returns id of the object that was written
+ */
+export const UpdateTable = async (data: ITable) => {
+  const firestore = useFirebaseFirestore()
+  try {
+    const docRef = doc(collection(firestore, collectionName), "/tables/" + data.id).withConverter(tableConverter);
+    const table = await WriteDocumentWithConverter(docRef, data)
+    return table
+  }
+  catch (e) {
+    console.error("Error reading table: " + e)
+    throw e
+  }
+}
+
+/**
  * Delete table of the given id
  * @param docName id of the table to delete
  */
