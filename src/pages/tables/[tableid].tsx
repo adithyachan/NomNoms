@@ -1,7 +1,5 @@
 // Next Imports
 import { useRouter } from "next/router";
-import Head from "next/head";
-import DefaultErrorPage from "next/error"
 
 // Firestore Imports
 import { ReadTable, ReadTables, UpdateTable } from "@/lib/firebase/table/TableOperations";
