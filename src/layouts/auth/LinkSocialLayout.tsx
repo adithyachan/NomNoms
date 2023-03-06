@@ -3,37 +3,21 @@ import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider} from "firebase/auth";
+import { signInAnonymously, GoogleAuthProvider, GithubAuthProvider} from "firebase/auth";
 import {
-  TextInput,
-  PasswordInput,
   Text,
-  Title,
   createStyles,
   Paper,
   Group,
   PaperProps,
-  Button,
   Image,
-  MantineProvider,
   Container,
-  Divider,
-  useMantineColorScheme,
-  ColorSchemeProvider,
-  NavLink,
-  Checkbox,
-  Anchor,
-  Stack,
-  Autocomplete,
-  Center,
 } from '@mantine/core';
-import { GoogleButton, TwitterButton, GithubButton, GoogleButtonLogin, GithubButtonLogin, GoogleButtonLink, GithubButtonLink} from "@/components/auth/SocialButtons"
-import { formatDiagnostic } from 'typescript';
+import { GoogleButtonLink, GithubButtonLink} from "@/components/auth/SocialButtons"
 import { useRouter } from "next/router";
-import  { UseAuth } from "@/providers/AuthProvider"
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
-import { IconCheck, IconX } from '@tabler/icons';
+import { IconX } from '@tabler/icons';
 
 export default function LogInForm (props: PaperProps) {
   //Router

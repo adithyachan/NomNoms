@@ -12,9 +12,6 @@ import {
     Center,
     Box,
     Image,
-    MantineProvider,
-    ThemeIcon,
-    CheckIcon,
   } from '@mantine/core';
   import { IconArrowLeft } from '@tabler/icons';
 import { IconAlertTriangle } from '@tabler/icons';
@@ -28,9 +25,6 @@ import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
 import { IconCheck } from '@tabler/icons';
 import { IconX } from '@tabler/icons';
-import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
-
-
 
   const useStyles = createStyles((theme) => ({
     title: {

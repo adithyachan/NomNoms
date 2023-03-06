@@ -1,50 +1,25 @@
-import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
-import { useFirebaseAuth, useFirebaseFirestore } from '@/lib/firebase/hooks/useFirebase';
-// import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { IconRefresh, IconX } from '@tabler/icons';
+import { useFirebaseFirestore } from '@/lib/firebase/hooks/useFirebase';
+import { IconRefresh } from '@tabler/icons';
 import {
   TextInput,
-  PasswordInput,
-  Text,
-  Title,
   createStyles,
   Paper,
   Group,
   PaperProps,
   Button,
   Image,
-  MantineProvider,
   Container,
-  Divider,
-  useMantineColorScheme,
-  ColorSchemeProvider,
-  NavLink,
-  Checkbox,
   Anchor,
   Stack,
-  Autocomplete,
+  Tooltip
 } from '@mantine/core';
-import { GoogleButton, TwitterButton, FacebookButton} from "@/components/auth/SocialButtons"
-import { formatDiagnostic } from 'typescript';
-import { randomFill } from 'crypto';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Input, Tooltip } from '@mantine/core';
-import { IconBrandTwitter, IconAlertCircle } from '@tabler/icons';
 import {
-  collection, 
   doc, 
-  getDocs, 
   getDoc, 
-  deleteDoc,
-  addDoc,
-  setDoc, 
-  DocumentReference,
-  CollectionReference} from "firebase/firestore";
-import { ReadDocument } from '@/lib/firebase/FirestoreOperations';
+  } from "firebase/firestore";
 
 
 export default function AuthenticationForm(props: PaperProps) {
