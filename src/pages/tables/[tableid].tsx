@@ -24,6 +24,7 @@ export default function TablePage() {
 
   const updateTable = () => {
     if (table) {
+      console.log("here")
       table.lastAccessed = Timestamp.fromDate((new Date()))
       table.expiration = Timestamp.fromDate(new Date(table.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
       if (!table.users.includes(user.uid!)) {
@@ -48,6 +49,7 @@ export default function TablePage() {
           const unsub = ReadTable(tableid as string, setTable)
           return () => {
             unsub()
+            updateTable()
           }
         }
         catch (err) {

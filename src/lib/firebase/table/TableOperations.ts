@@ -105,7 +105,7 @@ export const WriteTable = async (data: ITable) => {
 export const UpdateTable = async (data: ITable) => {
   const firestore = useFirebaseFirestore()
   try {
-    const docRef = doc(collection(firestore, collectionName), "/tables/" + data.id).withConverter(tableConverter);
+    const docRef = doc(collection(firestore, collectionName), data.id).withConverter(tableConverter);
     const table = await WriteDocumentWithConverter(docRef, data)
     return table
   }
