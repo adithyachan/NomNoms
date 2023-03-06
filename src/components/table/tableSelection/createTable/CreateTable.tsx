@@ -6,10 +6,12 @@ import { Table, ITable } from "@/types/Table"
 import { WriteTable } from "@/lib/firebase/table/TableOperations"
 import { Timestamp } from "firebase/firestore"
 import CodeModal from "./CodeModal";
+import { useUser } from "@/providers/AuthProvider";
 
 const special_chars = /[ `!@#$%^&*()+_\-=\[\]{};':"\\|,.<>\/?]/
 
 export default function CreateTable() {
+  const { user } = useUser()
   const [value, setValue] = useInputState('');
   const [zip, setZip] = useInputState('');
   const [price, setPrice] = useInputState('');
@@ -36,14 +38,14 @@ export default function CreateTable() {
       id: "",
       name: value,
       lastAccessed: Timestamp.fromDate(new Date()),
-      users: [],
-      leader: "test",
+      users: [user.uid!],
+      leader: user.uid!,
       prefs: {
         zip: zip,
         price: price,
         cuisine: cuisine,
       },
-      expiration: Timestamp.fromDate(new Date()),
+      expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
     }
     const table = new Table(tableJSON)
     

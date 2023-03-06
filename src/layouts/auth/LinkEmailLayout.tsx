@@ -1,41 +1,23 @@
-import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
-// import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
-import { createUserWithEmailAndPassword, EmailAuthProvider } from 'firebase/auth';
-import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { WriteDocument } from '@/lib/firebase/FirestoreOperations'; 
-import { getAuth, linkWithCredential } from "firebase/auth";
+import { EmailAuthProvider } from 'firebase/auth';
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { linkWithCredential } from "firebase/auth";
 
 import {
   TextInput,
   PasswordInput,
   Text,
-  Title,
   createStyles,
   Paper,
   Group,
   PaperProps,
   Button,
   Image,
-  MantineProvider,
   Container,
-  Divider,
-  useMantineColorScheme,
-  ColorSchemeProvider,
-  NavLink,
-  Checkbox,
-  Anchor,
   Stack,
-  Autocomplete,
-  Center
 } from '@mantine/core';
-import { GoogleButton, TwitterButton, GithubButton} from "@/components/auth/SocialButtons"
-import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
-import { IconCheck, IconX } from '@tabler/icons';
-import { formatDiagnostic } from 'typescript';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from "next/router";
 
 

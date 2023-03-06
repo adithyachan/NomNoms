@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { ReadTables } from "@/lib/firebase/table/TableOperations";
 import { Table } from "@/types/Table";
 import LoadingLayout from "@/layouts/LoadingLayout";
+import { useUser } from "@/providers/AuthProvider";
 
 export default function UserTablesLayout() {
+  const { user } = useUser()
   const [tables, setTables] = useState<Table[]>()
   const [loading, setLoading] = useState(false)
 
@@ -27,7 +29,7 @@ export default function UserTablesLayout() {
            <ScrollArea type="hover" className="h-60" scrollbarSize={0}>
             <Center>
               <Grid columns={24} className="m-1">
-                {tables?.map(
+                {tables?.filter((table) => table.users.includes(user.uid!)).map(
                   (table) =>
                   <Grid.Col key={table.id} span={22} sm={12}>
                     <TableCard table={table} id={table.id} />

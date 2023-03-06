@@ -1,4 +1,4 @@
-import { AuthContextProvider } from '@/lib/firebase/auth/AuthProvider';
+import { AuthContextProvider } from '@/providers/AuthProvider';
 import '@/styles/globals.css'
 import { MantineProvider } from '@mantine/core';
 import type { AppProps } from 'next/app'

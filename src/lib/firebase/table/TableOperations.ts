@@ -19,8 +19,14 @@ const tableConverter = {
         };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot | DocumentSnapshot) => {
+    try {
       const data = (snapshot.data() as ITable);
       return new Table(data);
+    }
+    catch (err) {
+      throw err
+    }
+      
   }
 };
 
@@ -82,6 +88,24 @@ export const WriteTable = async (data: ITable) => {
   try {
     const docRef = doc(collection(firestore, collectionName)).withConverter(tableConverter);
     data.id = docRef.id
+    const table = await WriteDocumentWithConverter(docRef, data)
+    return table
+  }
+  catch (e) {
+    console.error("Error reading table: " + e)
+    throw e
+  }
+}
+
+/**
+ * Writes a Table object to the firestore
+ * @param data Table object to write
+ * @returns id of the object that was written
+ */
+export const UpdateTable = async (data: ITable) => {
+  const firestore = useFirebaseFirestore()
+  try {
+    const docRef = doc(collection(firestore, collectionName), data.id).withConverter(tableConverter);
     const table = await WriteDocumentWithConverter(docRef, data)
     return table
   }

@@ -20,7 +20,7 @@ import { useState } from 'react';
 import { useRouter } from "next/router";
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
-import { UseAuth } from "@/lib/firebase/auth/AuthProvider"; 
+import { useUser } from "@/providers/AuthProvider"; 
 
 function PasswordRequirement({ meets, label }: { meets: boolean; label: string }) {
   return (
@@ -72,7 +72,7 @@ export default function ChangePassword() {
     const [oldPass, setOldPass] = useInputState('');
     const strength = getStrength(newPass);
     const auth = useFirebaseAuth();
-    const user = UseAuth();
+    const { user } = useUser();
     const checks = requirements.map((requirement, index) => (
       <PasswordRequirement key={index} label={requirement.label} meets={requirement.re.test(newPass)} />
     ));
