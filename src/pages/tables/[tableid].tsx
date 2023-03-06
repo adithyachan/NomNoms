@@ -19,12 +19,22 @@ export default function TablePage() {
   const router = useRouter()
   const { tableid } = router.query
   const { user } = useUser()
-  const [valid, setValid] = useState(false)
   const [table, setTable] = useState<Table>()
   const [tables, setTables] = useState<Table[]>()
 
+  const updateTable = () => {
+    if (table) {
+      table.lastAccessed = Timestamp.fromDate((new Date()))
+      table.expiration = Timestamp.fromDate(new Date(table.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
+      if (!table.users.includes(user.uid!)) {
+        table.users.push(user.uid!)
+      }
+      UpdateTable(table as ITable)
+    } 
+  }
+
   useEffect(() => {
-    if (!user.uid) {
+    if (!user.uid && !user.loading) {
       router.push("/auth/register")
     }
     
@@ -36,21 +46,12 @@ export default function TablePage() {
       if (tables?.map((table) => table.id).includes(tableid as string)) {
         try {
           const unsub = ReadTable(tableid as string, setTable)
-          setValid(true)
           return () => {
             unsub()
-            if (table) {
-              table.lastAccessed = Timestamp.fromDate((new Date()))
-              table.expiration = Timestamp.fromDate(new Date(table.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
-              if (user) {
-                table.users.push(user.uid!)
-              }
-              UpdateTable(table as ITable)
-            }
           }
         }
         catch (err) {
-          setValid(false)
+          router.push("/tables/tablenotfound")
         }
       }
       else {

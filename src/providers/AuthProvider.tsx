@@ -6,15 +6,15 @@ import { useFirebaseAuth } from "../lib/firebase/hooks/useFirebase";
 interface UserType {
   email: string | null;
   uid: string | null;
+  loading: boolean;
 }
 
-const AuthContext = createContext<{ user: UserType }>({user: { email: null, uid: null }});
+const AuthContext = createContext<{ user: UserType }>({user: { email: null, uid: null, loading: true }});
 
 export const useUser = () => useContext(AuthContext);
 
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<UserType>({ email: null, uid: null });
-  const [loading, setLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<UserType>({ email: null, uid: null, loading: true });
   const auth = useFirebaseAuth();
 
   useEffect(() => {
@@ -23,9 +23,10 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         setUser({
           email: user.email,
           uid: user.uid,
+          loading: false,
         });
       } else {
-        setUser({ email: null, uid: null });
+        setUser({ email: null, uid: null, loading: false });
       }
     });
     return unsubscribe;
