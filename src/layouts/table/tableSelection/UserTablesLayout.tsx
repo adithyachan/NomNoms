@@ -27,16 +27,14 @@ export default function UserTablesLayout() {
            <LoadingLayout /> 
            : 
            <ScrollArea type="hover" className="h-60" scrollbarSize={0}>
-            <Center>
-              <Grid columns={24} className="m-1">
-                {tables?.filter((table) => table.users.includes(user.uid!)).map(
-                  (table) =>
-                  <Grid.Col key={table.id} span={22} sm={12}>
-                    <TableCard table={table} id={table.id} />
-                  </Grid.Col>
-                )}
-              </Grid>
-            </Center>
+                <Grid columns={24} className="m-1 w-full">
+                  {tables?.filter((table) => table.users.includes(user.uid!)).map(
+                    (table) =>
+                    <Grid.Col key={table.id} span={12}>
+                      <TableCard table={table} id={table.id} />
+                    </Grid.Col>
+                  )}
+                </Grid>
           </ScrollArea> }
       </Flex>
       
