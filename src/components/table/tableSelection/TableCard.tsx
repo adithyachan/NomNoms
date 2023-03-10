@@ -1,6 +1,6 @@
 import { Table } from "@/types/Table";
 import { Card, Title, CopyButton, Tooltip, ActionIcon, Button, Group, Center } from "@mantine/core"
-import { IconCheck, IconCopy, IconSettings } from "@tabler/icons";
+import { IconCheck, IconCopy, IconSettings } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 
 
