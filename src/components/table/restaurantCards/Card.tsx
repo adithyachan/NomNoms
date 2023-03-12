@@ -12,6 +12,7 @@ export default function ShowCard(props : {id : string }) {
   const theme = useMantineTheme();
   //const [opened, { close, open }] = useDisclosure(false);
   const [opening, setOpened] = useState(false);
+  const [opened, setOpen] = useState(false);
 
   const {data : businessData, error : businessError , isLoading: isLoadingBusiness} = useRestaurantBusinessEndpoint(props.id)
 
@@ -82,7 +83,11 @@ export default function ShowCard(props : {id : string }) {
         if (imageUrl == undefined) {
           imageUrl = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
         }
-         //const photos = businessData.photos
+        const photos = businessData.photos 
+        var photosExists = true
+        if (photos == undefined) {
+          photosExists = false
+        }
         const pricePoint = businessData.price
         var priceExists = true
         if (pricePoint == undefined) {
@@ -271,9 +276,21 @@ export default function ShowCard(props : {id : string }) {
           left: 320,
         }}>
           
-          {reviewExists && <Text className='text-pink-200' style= {{ color : 'white' , fontWeight : 800, fontSize : '10px'}}>{reviewNo} reviews</Text>}
+          {reviewExists && <Text className='text-pink-200' style= {{ color : 'white' , fontWeight : 800, fontSize : '10px'}}>{reviewNo} Reviews</Text>}
           </div> 
     
+          <div
+        style={{
+        
+          position: 'absolute',
+          top: '73%',
+          left: 346,
+        }}>
+          
+          {photosExists &&  <Button style={{ color : 'white', fontWeight : 800, fontSize : '10px',backgroundColor: 'transparent'}} onClick={() => setOpened(true)}>Photos</Button>
+}
+          </div> 
+      
       <div
         style={{
           zIndex : 2,
@@ -287,19 +304,7 @@ export default function ShowCard(props : {id : string }) {
           <Button className='text-pink-200' style={{ color : 'white', fontWeight : 800, fontSize : '10px',backgroundColor: 'transparent'}} onClick={() => setOpened(true)}>Business Hours</Button>
          
           }
-      {/* <Popover   width={220} position="right" withArrow opened={opened} >
-      <Popover.Target>
-        <Button onMouseEnter={open} onMouseLeave={close} style={{color: "white" , backgroundColor: 'transparent', borderColor: 'transparent' }}>
-        Hours of Operation
-        </Button>
-      </Popover.Target>
-      <Popover.Dropdown style = {{  backgroundColor : "transparent" }} sx={{ pointerEvents: 'none' }}>
-        <Table   style = {{backgroundColor : "transparent", color: "white" }} fontSize = "xs" horizontalSpacing={-10} verticalSpacing={-10} >
-      
-          <tbody>{rows}</tbody>
-        </Table>
-      </Popover.Dropdown>
-    </Popover> */}
+     
     </div>
 
       <div style={{ zIndex:1, transform: 'translateX(-50%)' , 
