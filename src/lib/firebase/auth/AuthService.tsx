@@ -118,14 +118,16 @@ export async function SignInAsGuest() {
   });
 }
 
-export async function SignOutofAccount() {
-	const auth = useFirebaseAuth();
-    signOut(auth).then(() => {
-		// Sign-out successful.
-	  }).catch((error) => {
-		// An error happened.
-	  });
-}
+export async function SignOutUser() {
+ const auth = useFirebaseAuth();
+ signOut(auth).then(() => {
+  // Sign-out successful.
+  console.log("user was successfully signed out")
+}).catch((error) => {
+  // An error happened.
+  console.log("error occurred, user was not signed out successfully")
+});
 
+}
 
 

@@ -1,7 +1,7 @@
 import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup, signOut, GoogleAuthProvider } from "firebase/auth";
 
 import {
   TextInput,
@@ -144,6 +144,7 @@ export default function CreateAccount (props: PaperProps) {
           // ...
         });   
     }
+
 
 
   const useStyles = createStyles((theme) => ({
