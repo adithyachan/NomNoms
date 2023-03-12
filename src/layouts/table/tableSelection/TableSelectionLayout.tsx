@@ -2,18 +2,18 @@ import { AppShell, Container, Grid, Header, Text, Menu, Button } from "@mantine/
 import CreateJoinTableLayout from "./CreateJoinTableLayout";
 import UserTablesLayout from "./UserTablesLayout";
 import NavBar from "@/components/NavBar";
+import { UseAuth } from "@/lib/firebase/auth/AuthProvider";
+import HeaderTabs from "@/components/NavBar";
 
 
 export default function TableSelectionLayout() {
+
   return (
-
-
-
     <Container fluid className="bg-gradient-to-b from-rose-100 to-white">
       <AppShell>
-        <NavBar>
-          
-        </NavBar>
+      <NavBar user={UseAuth()}>
+
+      </NavBar>
       <Grid>
         <Grid.Col span={12} md={6}>
           <CreateJoinTableLayout />
