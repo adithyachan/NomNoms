@@ -85,29 +85,6 @@ export default function CreateAccount (props: PaperProps) {
       console.log("User was successfully created")
       //WriteDocument("users", UID , UID)
       // ...
-      showNotification({
-        title: 'Success!',
-        message: 'Account was successfully created!',
-        autoClose: 3000,
-        color: 'teal',
-        icon: <IconCheck size={16} />,
-        
-        styles: () => ({
-          /*
-          root: {
-            backgroundColor: '#FFE4E6',
-            borderColor: '#FFE4E6',
-            '&::before': { backgroundColor: '#FFFFFF' },
-          },
-          */
-          //title: { color: '#F43F5E' },
-          //description: { color: '#F43F5E'},
-          closeButton: {
-            color: '#F43F5E',
-            '&:hover': { backgroundColor: '#F43F5E' },
-          },
-        }),            
-      })
       resetForm();
       console.log("auth working")
       setTimeout(() => {
