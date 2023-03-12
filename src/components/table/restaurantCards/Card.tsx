@@ -138,7 +138,7 @@ export default function ShowCard(props : {id : string }) {
           </tr>
         ));
         return (
-          <div style={{ height: '450px',
+          [<div style={{ height: '450px',
             width: '450px'}}>
             <Card shadow="sm" 
             radius="lg" 
@@ -287,7 +287,7 @@ export default function ShowCard(props : {id : string }) {
           left: 346,
         }}>
           
-          {photosExists &&  <Button style={{ color : 'white', fontWeight : 800, fontSize : '10px',backgroundColor: 'transparent'}} onClick={() => setOpened(true)}>Photos</Button>
+          {photosExists &&  <Button style={{ color : 'white', fontWeight : 800, fontSize : '10px',backgroundColor: 'transparent'}} onClick={() => setOpen(true)}>Photos</Button>
 }
           </div> 
       
@@ -322,6 +322,6 @@ export default function ShowCard(props : {id : string }) {
       </div>
     </Card> 
 </div>
-);    
+,businessData]);    
 }
 }
