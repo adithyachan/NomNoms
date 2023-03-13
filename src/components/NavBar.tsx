@@ -1,3 +1,4 @@
+/*
 import { useState, useEffect } from 'react';
 import {
   createStyles,
@@ -7,8 +8,9 @@ import {
   Group,
   Text,
   Menu,
-  Tabs,
   Burger,
+  Image,
+  Header
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -22,17 +24,16 @@ import {
   IconSwitchHorizontal,
   IconChevronDown,
 } from '@tabler/icons';
-import { MantineLogo } from '@mantine/ds';
 import { UseAuth } from '@/lib/firebase/auth/AuthProvider';
 
 const useStyles = createStyles((theme) => ({
   header: {
     paddingTop: theme.spacing.sm,
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-    borderBottom: `16px solid ${
+    borderBottom: ` solid ${
       theme.colorScheme === 'dark' ? 'transparent' : theme.colors.gray[2]
     }`,
-    marginBottom: 1920,
+    marginBottom: 50,
   },
 
   mainSection: {
@@ -76,7 +77,7 @@ const useStyles = createStyles((theme) => ({
 
   tab: {
     fontWeight: 500,
-    height: 608,
+    height: 200,
     backgroundColor: 'transparent',
 
     '&:hover': {
@@ -94,19 +95,20 @@ export default function HeaderTabs({ user } : any) {
   const { classes, theme, cx } = useStyles();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
+  let currUser = UseAuth();
 
   return (
-    <div className={classes.header}>
+    <Header height={{ base: 50, md: 70 }} p="md">
+      <div style={{ display: 'flex', height: '100%'}}>
       <Container className={classes.mainSection}>
         <Group position="apart">
-          <MantineLogo size={28} />
 
-          <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm" />
+          <Image width={200} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
+
 
           <Menu
-            width={260}
+            width={200}
             position="bottom-end"
-            //transitionProps={{ transition: 'pop-top-right' }}
             onClose={() => setUserMenuOpened(false)}
             onOpen={() => setUserMenuOpened(true)}
             withinPortal
@@ -116,11 +118,11 @@ export default function HeaderTabs({ user } : any) {
                 className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
               >
                 <Group spacing={7}>
-                  <Avatar src={"/images/full_logo.png"} alt={user.email} radius="xl" size={20} />
+                  <Avatar alt={currUser.email} radius="xl" size={20} />
                   <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                    {user.name}
+                    {}
                   </Text>
-                  <IconChevronDown size={192} stroke={1.5} />
+                  <IconChevronDown size={20} stroke={1.5} />
                 </Group>
               </UnstyledButton>
             </Menu.Target>
@@ -163,10 +165,13 @@ export default function HeaderTabs({ user } : any) {
           </Menu>
         </Group>
       </Container>
-    </div>
+      </div>
+    </Header>
   );
 }
-/*
+
+*/
+
 import { useRouter } from "next/router";
 import { IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight } from '@tabler/icons';
 import { Header, Text, Menu, Button, Image } from "@mantine/core";
@@ -182,7 +187,8 @@ export default function NavBar (props: any) {
 
     return (
         <Header height={{ base: 50, md: 70 }} p="md">
-            <div style={{ display: 'flex', alignItems: 'center', height: '100%'}}>
+            <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+              <Image width={200} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
 
               <Menu shadow="md" width={200}>
                 <Menu.Target>
@@ -213,4 +219,3 @@ export default function NavBar (props: any) {
             </Header>
     );
 }
-*/
