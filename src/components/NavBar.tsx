@@ -1,5 +1,4 @@
-/*
-import { useState, useEffect } from 'react';
+import { UseAuth } from '@/lib/firebase/auth/AuthProvider';
 import {
   createStyles,
   Container,
@@ -8,9 +7,9 @@ import {
   Group,
   Text,
   Menu,
+  Header,
   Burger,
-  Image,
-  Header
+  Image
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -24,16 +23,16 @@ import {
   IconSwitchHorizontal,
   IconChevronDown,
 } from '@tabler/icons';
-import { UseAuth } from '@/lib/firebase/auth/AuthProvider';
+import { useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
   header: {
     paddingTop: theme.spacing.sm,
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-    borderBottom: ` solid ${
+    borderBottom: `solid ${
       theme.colorScheme === 'dark' ? 'transparent' : theme.colors.gray[2]
     }`,
-    marginBottom: 50,
+    marginBottom: 20,
   },
 
   mainSection: {
@@ -64,51 +63,26 @@ const useStyles = createStyles((theme) => ({
   userActive: {
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
   },
-
-  tabs: {
-    [theme.fn.smallerThan('sm')]: {
-      display: 'none',
-    },
-  },
-
-  tabsList: {
-    borderBottom: '0 !important',
-  },
-
-  tab: {
-    fontWeight: 500,
-    height: 200,
-    backgroundColor: 'transparent',
-
-    '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
-    },
-
-    '&[data-active]': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-      borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[2],
-    },
-  },
 }));
 
-export default function HeaderTabs({ user } : any) {
+
+export default function NavBar({ user }: any) {
   const { classes, theme, cx } = useStyles();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
-  let currUser = UseAuth();
 
   return (
     <Header height={{ base: 50, md: 70 }} p="md">
-      <div style={{ display: 'flex', height: '100%'}}>
       <Container className={classes.mainSection}>
         <Group position="apart">
-
           <Image width={200} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
 
+          <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm" />
 
           <Menu
-            width={200}
+            width={260}
             position="bottom-end"
+            //transitionProps={{ transition: 'pop-top-right' }}
             onClose={() => setUserMenuOpened(false)}
             onOpen={() => setUserMenuOpened(true)}
             withinPortal
@@ -118,9 +92,9 @@ export default function HeaderTabs({ user } : any) {
                 className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
               >
                 <Group spacing={7}>
-                  <Avatar alt={currUser.email} radius="xl" size={20} />
+                  <Avatar src={user.image} alt={user.name} radius="xl" size={20} />
                   <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                    {}
+                    {user.name}
                   </Text>
                   <IconChevronDown size={20} stroke={1.5} />
                 </Group>
@@ -165,13 +139,10 @@ export default function HeaderTabs({ user } : any) {
           </Menu>
         </Group>
       </Container>
-      </div>
     </Header>
   );
 }
-
-*/
-
+/*
 import { useRouter } from "next/router";
 import { IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight } from '@tabler/icons';
 import { Header, Text, Menu, Button, Image } from "@mantine/core";
@@ -219,3 +190,4 @@ export default function NavBar (props: any) {
             </Header>
     );
 }
+*/
