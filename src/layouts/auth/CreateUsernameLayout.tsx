@@ -1,5 +1,5 @@
 import { useToggle, upperFirst } from '@mantine/hooks';
-import { useForm } from '@mantine/form';
+import { isEmail, useForm } from '@mantine/form';
 import { useFirebaseAuth, useFirebaseFirestore } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -43,8 +43,11 @@ import {
   addDoc,
   setDoc, 
   DocumentReference,
-  CollectionReference} from "firebase/firestore";
+  CollectionReference,
+  Firestore,
+  DocumentSnapshot} from "firebase/firestore";
 import { ReadDocument } from '@/lib/firebase/FirestoreOperations';
+import { WriteDocument } from '@/lib/firebase/FirestoreOperations';
 
 
 export default function AuthenticationForm(props: PaperProps) {
@@ -65,16 +68,8 @@ export default function AuthenticationForm(props: PaperProps) {
       e.preventDefault();
       const firestore = useFirebaseFirestore()
   // Get document with name
-  const query = await getDoc(doc(firestore, "users", username))
-
-  // Check if document exists
-  if (!query.exists()) {
-  } else {
-  // document does not exist
-  alert("Username exists")
-  return undefined
-  }
-      
+  const auth = useFirebaseAuth();
+      const user = auth.currentUser;
       // if (ReadDocument("users", username) == undefined) {
       //   alert("Username exists")
       //   return undefined
@@ -83,6 +78,15 @@ export default function AuthenticationForm(props: PaperProps) {
       //   alert("Username should be one word")
       //   return undefined
       // }
+      if (user) {
+        const UID = user.uid;
+        //const firestore = useFirebaseFirestore()
+    // Get document with name
+    // await firestore.collection('users').document(UID)
+    //       .get().then((DocumentSnapshot ds){
+    //     var email=ds.data['photourl'];
+    // });
+  }
       var temp = 0  
       !/\s/.test(username) ? null : temp = 1
       if (temp == 1){
@@ -92,6 +96,8 @@ export default function AuthenticationForm(props: PaperProps) {
       console.log("working")
       console.log("working")
       console.log(username)
+      const UID = user?.uid;
+      WriteDocument("users", {username: username, email: ""} , UID)
       setTimeout(() => {
         router.push('/tables');
       }, 10)

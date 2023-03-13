@@ -1,14 +1,17 @@
 export interface IUser {
-  name: string,
-  tables: string[],
+  username?: string,
+  tables?: string,
+  email?: string,
 }
 
 export class User implements IUser {
-  name: string;
-  tables: string[];
+  username: string;
+  tables: string;
+  email: string;
 
-  constructor(name: string, tables: string[]) {
-    this.name = name;
+  constructor(username: string, tables: string, email: string) {
+    this.username = username;
     this.tables = tables;
+    this.email = email;
   }
 }

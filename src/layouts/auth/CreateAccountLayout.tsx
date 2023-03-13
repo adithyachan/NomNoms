@@ -83,12 +83,12 @@ export default function CreateAccount (props: PaperProps) {
       const user = userCredential.user;
       var UID = userCredential.user.uid;
       console.log("User was successfully created")
-      //WriteDocument("users", UID , UID)
+      WriteDocument("users", {email: form.values.email} , UID)
       // ...
       resetForm();
       console.log("auth working")
       setTimeout(() => {
-        router.push('/auth/login');
+        router.push('/auth/createUsername');
       }, 10)
 
 
