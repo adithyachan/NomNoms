@@ -5,6 +5,7 @@ import GetHours from './HoursOfOperation';
 import { Table } from '@mantine/core';
 import { useState } from 'react';
 import { IconCheck, IconX } from '@tabler/icons';
+import RestImages from './Photos';
 
 
 //import RenderImage from './Image';
@@ -30,8 +31,8 @@ export default function ShowCard(props : {id : string }) {
         console.log(businessError)
         if (businessError.code == ("BUSINESS_NOT_FOUND")) {
           return (
-            <div style={{ height: '410px', 
-              width: '410px',
+            <div style={{ height: '450px', 
+              width: '450px',
               alignItems: 'center' }} >
               <Text size="md" 
                 color="dimmed" >
@@ -41,8 +42,8 @@ export default function ShowCard(props : {id : string }) {
           )
         } else {
           return (
-            <div style={{ height: '410px', 
-              width: '410px', 
+            <div style={{ height: '450px', 
+              width: '450px', 
               alignItems: 'center' }} >
               <Text size="md" 
                 color="dimmed">
@@ -53,8 +54,8 @@ export default function ShowCard(props : {id : string }) {
         }
       } else if (isLoadingBusiness) {
         return (
-          <div  style={{ height: '410px', 
-            width: '410px'}} >
+          <div  style={{ height: '450px', 
+            width: '450px'}} >
             <Card className='bg-gradient-to-r from-pink-100 via-white to-pink-100 ' 
               shadow="sm" 
                 radius="md" 
@@ -127,7 +128,7 @@ export default function ShowCard(props : {id : string }) {
         const formattedHours = GetHours(data)
         const ths = (
           <tr style = {{borderBottomColor : 'pink'}}>
-            <th >Day</th>
+            <th>Day</th>
             <th>Hours</th>
           </tr>
         );
@@ -138,7 +139,7 @@ export default function ShowCard(props : {id : string }) {
           </tr>
         ));
         return (
-          [<div style={{ height: '450px',
+          <div style={{ height: '450px',
             width: '450px'}}>
             <Card shadow="sm" 
             radius="lg" 
@@ -155,7 +156,6 @@ export default function ShowCard(props : {id : string }) {
       />
 
       <div 
-      
       style={{ position: 'absolute',
        top: 0,
          right: 0, 
@@ -174,7 +174,7 @@ export default function ShowCard(props : {id : string }) {
           left: 11,
           transform: 'translateY(-50%)'
         }}>
-        <Text className="text-5xl p-4  font-bold  from-pink-300 via-pink-50 to-pink-300 bg-gradient-to-r bg-clip-text text-transparent" style={{  borderColor : "purple", //borderSpacing : '10px', borderInlineColor : "purple", 
+        <Text className="text-5xl p-4 font-bold from-pink-300 via-pink-50 to-pink-300 bg-gradient-to-r bg-clip-text text-transparent" style={{  borderColor : "purple", //borderSpacing : '10px', borderInlineColor : "purple", 
          fontSize: '24px',
           fontWeight: 700
  }}>{nameRestaurant}</Text>
@@ -200,9 +200,26 @@ export default function ShowCard(props : {id : string }) {
         </Text>
         }
       </div>
-     
+    
       <Modal
-        
+          radius = "lg"
+          centered
+          withCloseButton={false} 
+          size="auto"
+          
+        opened={opened}
+        onClose={() => setOpen(false)}
+        overlayColor={theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[2]}
+      overlayOpacity={0.55}
+      overlayBlur={3} 
+      overflow="inside" 
+      style = {{ position : "absolute", top:'7%'
+     
+        } }
+      >
+      <RestImages photos = {photos}/>
+      </Modal> 
+      <Modal
           centered
           withCloseButton={false} 
           size="auto"
@@ -322,6 +339,5 @@ export default function ShowCard(props : {id : string }) {
       </div>
     </Card> 
 </div>
-,businessData]);    
-}
+        )}
 }

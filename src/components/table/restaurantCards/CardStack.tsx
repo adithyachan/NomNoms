@@ -6,13 +6,7 @@ import { Card, Text, Button, Tooltip, Progress } from '@mantine/core';
 
 
 export default function CardStack({ids, setUserVotes, user} : any) {
-  //var cards = []
-  var data = []
-  // for (var  i = 0; i < ids.length;i++) {
-    
-  //   const [cards[i], data] = ShowCard(ids[i]) 
-    
-  // }
+
   const cards = ids.map((id: string) => <ShowCard key={id} id={id}/>)
   const [index, setIndex] = useState(0)
   const [card, setCard] = useState(cards[index])
