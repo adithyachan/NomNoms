@@ -1,8 +1,8 @@
 import ShowCard from "./Card";
 import React, { useEffect, useState } from 'react'
-import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX } from '@tabler/icons'
+import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX, IconChevronRight} from '@tabler/icons'
 
-import { Card, Text, Button, Tooltip, Progress } from '@mantine/core';
+import { Card, Text, Button, Tooltip, Progress, NavLink } from '@mantine/core';
 
 
 export default function CardStack({ids, setUserVotes, user} : any) {
@@ -11,7 +11,7 @@ export default function CardStack({ids, setUserVotes, user} : any) {
   const [index, setIndex] = useState(0)
   const [card, setCard] = useState(cards[index])
   const [canFinish, setCanFinish] = useState(false)
-
+  const [canSkip, setCanSkip] = useState(true)
   // not to be confused with setUserVotes, which is a setter function passed into this component
   // in order to set this user's votes. 
   // setVotes is meant to update the user's votes as they are going through the card stack,
@@ -44,6 +44,7 @@ export default function CardStack({ids, setUserVotes, user} : any) {
   function handleYesClick() {
     if (index < cards.length - 1) {
       setIndex(index + 1);
+      setCanSkip(false);
       setVotes((votes: any) => ({
         ...votes, 
         [ids[index]]: 1,
@@ -53,6 +54,7 @@ export default function CardStack({ids, setUserVotes, user} : any) {
   function handleNoClick() {
     if (index < cards.length - 1) {
       setIndex(index + 1);
+      setCanSkip(false);
       setVotes((votes: any) => ({
         ...votes, 
         [ids[index]]: 0,
@@ -134,6 +136,18 @@ export default function CardStack({ids, setUserVotes, user} : any) {
     }
   }
 
+  function Skip() {
+    if (canSkip) {
+      return (
+        <NavLink onClick={() => handleFinishClick()} active={true} variant="subtle" color="red" label="Or, if you&apos;re fine with anything your friends choose, skip voting" rightSection={<IconChevronRight size="0.8rem" stroke={1.5}/>} />
+      )
+    } else {
+      return (
+        <></>
+      )
+    }
+  }
+
   if (ids == undefined || ids.length == 0) return (<Text size="md" color="dimmed">Card stack is empty!</Text> )
 
   else{
@@ -146,15 +160,17 @@ export default function CardStack({ids, setUserVotes, user} : any) {
           <div style={{paddingTop: '100px'}}>
 
             {card}
-            <div style={{paddingTop: '10px', justifyContent: 'center', alignItems: 'center', display: 'flex', gap: 35}}>
+            <div style={{paddingBottom: '30px', paddingTop: '10px', justifyContent: 'center', alignItems: 'center', display: 'flex', gap: 35}}>
               <BackButton />
               <YesButton />
               <NoButton />
               <FinishButton />
               
             </div>
+            <Skip />
           </div>
         </div>
+
       </>
     )
     
