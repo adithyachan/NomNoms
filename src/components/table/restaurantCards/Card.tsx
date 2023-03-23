@@ -132,8 +132,8 @@ export default function ShowCard(props : {id : string }) {
             <th>Hours</th>
           </tr>
         );
-        const rows = formattedHours.map((individual) => (
-          <tr key={individual.name}>
+        const rows = formattedHours.map((individual, index) => (
+          <tr key={`row-${index}`}>
             <td>{individual.day}</td>
             <td>{individual.timing}</td>
           </tr>
