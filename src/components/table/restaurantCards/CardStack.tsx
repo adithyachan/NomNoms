@@ -5,7 +5,7 @@ import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX, IconChevro
 import { Card, Text, Button, Tooltip, Progress, NavLink } from '@mantine/core';
 
 
-export default function CardStack({ids, setUserVotes, user} : any) {
+export default function CardStack({ids, setState, setUserVotes, user} : any) {
 
   const cards = ids.map((id: string) => <ShowCard key={id} id={id}/>)
   const [index, setIndex] = useState(0)
@@ -66,7 +66,16 @@ export default function CardStack({ids, setUserVotes, user} : any) {
       setIndex(index - 1);
   }
   function handleFinishClick() {
+    
+    Object.keys(votes).forEach(key => {
+      if (votes[key] == 0) {
+        delete votes[key]
+      }
+    })
     console.log(votes)
+    setUserVotes(votes)
+    setState('order')
+
     // setUserVotes(votes)
     // TODO: redirect to waiting for other nomsters to finish their votes page
   }
