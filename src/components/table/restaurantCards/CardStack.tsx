@@ -6,7 +6,6 @@ import { Card, Text, Button, Tooltip, Progress, NavLink } from '@mantine/core';
 
 
 export default function CardStack({ids, setState, setUserVotes, user} : any) {
-
   const cards = ids.map((id: string) => <ShowCard key={id} id={id}/>)
   const [index, setIndex] = useState(0)
   const [card, setCard] = useState(cards[index])
@@ -74,7 +73,8 @@ export default function CardStack({ids, setState, setUserVotes, user} : any) {
     })
     console.log(votes)
     setUserVotes(votes)
-    setState('order')
+    setState('favorite')
+    
 
     // setUserVotes(votes)
     // TODO: redirect to waiting for other nomsters to finish their votes page
