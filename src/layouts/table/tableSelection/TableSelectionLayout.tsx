@@ -5,7 +5,7 @@ import { showNotification } from "@mantine/notifications";
 import { Button} from "@mantine/core";
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
 import { signOut } from "firebase/auth";
-import { IconCheck, IconX } from "@tabler/icons";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 export default function TableSelectionLayout() {
   return (
