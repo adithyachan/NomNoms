@@ -1,5 +1,5 @@
 import { createStyles, Container, Text, Button, Group, Image } from '@mantine/core';
-import { IconLogin } from '@tabler/icons';
+import { IconLogin } from '@tabler/icons-react';
 import { useRouter } from "next/router";
 
 const BREAKPOINT = '@media (max-width: 755px)';

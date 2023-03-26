@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { BackgroundImage, Button, Card, Overlay, useMantineTheme } from "@mantine/core"
-import { IconArrowRight, IconArrowLeft } from "@tabler/icons"
+import { IconArrowRight, IconArrowLeft } from "@tabler/icons-react"
 export default function RestImages({photos} : any) {
     const theme = useMantineTheme();
     const [index, setIndex] = useState(1)

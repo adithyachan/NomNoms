@@ -1,7 +1,7 @@
 import FavoriteCard from './FavoriteCard';
 import { useEffect, useState } from 'react';
 import { NavLink, Button, Footer } from '@mantine/core'
-import { IconChevronRight} from '@tabler/icons'
+import { IconChevronRight} from '@tabler/icons-react'
 import { useRouter } from 'next/router';
 
 export default function FavoritePicker({ ids, votes, setVotes, listData}: any) {

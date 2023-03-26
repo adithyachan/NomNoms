@@ -1,6 +1,6 @@
 import ShowCard from "./Card";
 import React, { useEffect, useState } from 'react'
-import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX, IconChevronRight} from '@tabler/icons'
+import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX, IconChevronRight} from '@tabler/icons-react'
 
 import { Card, Text, Button, Tooltip, Progress, NavLink } from '@mantine/core';
 

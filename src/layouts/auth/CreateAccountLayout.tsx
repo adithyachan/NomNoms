@@ -22,7 +22,7 @@ import {
 import { GoogleButton, GithubButton} from "@/components/auth/SocialButtons"
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
-import { IconX } from '@tabler/icons';
+import { IconX } from '@tabler/icons-react';
 import { useRouter } from "next/router";
 
 
