@@ -20,15 +20,15 @@ export default function TablePage() {
   const [table, setTable] = useState<Table>()
   const [tables, setTables] = useState<Table[]>()
 
-  const updateTable = () => {
+  const updateTable = async () => {
     if (table) {
-      console.log("here")
+      console.log(((new Date()).getTime() - table.lastAccessed.toDate().getTime()) / 1000)
       table.lastAccessed = Timestamp.fromDate((new Date()))
       table.expiration = Timestamp.fromDate(new Date(table.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
       if (!table.users.includes(user.uid!)) {
         table.users.push(user.uid!)
       }
-      UpdateTable(table as ITable)
+      await UpdateTable(table as ITable)
     } 
   }
 
@@ -43,22 +43,18 @@ export default function TablePage() {
     }
     else {
       if (tables?.map((table) => table.id).includes(tableid as string)) {
-        try {
+        if (!table) {
           const unsub = ReadTable(tableid as string, setTable)
-          return () => {
-            unsub()
-            updateTable()
-          }
         }
-        catch (err) {
-          router.push("/tables/tablenotfound")
+        else if (((new Date()).getTime() - table.lastAccessed.toDate().getTime()) / 1000 > 2) {
+          updateTable()
         }
       }
       else {
         router.push("/tables/tablenotfound")
       }
     }
-  }, [tables, user, tableid])
+  }, [tables, table, user, tableid])
 
   // Check if page is loaded yet
   if (!table) {

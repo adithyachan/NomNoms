@@ -1,64 +1,69 @@
+import { Table } from '@/types/Table';
 import {
   Group,
   Avatar,
   Text,
-  UnstyledButton,
-  Menu
+  Flex,
+  Menu,
+  ActionIcon
 } from '@mantine/core';
 
-import { forwardRef } from "react"
+import { IconSettings, IconCrown, IconX } from '@tabler/icons-react';
+import { UpdateTable } from '@/lib/firebase/table/TableOperations';
 
 
 interface UserCardProps extends React.ComponentPropsWithoutRef<'button'> {
   image?: string;
   name: string;
   email: string;
+  leaderView?: boolean;
   icon?: React.ReactNode;
+  table: Table;
 }
 
-// eslint-disable-next-line react/display-name
-const UserButton = forwardRef<HTMLButtonElement, UserCardProps>(
-  ({ image, name, email, icon, ...others }: UserCardProps, ref) => (
-    <UnstyledButton ref={ref}>
-      <Group className='bg-rose-100 p-5 shadow-rose-200 rounded-3xl shadow-lg transition-all ease-in-out hover:shadow-xl hover:shadow-red-300 delay-100 duration-500'>
-        <Avatar src={image} radius="xl" />
-        <div style={{ flex: 1 }}>
-          <Text size="sm" weight={500}>
-            {name}
-          </Text>
-          <Text color="dimmed" size="xs">
-            {email}
-          </Text>
-        </div>
-        { icon }
-      </Group>
-    </UnstyledButton>
-  )
-);
+export default function UserCard({ image, name, email, leaderView, icon, table }: UserCardProps) {
+  const transferLeadership = async () => {
+    table.leader = name
+    await UpdateTable(table)
+  }
 
-export default function UserCard({ image, name, email, icon }: UserCardProps) {
+  const kickUser = async () => {
+    table.users = table.users.filter(item => item !== name)
+    await UpdateTable(table)
+  }
 
   return (
-    <Group position="center">
-      <Menu>
-        <Menu.Target>
-          <UserButton
-            image={image}
-            name={name}
-            email={email}
-            icon={icon}
-          />
-        </Menu.Target>
-        <Menu.Dropdown>
-          <Menu.Item
-            component="a"
-            href="https://mantine.dev"
-            target="_blank"
-          >
-            External link
-          </Menu.Item>
-        </Menu.Dropdown>
-      </Menu>
+    <Group className='bg-rose-100 p-5 shadow-rose-200 rounded-3xl shadow-lg transition-all ease-in-out hover:shadow-xl hover:shadow-red-300 delay-100 duration-500'>
+      <Flex className="justify-between items-center w-full">
+        <Avatar src={image} radius="xl" />
+        { icon ? icon :
+         leaderView ? 
+         <Menu>
+          <Menu.Target>
+            <ActionIcon component="button" color="gray" variant='subtle'>
+              <IconSettings className='h-5 w-5'/>
+            </ActionIcon>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Label>Manage Nomster</Menu.Label>
+            <Menu.Item color="red" onClick={transferLeadership} icon={<IconCrown className='h-3 w-3 fill-amber-500'/>}>
+              Transfer Leadership
+            </Menu.Item>
+            <Menu.Item color="red" onClick={kickUser} icon={<IconX className='h-3 w-3'/>}>
+              Kick Nomster
+            </Menu.Item>
+          </Menu.Dropdown>
+         </Menu> :
+         null }
+      </Flex>
+      <div style={{ flex: 1 }}>
+        <Text size="sm" weight={500}>
+          {name}
+        </Text>
+        <Text color="dimmed" size="xs">
+          {email}
+        </Text>
+      </div>
     </Group>
   );
 }
