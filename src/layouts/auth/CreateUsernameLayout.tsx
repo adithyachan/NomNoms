@@ -74,6 +74,22 @@ export default function AuthenticationForm(props: PaperProps) {
         alert("Username exists")
         return undefined
       } 
+      //const user = userCredential.user;
+      if (user) {
+        const UID = user.uid;
+        //const firestore = useFirebaseFirestore()
+    // Get document with name
+    // await firestore.collection('users').document(UID)
+    //       .get().then((DocumentSnapshot ds){
+    //     var email=ds.data['photourl'];
+    // });
+  }
+      //console.log(username)
+      const UID = user?.uid;
+      if (user?.email) {
+      WriteDocument("users", {username: username, email: user.email}, UID)
+      WriteDocument("usernames", {uid: UID}, username)
+      }
       // if () {
       //   alert("Username should be one word")
       //   return undefined
@@ -96,8 +112,8 @@ export default function AuthenticationForm(props: PaperProps) {
       console.log("working")
       console.log("working")
       console.log(username)
-      const UID = user?.uid;
-      WriteDocument("users", {username: username, email: ""} , UID)
+      // const UID = user?.uid;
+      // WriteDocument("users", {username: username, email: ""} , UID)
       setTimeout(() => {
         router.push('/tables');
       }, 10)

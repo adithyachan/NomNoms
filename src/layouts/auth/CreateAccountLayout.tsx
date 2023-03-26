@@ -84,26 +84,31 @@ export default function CreateAccount (props: PaperProps) {
   const HandleCreate = async (e : any) => {
     const auth = useFirebaseAuth();
     console.log("register");
+    // const q = query(collection(db, "cities"), where("capital", "==", true));
 
+    // const querySnapshot = await getDocs(q);
+    // querySnapshot.forEach((doc) => {
+    // // doc.data() is never undefined for query doc snapshots
+    // console.log(doc.id, " => ", doc.data());
+    // });
+    if (ReadDocument("usernames", username) == undefined) {
+        alert("Username exists")
+        return undefined
+    }
+    // if (user) {
+    // //var UID = userCredential.user.uid;
+    // console.log("User was successfully created")
+    // WriteDocument("users", {email: form.values.email} , UID)
+    var temp = 0  
+    !/\s/.test(username) ? null : temp = 1
+    if (temp == 1){
+      alert("Username should be one word")
+      return undefined
+    }
     createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
-      // const q = query(collection(db, "cities"), where("capital", "==", true));
-
-      // const querySnapshot = await getDocs(q);
-      // querySnapshot.forEach((doc) => {
-      // // doc.data() is never undefined for query doc snapshots
-      // console.log(doc.id, " => ", doc.data());
-      // });
-      if (ReadDocument("usernames", username) != undefined) {
-          alert("Username exists")
-          return undefined
-      }
-      // if (user) {
-      // //var UID = userCredential.user.uid;
-      // console.log("User was successfully created")
-      // WriteDocument("users", {email: form.values.email} , UID)
       if (user) {
         const UID = user.uid;
         //const firestore = useFirebaseFirestore()
@@ -113,14 +118,6 @@ export default function CreateAccount (props: PaperProps) {
     //     var email=ds.data['photourl'];
     // });
   }
-      var temp = 0  
-      !/\s/.test(username) ? null : temp = 1
-      if (temp == 1){
-        alert("Username should be one word")
-        return undefined
-      }
-      console.log("working")
-      console.log("working")
       //console.log(username)
       const UID = user?.uid;
       WriteDocument("users", {username: username, email: form.values.email}, UID)
