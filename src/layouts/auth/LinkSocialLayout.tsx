@@ -17,7 +17,7 @@ import { GoogleButtonLink, GithubButtonLink} from "@/components/auth/SocialButto
 import { useRouter } from "next/router";
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
-import { IconX } from '@tabler/icons';
+import { IconX } from '@tabler/icons-react';
 
 export default function LogInForm (props: PaperProps) {
   //Router

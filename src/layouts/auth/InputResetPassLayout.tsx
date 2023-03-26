@@ -13,7 +13,7 @@ import { Box,
   Space
 } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
-import { IconCheck, IconX } from '@tabler/icons';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
 import { confirmPasswordReset } from "firebase/auth";
 import { useEffect, useRef, useState } from 'react';

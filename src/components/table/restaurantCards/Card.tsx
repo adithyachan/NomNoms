@@ -4,7 +4,7 @@ import { Loader } from '@mantine/core';
 import GetHours from './HoursOfOperation';
 import { Table } from '@mantine/core';
 import { useState } from 'react';
-import { IconCheck, IconX } from '@tabler/icons';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import RestImages from './Photos';
 
 

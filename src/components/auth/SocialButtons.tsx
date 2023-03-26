@@ -1,5 +1,5 @@
 import { Button, ButtonProps, Group } from '@mantine/core';
-import { GithubIcon, DiscordIcon, TwitterIcon } from '@mantine/ds';
+import { IconBrandGithub, IconBrandDiscord, IconBrandTwitter } from '@tabler/icons-react';
 import { GoogleIcon } from './GoogleIcon';
 import { FacebookIcon } from './FacebookIcon';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider } from "firebase/auth";
@@ -173,7 +173,7 @@ export function GithubButton(props: ButtonProps) {
     <Button
       {...props}
       onClick={HandleGithub}
-      leftIcon={<GithubIcon size={16} />}
+      leftIcon={<IconBrandGithub size={16} />}
       sx={(theme) => ({
         backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
         color: '#fff',
@@ -216,7 +216,7 @@ export function GithubButtonLogin(props: ButtonProps) {
     <Button
       {...props}
       onClick={HandleGithubLogin}
-      leftIcon={<GithubIcon size={16} />}
+      leftIcon={<IconBrandGithub size={16} />}
       sx={(theme) => ({
         backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
         color: '#fff',
@@ -250,7 +250,7 @@ export function GithubButtonLink(props: ButtonProps) {
     <Button
       {...props}
       onClick={HandleGithubLink}
-      leftIcon={<GithubIcon size={16} />}
+      leftIcon={<IconBrandGithub size={16} />}
       sx={(theme) => ({
         backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
         color: '#fff',
@@ -298,7 +298,7 @@ export function FacebookButton(props: ButtonProps) {
 export function DiscordButton(props: ButtonProps) {
   return (
     <Button
-      leftIcon={<DiscordIcon size={16} />}
+      leftIcon={<IconBrandDiscord size={16} />}
       sx={(theme) => ({
         backgroundColor: theme.colorScheme === 'dark' ? '#5865F2' : '#5865F2',
         '&:hover': {
@@ -318,7 +318,7 @@ export function TwitterButton(props: ButtonProps & React.ComponentPropsWithoutRe
   return (
     <Button
       component="a"
-      leftIcon={<TwitterIcon size={16} color="#00ACEE" />}
+      leftIcon={<IconBrandTwitter size={16} color="#00ACEE" />}
       variant="default"
       {...props}
     />

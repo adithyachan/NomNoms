@@ -6,7 +6,7 @@ import RestaurantListLayout from "./RestaurantListLayout";
 
 export default function TableSelectedLayout(props: {table: Table}) {
   return (
-    <Container fluid>
+    <Container fluid className="p-10 bg-gradient-to-b from-rose-100 to-white">
       {/* Create Grid with 3 columns, 1st & 3rd are smaller. Middle is larger */}
       <Grid>
         <Grid.Col span={3}>

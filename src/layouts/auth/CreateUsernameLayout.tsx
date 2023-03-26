@@ -1,6 +1,6 @@
 import { useForm } from '@mantine/form';
 import { useFirebaseFirestore } from '@/lib/firebase/hooks/useFirebase';
-import { IconRefresh } from '@tabler/icons';
+import { IconRefresh } from '@tabler/icons-react';
 import {
   TextInput,
   createStyles,
