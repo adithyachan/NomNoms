@@ -70,11 +70,10 @@ const copy = (link: string) => (
           <div  style=
           {{ height: '100%', 
             width: '300px',
-            position: 'center', 
           }} > 
 
              <Card  style={{
-                justifyContent: 'center', position: 'center' }} 
+                justifyContent: 'center' }} 
              className="shadow-lg bg-rose-100 shadow-rose-200 transition ease-in-out hover:shadow-xl delay-100 duration-500 hover:shadow-rose-300 rounded-lg">
               <Text className= "mb-3 text-5 font-black text-center " >Personal Table</Text>
           
@@ -83,7 +82,7 @@ const copy = (link: string) => (
           <Group>
           
             <Button color="red" size="xs" compact  onClick={joinTable}>
-              Let's Eat!
+               Let&aposs Eat! 
             </Button>
           </Group>
         </Center>
