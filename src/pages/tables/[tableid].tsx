@@ -26,7 +26,6 @@ export default function TablePage() {
 
   const updateTable = async () => {
     if (table) {
-      console.log(((new Date()).getTime() - table.lastAccessed.toDate().getTime()) / 1000)
       table.lastAccessed = Timestamp.fromDate((new Date()))
       table.expiration = Timestamp.fromDate(new Date(table.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
       if (!table.users.includes(user.uid!)) {
