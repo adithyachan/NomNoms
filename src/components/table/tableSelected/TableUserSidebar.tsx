@@ -2,7 +2,7 @@ import { Table } from "@/types/Table";
 import { IconCrown } from "@tabler/icons-react";
 import { Title } from "@mantine/core";
 import { useUser } from "@/providers/AuthProvider";
-import UserCard from "./UserCard";
+import UserCard from "./CardUser";
 
 export default function TableUserSidebar(props: {table: Table}) {
   const { user } = useUser();
