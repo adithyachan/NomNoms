@@ -1,12 +1,12 @@
 import { Table } from "@/types/Table";
 import { IconCrown } from "@tabler/icons-react";
-import UserCard from "./UserCard";
 import { Title } from "@mantine/core";
 import { useUser } from "@/providers/AuthProvider";
+import UserCard from "./UserCard";
 
 export default function TableUserSidebar(props: {table: Table}) {
   const { user } = useUser();
-  
+
   return (
     <div className="rounded-3xl bg-white shadow-red-100 shadow-xl p-5 space-y-5">
       <Title className="text-center text-5xl font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Users</Title>
