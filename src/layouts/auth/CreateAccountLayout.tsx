@@ -4,7 +4,8 @@ import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { WriteDocument } from '@/lib/firebase/FirestoreOperations'; 
+import { ReadDocument, WriteDocument, WriteDocumentWithConverter } from '@/lib/firebase/FirestoreOperations'; 
+import { getFirestore } from 'firebase/firestore';
 
 import {
   TextInput,
@@ -37,6 +38,7 @@ import { formatDiagnostic } from 'typescript';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from "next/router";
 import { useState } from 'react';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 
 
 export default function CreateAccount (props: PaperProps) {
@@ -54,7 +56,7 @@ export default function CreateAccount (props: PaperProps) {
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) => (val.length < 6 ? 'Password should include at least 6 characters' : null),
-      //username: (val) => (!/\S/.test(val) ? null : 'Username should be one word'),
+      username: (val) => (!/\S/.test(val) ? null : 'Username should be one word'),
 
       confirmpassword: (val, values) =>
         val !== values.password ? 'Passwords did not match' : null,
@@ -87,6 +89,17 @@ export default function CreateAccount (props: PaperProps) {
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
+      // const q = query(collection(db, "cities"), where("capital", "==", true));
+
+      // const querySnapshot = await getDocs(q);
+      // querySnapshot.forEach((doc) => {
+      // // doc.data() is never undefined for query doc snapshots
+      // console.log(doc.id, " => ", doc.data());
+      // });
+      if (ReadDocument("usernames", username) != undefined) {
+          alert("Username exists")
+          return undefined
+      }
       // if (user) {
       // //var UID = userCredential.user.uid;
       // console.log("User was successfully created")
@@ -110,7 +123,8 @@ export default function CreateAccount (props: PaperProps) {
       console.log("working")
       //console.log(username)
       const UID = user?.uid;
-      WriteDocument("users", {username: username, email: form.values.email})
+      WriteDocument("users", {username: username, email: form.values.email}, UID)
+      WriteDocument("usernames", {uid: UID}, username)
       resetForm();
       console.log("auth working")
       setTimeout(() => {
@@ -264,7 +278,7 @@ export default function CreateAccount (props: PaperProps) {
           }
           value={username}
           onChange={(event) => setUsername(event.target.value)}
-           error={form.errors.username && 'Username should be one word'}
+           //error={form.errors.username && 'Username should be one word'}
          />
          
           <PasswordInput

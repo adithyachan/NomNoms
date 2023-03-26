@@ -70,10 +70,10 @@ export default function AuthenticationForm(props: PaperProps) {
   // Get document with name
   const auth = useFirebaseAuth();
       const user = auth.currentUser;
-      // if (ReadDocument("users", username) == undefined) {
-      //   alert("Username exists")
-      //   return undefined
-      // } 
+      if (ReadDocument("usernames", username) == undefined) {
+        alert("Username exists")
+        return undefined
+      } 
       // if () {
       //   alert("Username should be one word")
       //   return undefined
