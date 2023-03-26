@@ -13,6 +13,10 @@ import { useUser } from "@/providers/AuthProvider";
 import { ITable, Table } from "@/types/Table";
 import { Timestamp } from "firebase/firestore";
 
+import { NotificationsProvider, showNotification } from "@mantine/notifications";
+
+import { IconCheck } from "@tabler/icons-react";
+
 export default function TablePage() {
   const router = useRouter()
   const { tableid } = router.query
@@ -26,6 +30,13 @@ export default function TablePage() {
       table.lastAccessed = Timestamp.fromDate((new Date()))
       table.expiration = Timestamp.fromDate(new Date(table.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
       if (!table.users.includes(user.uid!)) {
+        showNotification({
+          title: `You're in!`,
+          message: `Successfully joined table: ${table.name}`,
+          autoClose: 3000,
+          color: 'teal',
+          icon: <IconCheck size={16} />,           
+        })
         table.users.push(user.uid!)
       }
       await UpdateTable(table as ITable)
@@ -45,6 +56,7 @@ export default function TablePage() {
       if (tables?.map((table) => table.id).includes(tableid as string)) {
         if (!table) {
           const unsub = ReadTable(tableid as string, setTable)
+          return unsub
         }
         else if (((new Date()).getTime() - table.lastAccessed.toDate().getTime()) / 1000 > 2) {
           updateTable()
@@ -61,5 +73,10 @@ export default function TablePage() {
     return <LoadingLayout fullscreen logo/>;
   }
 
-  return <TableSelectedLayout table={ table }/>
+  return (
+    <>
+      <NotificationsProvider />
+      <TableSelectedLayout table={ table }/>
+    </>
+  )
 }
