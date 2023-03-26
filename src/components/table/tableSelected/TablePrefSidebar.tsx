@@ -1,8 +1,13 @@
 import { Table } from "@/types/Table";
+
+import SearchBar from "../SearchBar";
+
 export default function TablePrefSidebar(props: { table: Table }) {
   return (
     <>
-      {/* TODO: Add individual preference user input */}
+    <SearchBar>
+
+    </SearchBar>
     </>
   );
 }
