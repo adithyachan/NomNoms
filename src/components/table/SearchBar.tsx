@@ -1,73 +1,30 @@
-import { createStyles, Header, Autocomplete, Group, Burger } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { IconSearch } from '@tabler/icons-react';
-import { MantineLogo } from '@mantine/ds';
+import { TextInput, TextInputProps, ActionIcon, useMantineTheme, Autocomplete } from '@mantine/core';
+import { IconSearch, IconArrowRight, IconArrowLeft } from '@tabler/icons-react';
 
-const useStyles = createStyles((theme) => ({
-  header: {
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
-  },
+export default function SearchBar(props: any) {
 
-  inner: {
-    height: 200,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-
-  links: {
-    [theme.fn.smallerThan('md')]: {
-      display: 'none',
-    },
-  },
-
-  search: {
-    [theme.fn.smallerThan('xs')]: {
-      display: 'none',
-    },
-  },
-
-  link: {
-    display: 'block',
-    lineHeight: 1,
-    padding: `${40} ${52}`,
-    borderRadius: theme.radius.sm,
-    textDecoration: 'none',
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
-    fontSize: theme.fontSizes.sm,
-    fontWeight: 500,
-
-    '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-    },
-  },
-}));
-
-
-export default function SearchBar(props : any) {
-  const [opened, { toggle }] = useDisclosure(false);
-  const { classes } = useStyles();
+  const theme = useMantineTheme();
 
   return (
-    <Header height={56} className={classes.header} mb={120}>
-      <div className={classes.inner}>
-        <Group>
-          <Burger opened={opened} onClick={toggle} size="sm" />
-          <MantineLogo size={28} />
-        </Group>
-
-        <Group>
-          <Group ml={50} spacing={5} className={classes.links}>
-          </Group>
-          <Autocomplete
-            className={classes.search}
-            placeholder="Search"
-            icon={<IconSearch size="2" stroke={1.5} />}
-            data={['React', 'Angular', 'Vue', 'Next.js', 'Riot.js', 'Svelte', 'Blitz.js']}
-          />
-        </Group>
-      </div>
-    </Header>
+    <Autocomplete
+      icon={<IconSearch size="1.1rem" stroke={1.5} />}
+      radius="xl"
+      size="md"
+      rightSection={
+        <ActionIcon size={32} radius="xl" color="red" variant="filled">
+          {theme.dir === 'ltr' ? (
+            <IconArrowRight size="1.1rem" stroke={1.5} />
+          ) : (
+            <IconArrowLeft size="1.1rem" stroke={1.5} />
+          )}
+        </ActionIcon>
+      }
+      placeholder="Search Cuisines"
+      rightSectionWidth={42}
+      data={['React', 'Angular', 'Svelte', 'Vue']}
+      transition="pop"
+      transitionDuration={80}
+      transitionTimingFunction='ease'
+    />
   );
 }
