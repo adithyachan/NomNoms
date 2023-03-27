@@ -49,6 +49,7 @@ export default function FavoritePicker({ ids, votes, setVotes, listData}: any) {
           />
         ))}
       </div>
+      <div style={{paddingBottom: '40px'}} />
       {favorite !== undefined && (
         <Footer height={60} style={{position: 'fixed', bottom: 0, left: 0, right: 0 }}>
 
