@@ -2,10 +2,10 @@ import { Slider } from '@mantine/core';
 
 // Configure marks to match step
 const MARKS = [
-  { value: 25, label: '$' },
-  { value: 50, label: '$$' },
-  { value: 75, label: '$$$' },
-  { value: 100, label: '$$$$' },
+  { value: 0, label: '$' },
+  { value: 33, label: '$$' },
+  { value: 66, label: '$$$' },
+  { value: 99, label: '$$$$' },
 ];
 
 export default function PriceSlider(props : any) {
@@ -13,10 +13,16 @@ export default function PriceSlider(props : any) {
     <>
       {/* Set min, max and step props to replace default values */}
       <Slider
+        label={(val) => MARKS.find((mark) => mark.value === val)?.label}
         defaultValue={50}
-        step={25}
+        step={33}
         marks={MARKS}
-        styles={{ markLabel: { display: 'none' } }}
+        color="red"
+        styles={{ 
+          markLabel: { 
+            color: "red"
+          }
+        }}
       />
     </>
   );
