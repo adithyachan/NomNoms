@@ -82,7 +82,7 @@ const copy = (link: string) => (
           <Group>
           
             <Button color="red" size="xs" compact  onClick={joinTable}>
-               Let&aposs Eat! 
+               Let&apos;s Eat! 
             </Button>
           </Group>
         </Center>

@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 export default function Voting() {
   const [state, setState] = useState('stack'); // can be stack, favorite, done
   const [votes, setVotes] = useState();
-  const { data: listData, error: listError, isLoading: listIsLoading } = useRestaurantListEndpoint(10019, 3200, 'chinese');
+  const { data: listData, error: listError, isLoading: listIsLoading } = useRestaurantListEndpoint(10, 10019, 3200, 'japanese,mexican');
   const router = useRouter()
   if (state === 'stack') {
     if (listError) {
