@@ -24,6 +24,7 @@ import {
 } from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
+import { useUser } from '@/providers/AuthProvider';
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -65,14 +66,13 @@ const useStyles = createStyles((theme) => ({
 }));
 
 
-export default function NavBar({ user }: any) {
+export default function NavBar(props : any) {
   const { classes, theme, cx } = useStyles();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
-  const userActive = useFirebaseAuth().currentUser?.email;
+  const { user } = useUser();
 
-  console.log("Email: " + userActive);
 
   return (
     <Header height={{ base: 50, md: 70 }} p="md">
@@ -97,9 +97,9 @@ export default function NavBar({ user }: any) {
                 className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
               >
                 <Group spacing={7}>
-                  <Avatar src={user.image} alt={userActive!} radius="xl" size={20} />
+                  <Avatar alt={user.email!} radius="xl" size={20} />
                   <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                    {userActive}
+                    {user.email}
                   </Text>
                   <IconChevronDown size={20} stroke={1.5} />
                 </Group>
