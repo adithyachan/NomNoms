@@ -1,12 +1,22 @@
 import { Table } from "@/types/Table";
-import { Card, Title, CopyButton, Tooltip, ActionIcon, Button, Group, Center } from "@mantine/core"
-import { IconCheck, IconCopy, IconSettings } from "@tabler/icons";
+import { Card, Title, CopyButton, Tooltip, ActionIcon, Button, Group, Center, Menu, Modal, Flex, Text } from "@mantine/core"
+import { IconCheck, IconCopy, IconSettings, IconDoorExit } from "@tabler/icons-react";
 import { useRouter } from "next/router";
-
-
+import { useDisclosure } from "@mantine/hooks";
+import { useUser } from "@/providers/AuthProvider";
+import { UpdateTable } from "@/lib/firebase/table/TableOperations";
+import { NotificationsProvider, showNotification } from "@mantine/notifications";
 
 export default function TableCard(props: {table: Table, id: string}) {
   const router = useRouter()
+  const [opened, {open, close}] = useDisclosure()
+  const { user } = useUser();
+
+  const removeTable = async () => {
+    props.table.users = props.table.users.filter(item => item !== user.uid)
+    await UpdateTable(props.table)
+    close()
+  }
 
   const copy = (link: string) => (
     <CopyButton value={ link } timeout={2000}>
@@ -20,20 +30,46 @@ export default function TableCard(props: {table: Table, id: string}) {
     </CopyButton>
   )
 
+  const LeaveModal = () => (
+    <Modal opened={opened} onClose={close} withCloseButton={false} centered>
+      <Title className="text-center" order={1}>Are you sure you want to leave <span className="text-red-500">{ props.table.name }</span>?</Title>
+      <Flex className="space-x-5 mt-5 w-full justify-center">
+        <Button color="red" onClick={removeTable}>
+          Leave
+        </Button>
+        <Button color="gray" onClick={close}>
+          Cancel
+        </Button>
+      </Flex>
+    </Modal>
+  )
+
   const joinTable = () => {
     router.push("/tables/" + props.id)
   }
 
   return (
     <>
+      <LeaveModal />
       <Card className="shadow-lg bg-rose-100 shadow-rose-200 transition ease-in-out hover:shadow-xl delay-100 duration-500 hover:shadow-rose-300 rounded-lg">
         <Center className="flex-col space-y-2">
           <Title order={5}>{ props.table.name }</Title>
           <Group>
             <Tooltip label="Settings" withArrow position="bottom">
-              <ActionIcon>
-                <IconSettings size={12} />
-              </ActionIcon> 
+              <Menu position="bottom">
+                <Menu.Target>
+                  <ActionIcon>
+                    <IconSettings size={12} />
+                  </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Table Settings</Menu.Label>
+                  <Menu.Item color="red" icon={<IconDoorExit className="h-3 w-3"/>} onClick={open}>
+                    Leave Table
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+              
             </Tooltip>
             <Button color="red" size="xs" compact  onClick={joinTable}>
               Join

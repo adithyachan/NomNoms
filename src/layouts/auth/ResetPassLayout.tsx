@@ -12,12 +12,8 @@ import {
     Center,
     Box,
     Image,
-    MantineProvider,
-    ThemeIcon,
-    CheckIcon,
   } from '@mantine/core';
-  import { IconArrowLeft } from '@tabler/icons';
-import { IconAlertTriangle } from '@tabler/icons';
+  import { IconArrowLeft, IconAlertTriangle, IconCheck, IconX } from '@tabler/icons-react';
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { useRouter } from "next/router";
@@ -26,11 +22,6 @@ import React from 'react';
 import { useForm } from 'react-hook-form'
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
-import { IconCheck } from '@tabler/icons';
-import { IconX } from '@tabler/icons';
-import { iconSizes } from '@mantine/core/lib/Stepper/Step/Step.styles';
-
-
 
   const useStyles = createStyles((theme) => ({
     title: {

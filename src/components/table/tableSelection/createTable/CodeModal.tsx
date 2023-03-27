@@ -5,7 +5,7 @@ import { Modal,
          Center,
          TextInput, 
          Title } from "@mantine/core"
-import { IconCopy, IconCheck } from '@tabler/icons'
+import { IconCopy, IconCheck } from '@tabler/icons-react'
 
 export default function CodeModal(props: { code: string, open: boolean, handler: any }) {
   const link = process.env.NEXT_PUBLIC_VERCEL_URL + "/tables/" + props.code

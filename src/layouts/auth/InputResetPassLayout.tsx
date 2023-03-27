@@ -13,11 +13,11 @@ import { Box,
   Space
 } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
-import { IconCheck, IconX } from '@tabler/icons';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
 import { confirmPasswordReset } from "firebase/auth";
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Router, useRouter } from "next/router";
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from "next/router";
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
 

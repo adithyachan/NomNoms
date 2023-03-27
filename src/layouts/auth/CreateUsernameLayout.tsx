@@ -7,37 +7,21 @@ import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthPro
 import { IconRefresh, IconX } from '@tabler/icons';
 import {
   TextInput,
-  PasswordInput,
-  Text,
-  Title,
   createStyles,
   Paper,
   Group,
   PaperProps,
   Button,
   Image,
-  MantineProvider,
   Container,
-  Divider,
-  useMantineColorScheme,
-  ColorSchemeProvider,
-  NavLink,
-  Checkbox,
   Anchor,
   Stack,
-  Autocomplete,
+  Tooltip
 } from '@mantine/core';
-import { GoogleButton, TwitterButton, FacebookButton} from "@/components/auth/SocialButtons"
-import { formatDiagnostic } from 'typescript';
-import { randomFill } from 'crypto';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Input, Tooltip } from '@mantine/core';
-import { IconBrandTwitter, IconAlertCircle } from '@tabler/icons';
 import {
-  collection, 
   doc, 
-  getDocs, 
   getDoc, 
   deleteDoc,
   addDoc,

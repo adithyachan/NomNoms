@@ -1,7 +1,5 @@
-import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
-// import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import { ReadDocument, WriteDocument, WriteDocumentWithConverter } from '@/lib/firebase/FirestoreOperations'; 
@@ -18,19 +16,14 @@ import {
   PaperProps,
   Button,
   Image,
-  MantineProvider,
   Container,
-  Divider,
-  useMantineColorScheme,
-  ColorSchemeProvider,
-  NavLink,
   Checkbox,
   Anchor,
   Stack,
   Autocomplete,
   Tooltip,
 } from '@mantine/core';
-import { GoogleButton, TwitterButton, GithubButton} from "@/components/auth/SocialButtons"
+import { GoogleButton, GithubButton} from "@/components/auth/SocialButtons"
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
 import { IconCheck, IconRefresh, IconX } from '@tabler/icons';

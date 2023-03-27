@@ -1,37 +1,22 @@
-import { useToggle, upperFirst } from '@mantine/hooks';
+import { useToggle } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
-import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
-// import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { SignInAsGuest } from '@/lib/firebase/auth/AuthService';
-import { GithubButton } from '@/components/auth/SocialButtons';
 import { useRouter } from "next/router";
 
 import {
   TextInput,
   PasswordInput,
   Text,
-  Title,
   createStyles,
   Paper,
   Group,
   PaperProps,
   Button,
   Image,
-  MantineProvider,
   Container,
-  Divider,
-  useMantineColorScheme,
-  ColorSchemeProvider,
-  NavLink,
   Checkbox,
   Anchor,
   Stack,
-  Autocomplete,
 } from '@mantine/core';
-import { GoogleButton, TwitterButton, FacebookButton} from "@/components/auth/SocialButtons"
-import { formatDiagnostic } from 'typescript';
 
 
 export default function AuthenticationForm(props: PaperProps) {
