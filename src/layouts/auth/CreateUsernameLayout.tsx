@@ -4,7 +4,7 @@ import { useFirebaseAuth, useFirebaseFirestore } from '@/lib/firebase/hooks/useF
 // import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { IconRefresh, IconX } from '@tabler/icons';
+import { IconRefresh, IconX } from '@tabler/icons-react';
 import {
   TextInput,
   createStyles,

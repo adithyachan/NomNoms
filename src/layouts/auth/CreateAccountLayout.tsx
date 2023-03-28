@@ -26,7 +26,7 @@ import {
 import { GoogleButton, GithubButton} from "@/components/auth/SocialButtons"
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
-import { IconCheck, IconRefresh, IconX } from '@tabler/icons';
+import { IconCheck, IconRefresh, IconX } from '@tabler/icons-react';
 import { formatDiagnostic } from 'typescript';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from "next/router";
