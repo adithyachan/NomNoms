@@ -3,9 +3,11 @@ import TableUserSidebar from "@/components/table/tableSelected/TableUserSidebar"
 import { Table } from "@/types/Table";
 import { Container, Grid, Title } from "@mantine/core";
 import RestaurantListLayout from "./RestaurantListLayout";
+import NavBar from "@/components/NavBar";
 
 export default function TableSelectedLayout(props: {table: Table}) {
   return (
+    <>
     <Container fluid className="p-10 bg-gradient-to-b from-rose-100 to-white">
       {/* Create Grid with 3 columns, 1st & 3rd are smaller. Middle is larger */}
       <Grid>
@@ -20,5 +22,6 @@ export default function TableSelectedLayout(props: {table: Table}) {
         </Grid.Col>
       </Grid>
     </Container>
+    </>
   );
 }
