@@ -1,6 +1,10 @@
-import { useForm } from '@mantine/form';
-import { useFirebaseFirestore } from '@/lib/firebase/hooks/useFirebase';
-import { IconRefresh } from '@tabler/icons-react';
+import { useToggle, upperFirst } from '@mantine/hooks';
+import { isEmail, useForm } from '@mantine/form';
+import { useFirebaseAuth, useFirebaseFirestore } from '@/lib/firebase/hooks/useFirebase';
+// import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import { IconRefresh, IconX } from '@tabler/icons-react';
 import {
   TextInput,
   createStyles,
@@ -19,7 +23,15 @@ import { useState } from 'react';
 import {
   doc, 
   getDoc, 
-  } from "firebase/firestore";
+  deleteDoc,
+  addDoc,
+  setDoc, 
+  DocumentReference,
+  CollectionReference,
+  Firestore,
+  DocumentSnapshot} from "firebase/firestore";
+import { ReadDocument } from '@/lib/firebase/FirestoreOperations';
+import { WriteDocument } from '@/lib/firebase/FirestoreOperations';
 
 
 export default function AuthenticationForm(props: PaperProps) {
@@ -40,24 +52,41 @@ export default function AuthenticationForm(props: PaperProps) {
       e.preventDefault();
       const firestore = useFirebaseFirestore()
   // Get document with name
-  const query = await getDoc(doc(firestore, "users", username))
-
-  // Check if document exists
-  if (!query.exists()) {
-  } else {
-  // document does not exist
-  alert("Username exists")
-  return undefined
+  const auth = useFirebaseAuth();
+      const user = auth.currentUser;
+      if (ReadDocument("usernames", username) == undefined) {
+        alert("Username exists")
+        return undefined
+      } 
+      //const user = userCredential.user;
+      if (user) {
+        const UID = user.uid;
+        //const firestore = useFirebaseFirestore()
+    // Get document with name
+    // await firestore.collection('users').document(UID)
+    //       .get().then((DocumentSnapshot ds){
+    //     var email=ds.data['photourl'];
+    // });
   }
-      
-      // if (ReadDocument("users", username) == undefined) {
-      //   alert("Username exists")
-      //   return undefined
-      // } 
+      //console.log(username)
+      const UID = user?.uid;
+      if (user?.email) {
+      WriteDocument("users", {username: username, email: user.email}, UID)
+      WriteDocument("usernames", {uid: UID}, username)
+      }
       // if () {
       //   alert("Username should be one word")
       //   return undefined
       // }
+      if (user) {
+        const UID = user.uid;
+        //const firestore = useFirebaseFirestore()
+    // Get document with name
+    // await firestore.collection('users').document(UID)
+    //       .get().then((DocumentSnapshot ds){
+    //     var email=ds.data['photourl'];
+    // });
+  }
       var temp = 0  
       !/\s/.test(username) ? null : temp = 1
       if (temp == 1){
@@ -67,6 +96,8 @@ export default function AuthenticationForm(props: PaperProps) {
       console.log("working")
       console.log("working")
       console.log(username)
+      // const UID = user?.uid;
+      // WriteDocument("users", {username: username, email: ""} , UID)
       setTimeout(() => {
         router.push('/tables');
       }, 10)

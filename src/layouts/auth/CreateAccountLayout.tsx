@@ -1,7 +1,9 @@
 import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import { ReadDocument, WriteDocument, WriteDocumentWithConverter } from '@/lib/firebase/FirestoreOperations'; 
+import { getFirestore } from 'firebase/firestore';
 
 import {
   TextInput,
@@ -18,27 +20,36 @@ import {
   Checkbox,
   Anchor,
   Stack,
+  Autocomplete,
+  Tooltip,
 } from '@mantine/core';
 import { GoogleButton, GithubButton} from "@/components/auth/SocialButtons"
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
-import { IconX } from '@tabler/icons-react';
+import { IconCheck, IconRefresh, IconX } from '@tabler/icons-react';
+import { formatDiagnostic } from 'typescript';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from "next/router";
+import { useState } from 'react';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 
 
 export default function CreateAccount (props: PaperProps) {
   //Form 
+  const [username, setUsername] = useState("");
   const form = useForm({
     initialValues: {
       email: '',
       name: '',
       password: '',
       confirmpassword: '',
+      username: '',
       terms: true,
     },
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) => (val.length < 6 ? 'Password should include at least 6 characters' : null),
+      username: (val) => (!/\S/.test(val) ? null : 'Username should be one word'),
 
       confirmpassword: (val, values) =>
         val !== values.password ? 'Passwords did not match' : null,
@@ -51,6 +62,7 @@ export default function CreateAccount (props: PaperProps) {
     form.values.email = '';
     form.values.name = '',
     form.values.password = '',
+    form.values.username = '',
     form.values.confirmpassword = '',
     form.values.terms = true
   }
@@ -65,19 +77,48 @@ export default function CreateAccount (props: PaperProps) {
   const HandleCreate = async (e : any) => {
     const auth = useFirebaseAuth();
     console.log("register");
+    // const q = query(collection(db, "cities"), where("capital", "==", true));
 
+    // const querySnapshot = await getDocs(q);
+    // querySnapshot.forEach((doc) => {
+    // // doc.data() is never undefined for query doc snapshots
+    // console.log(doc.id, " => ", doc.data());
+    // });
+    if (ReadDocument("usernames", username) == undefined) {
+        alert("Username exists")
+        return undefined
+    }
+    // if (user) {
+    // //var UID = userCredential.user.uid;
+    // console.log("User was successfully created")
+    // WriteDocument("users", {email: form.values.email} , UID)
+    var temp = 0  
+    !/\s/.test(username) ? null : temp = 1
+    if (temp == 1){
+      alert("Username should be one word")
+      return undefined
+    }
     createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
-      var UID = userCredential.user.uid;
-      console.log("User was successfully created")
-      //WriteDocument("users", UID , UID)
-      // ...
+      if (user) {
+        const UID = user.uid;
+        //const firestore = useFirebaseFirestore()
+    // Get document with name
+    // await firestore.collection('users').document(UID)
+    //       .get().then((DocumentSnapshot ds){
+    //     var email=ds.data['photourl'];
+    // });
+  }
+      //console.log(username)
+      const UID = user?.uid;
+      WriteDocument("users", {username: username, email: form.values.email}, UID)
+      WriteDocument("usernames", {uid: UID}, username)
       resetForm();
       console.log("auth working")
       setTimeout(() => {
-        router.push('/auth/login');
+        router.push('/auth/createUsername');
       }, 10)
 
 
@@ -117,6 +158,14 @@ export default function CreateAccount (props: PaperProps) {
       console.log("auth working")
     });
 
+  }
+
+  const GetValue = () => {
+    console.log("here")
+    var myarray1= new Array("Appetizing", "Aromatic", "Bitter", "Bland", "Bold", "Buttery", "Candied", "Caramelized", "Chewy", "Citrusy", "Classic", "Comforting", "Crispy", "Crunchy", "Creamy", "Decadent", "Delectable", "Delicate", "Delicious", "Divine", "Earthy", "Exotic", "Fiery", "Flaky", "Flavorful", "Fresh", "Fruity", "Garlicky", "Gooey", "Grilled", "Hearty", "Heavenly", "Herbaceous", "Homemade", "Honeyed", "Hot", "Icy", "Indulgent", "Infused", "Intense", "Juicy", "Light", "Luscious", "Melt-in-your-mouth", "Mild", "Moist", "Mouthwatering", "Nutritious", "Robust", "Satiny", "Satisfying", "Succulent", "Aromatic", "Piquant", "Robust", "Succulent", "Tangy", "Tart", "Toothsome", "Velvety", "Vibrant", "Zesty", "Ambrosial", "Balsamic", "Buttery", "Candied", "Charred", "Chunky", "Citrusy", "Crispy", "Crumbly", "Crusty", "Delicious", "Delectable", "Divine", "Doughy", "Eggy", "Enchanting", "Enticing", "Exquisite", "Fiery", "Flaky", "Flavorful", "Fruity", "Gooey", "Hearty", "Heavenly", "Herbaceous", "Juicy", "Luscious", "Moist", "Mouthwatering", "Nutty", "Palatable", "Peppery", "Piquant", "Pungent", "Rich", "Robust", "Salty", "Satisfying", "Savory", "Scrumptious", "Seasoned", "Smoky", "Smooth", "Spicy", "Sticky", "Sublime", "Sweet", "Tangy", "Tart", "Tasty", "Tender", "Tingly", "Toasty", "Topped", "Toothsome", "Unctuous", "Unique", "Velvety", "Whipped", "Whole", "Wicked", "Woodsy", "Wondrous", "Yeasty", "Yummy", "Zesty", "Addictive", "Alluring", "Appetizing", "Bittersweet", "Bold", "Bright", "Captivating", "Classic", "Comforting", "Complex", "Crave-worthy", "Creamy", "Decadent", "Delightful", "Dynamic", "Earthy", "Elegant", "Exotic", "Familiar", "Festive", "Fresh", "Funky", "Seggsy")
+    var myarray2= new Array("Lasagna", "Tacos", "Sushi", "Pizza", "Risotto", "Curry", "Gnocchi", "Ramen", "Falafel", "Dumplings", "Pesto", "Paella", "Carpaccio", "Fajitas", "Shakshuka", "Tartare", "Souffle", "Gumbo", "Ravioli", "Scampi", "Miso", "Gyro", "Boba", "Ratatouille", "Poutine", "Empanadas", "Bibimbap", "Tzatziki", "Haggis", "Nasi Goreng", "Biryani", "Polenta", "Chowder", "Kimchi", "Katsu", "Maki", "Soba", "Bratwurst", "Raclette", "Poke", "Cacciatore", "Moussaka", "Pho", "Escargot", "Gazpacho", "Bolognese", "Schnitzel", "Escabeche", "Feijoada", "Korma", "Meze", "Tempura", "Wonton", "Shakshuka", "Chakalaka", "Jambalaya", "Pastry", "Pierogi", "Frittata", "Ratatouille", "Croissant", "Shakshuka", "Shawarma", "Tagine", "Tostada", "Carpaccio", "Falafel", "Shakshuka", "Kebab", "Mezze", "Bibimbap", "Bulgogi", "Croquette", "Fajitas", "Miso", "Mousse", "Apple", "Banana", "Orange", "Pear", "Cherry", "Mango", "Pineapple", "Peach", "Plum", "Grapefruit", "Grapes", "Lemon", "Lime", "Strawberry", "Blueberry", "Raspberry", "Blackberry", "Kiwi", "Melon", "Watermelon", "Honeydew", "Cantaloupe", "Tomato", "Cucumber", "Carrot", "Broccoli", "Cauliflower", "Cabbage", "Spinach", "Kale", "Lettuce", "Celery", "Onion", "Garlic", "Potato", "Yam", "Squash", "Zucchini", "Mushroom", "Olive", "Peanut", "Cashew", "Almond", "Walnut", "Pecan", "Pistachio", "Hazelnut", "Macadamia", "Soybean", "Corn", "Wheat", "Rice", "Oat", "Barley", "Quinoa", "Couscous", "Bulgur", "Lentil", "Chickpea")
+    var random = myarray1[Math.floor(Math.random() * myarray1.length)] + myarray2[Math.floor(Math.random() * myarray2.length)];
+    setUsername(random);
   }
 
     const provider = new GoogleAuthProvider();
@@ -201,6 +250,25 @@ export default function CreateAccount (props: PaperProps) {
            value={form.values.email}
            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
            error={form.errors.email && 'Invalid email'}
+         />
+
+          <TextInput
+           required
+           label="Username"
+           placeholder="SpicyBurrito"
+           rightSection={
+            <Tooltip 
+            label="Randomize"
+            onClick={GetValue}
+            position="top-end" withArrow>
+              <div>
+                <IconRefresh size="1rem" style={{ display: 'block', opacity: 0.5 }} />
+              </div>
+            </Tooltip>
+          }
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+           //error={form.errors.username && 'Username should be one word'}
          />
          
           <PasswordInput

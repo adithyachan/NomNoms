@@ -7,6 +7,7 @@ import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 import { CreateAccountWithGitHub } from '@/lib/firebase/auth/AuthService';
 import { useRouter } from "next/router";
 import { getAuth, linkWithPopup } from "firebase/auth";
+import { WriteDocument } from '@/lib/firebase/FirestoreOperations';
 //const provider = new GoogleAuthProvider();
 
 const provider = new GoogleAuthProvider();
@@ -61,6 +62,22 @@ export function GoogleButton(props: ButtonProps) {
   // This gives you a Google Access Token. You can use it to access the Google API.
   const credential = GoogleAuthProvider.credentialFromResult(result);
   const token = credential?.accessToken;
+  const user2 = result.user;
+//       if (user2) {
+//         const UID = user2.uid;
+//         //const firestore = useFirebaseFirestore()
+//     // Get document with name
+//     // await firestore.collection('users').document(UID)
+//     //       .get().then((DocumentSnapshot ds){
+//     //     var email=ds.data['photourl'];
+//     // });
+//   }
+//       //console.log(username)
+//       const UID = user2?.uid;
+//       const EMail = user2?.email;
+//       if (EMail) {
+//       WriteDocument("users", {email: EMail}, UID)
+// }
   setTimeout(() => {
     router.push('/auth/createUsername');
   }, 10)
