@@ -2,7 +2,8 @@ import { Slider,
          Switch,
          Group,
          useMantineTheme,
-         Grid
+         Grid,
+         TextInput
         } from '@mantine/core';
 import { IconSun, IconMoonStars, IconAdjustmentsHorizontal, IconCursorText } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -19,7 +20,14 @@ export default function PriceSlider(props : any) {
   const theme = useMantineTheme();
   const [checked, setChecked] = useState(false);
 
-  console.log(checked);
+  const [valueMin, setValueMin] = useState('');
+  const [valueMax, setValueMax] = useState('');
+
+  const HandleChecked = (e : any) => {
+    setChecked(e);
+    setValueMin('');
+    setValueMax('');
+  }
 
   return (
     <>
@@ -28,7 +36,30 @@ export default function PriceSlider(props : any) {
         Select Price Point
       <Grid.Col span={8}>
       {checked ?       
-      <></>
+      <>
+      <Grid>
+        <Grid.Col span={5}>
+        <TextInput
+          placeholder="Min $"
+          label="Min Price"
+          value={valueMin} 
+          onChange={(event) => setValueMin(event.currentTarget.value)}
+          withAsterisk
+
+        />
+        </Grid.Col>
+        <Grid.Col span={5}>
+        <TextInput
+          placeholder="Max $"
+          label="Max Price"
+          value={valueMax} 
+          onChange={(event) => setValueMax(event.currentTarget.value)}
+          withAsterisk
+
+        />
+        </Grid.Col>
+      </Grid>
+      </>
       : 
       <Slider
       label={(val) => MARKS.find((mark) => mark.value === val)?.label}
@@ -49,7 +80,7 @@ export default function PriceSlider(props : any) {
       <Grid.Col span="auto">
       <Switch
         checked={checked}
-        onChange={(event) => setChecked(event.currentTarget.checked)}
+        onChange={(event) => HandleChecked(event.currentTarget.checked)}
         size="sm"
         color={'red'}
         onLabel={<IconCursorText size="16" stroke={2.5} color={'white'} />}
