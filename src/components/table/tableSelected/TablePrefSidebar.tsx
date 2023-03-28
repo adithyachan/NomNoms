@@ -1,4 +1,3 @@
-import NavBar from "@/components/NavBar";
 import { Table } from "@/types/Table";
 import { Flex,
          Text, 
@@ -10,6 +9,7 @@ import SearchBar from "../SearchBar";
 export default function TablePrefSidebar(props: { table: Table }) {
   return (
     <>
+
     <Flex 
     gap="xl"
     className="bg-white p-10 rounded-3xl shadow-lg shadow-rose-100 flex-col justify-center">
