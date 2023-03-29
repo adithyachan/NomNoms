@@ -44,9 +44,8 @@ export default function TablePage() {
 
   useEffect(() => {
     if (!user.uid && !user.loading) {
-      router.push("/auth/register")
+      router.push("/")
     }
-    
     if (!tables) {
       const unsubTables = ReadTables(setTables)
       return unsubTables
@@ -73,8 +72,9 @@ export default function TablePage() {
 
   return (
     <>
-      <NotificationsProvider />
-      <TableSelectedLayout table={ table }/>
+      <NotificationsProvider>
+        <TableSelectedLayout table={ table }/>
+      </NotificationsProvider>
     </>
   )
 }
