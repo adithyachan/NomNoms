@@ -28,7 +28,8 @@ export default function TablePage() {
     if (table) {
       table.lastAccessed = Timestamp.fromDate((new Date()))
       table.expiration = Timestamp.fromDate(new Date(table.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
-      if (!table.users.includes(user.uid!)) {
+      // if (!table.users.includes(user.uid!)) {
+      if (! Object.keys(table.users).includes(user.uid!)) {
         showNotification({
           title: `You're in!`,
           message: `Successfully joined table: ${table.name}`,
@@ -36,7 +37,8 @@ export default function TablePage() {
           color: 'teal',
           icon: <IconCheck size={16} />,           
         })
-        table.users.push(user.uid!)
+        // table.users.push(user.uid!)
+        table.users[user.uid!] = {};
       }
       await UpdateTable(table as ITable)
     } 

@@ -4,7 +4,12 @@ export interface ITable {
   id: string,
   name: string,
   lastAccessed: Timestamp,
-  users: string[],
+  // users: string[],
+  users: {
+    [key: string]: {
+      [key: string]: number;
+    };
+  };
   leader: string,
   prefs: {
     zip: string,
@@ -17,7 +22,12 @@ export class Table implements ITable {
   id: string;
   name: string;
   lastAccessed: Timestamp;
-  users: string[];
+  // users: string[];
+  users: {
+    [key: string]: {
+      [key: string]: number;
+    };
+  };
   leader: string;
   prefs: {
     zip: string;

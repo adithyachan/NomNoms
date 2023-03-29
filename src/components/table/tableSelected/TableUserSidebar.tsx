@@ -29,7 +29,7 @@ export default function TableUserSidebar(props: {table: Table}) {
           leaderView={ props.table.leader == user.uid } 
           table={ props.table }
         />
-        {props.table.users.filter((item) => item != props.table.leader).map((uid) => 
+        {Object.keys(props.table.users).filter((item) => item != props.table.leader).map((uid) => 
           <>
             <UserCard 
               name={ users?.find((item) => item.uid == uid)?.username! } 

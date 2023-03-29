@@ -29,7 +29,8 @@ export default function UserCard({ image, name, email, uid, leaderView, icon, ta
   }
 
   const kickUser = async () => {
-    table.users = table.users.filter(item => item !== uid)
+    // table.users = table.users.filter(item => item !== uid)
+    delete table.users[uid]
     await UpdateTable(table)
   }
 

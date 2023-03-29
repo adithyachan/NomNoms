@@ -35,7 +35,8 @@ export default function CreateTable() {
       id: "",
       name: value,
       lastAccessed: Timestamp.fromDate(new Date()),
-      users: [user.uid!],
+      // users: [user.uid!],
+      users: {},
       leader: user.uid!,
       prefs: {
         zip: zip,
@@ -43,6 +44,7 @@ export default function CreateTable() {
       },
       expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
     }
+    tableJSON.users[user.uid!] = {}
     const table = new Table(tableJSON)
     
     try {
