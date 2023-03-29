@@ -1,20 +1,20 @@
 export interface IUser {
-  username?: string,
-  tables?: string,
-  uid?: string,
-  email?: string,
+  username: string,
+  tables: string[],
+  uid: string,
+  email: string,
 }
 
 export class User implements IUser {
   username: string;
-  tables: string;
+  tables: string[];
   uid: string;
   email: string;
 
-  constructor(username: string, tables: string, uid: string, email: string) {
-    this.username = username;
-    this.tables = tables;
-    this.uid = uid;
-    this.email = email;
+  constructor(data: IUser) {
+    this.username = data.username;
+    this.tables = data.tables;
+    this.uid = data.uid;
+    this.email = data.email;
   }
 }

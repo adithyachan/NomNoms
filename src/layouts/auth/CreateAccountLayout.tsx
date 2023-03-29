@@ -32,11 +32,14 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from "next/router";
 import { useState } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
+import { IUser, User } from '@/types/User';
+import { WriteUser } from '@/lib/firebase/auth/AuthOperations';
 
 
 export default function CreateAccount (props: PaperProps) {
   //Form 
   const [username, setUsername] = useState("");
+  const [users, setUsers] = useState<User[]>();
   const form = useForm({
     initialValues: {
       email: '',
@@ -77,21 +80,11 @@ export default function CreateAccount (props: PaperProps) {
   const HandleCreate = async (e : any) => {
     const auth = useFirebaseAuth();
     console.log("register");
-    // const q = query(collection(db, "cities"), where("capital", "==", true));
 
-    // const querySnapshot = await getDocs(q);
-    // querySnapshot.forEach((doc) => {
-    // // doc.data() is never undefined for query doc snapshots
-    // console.log(doc.id, " => ", doc.data());
-    // });
     if (ReadDocument("usernames", username) == undefined) {
         alert("Username exists")
         return undefined
     }
-    // if (user) {
-    // //var UID = userCredential.user.uid;
-    // console.log("User was successfully created")
-    // WriteDocument("users", {email: form.values.email} , UID)
     var temp = 0  
     !/\s/.test(username) ? null : temp = 1
     if (temp == 1){
@@ -102,26 +95,11 @@ export default function CreateAccount (props: PaperProps) {
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
-      if (user) {
-        const UID = user.uid;
-        //const firestore = useFirebaseFirestore()
-    // Get document with name
-    // await firestore.collection('users').document(UID)
-    //       .get().then((DocumentSnapshot ds){
-    //     var email=ds.data['photourl'];
-    // });
-  }
-      //console.log(username)
       const UID = user?.uid;
-      WriteDocument("users", {username: username, email: form.values.email}, UID)
-      WriteDocument("usernames", {uid: UID}, username)
+      WriteUser({username: username, email: form.values.email, uid: UID, tables: []} as IUser)
       resetForm();
+      router.push("/tables");
       console.log("auth working")
-      setTimeout(() => {
-        router.push('/auth/createUsername');
-      }, 10)
-
-
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -133,27 +111,10 @@ export default function CreateAccount (props: PaperProps) {
           message: 'Please enter another email! ',
           autoClose: 3000,
           color: 'red',
-          icon: <IconX size={16} />,
-          
-          styles: () => ({
-            /*
-            root: {
-              backgroundColor: '#FFE4E6',
-              borderColor: '#FFE4E6',
-              '&::before': { backgroundColor: '#FFFFFF' },
-            },
-            */
-            //title: { color: '#F43F5E' },
-            //description: { color: '#F43F5E'},
-            closeButton: {
-              color: '#F43F5E',
-              '&:hover': { backgroundColor: '#F43F5E' },
-            },
-          }),            
+          icon: <IconX size={16} />,           
         })
       }
 
-      // ..
       resetForm();
       console.log("auth working")
     });
