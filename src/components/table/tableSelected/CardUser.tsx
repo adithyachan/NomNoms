@@ -16,19 +16,20 @@ interface UserCardProps extends React.ComponentPropsWithoutRef<'button'> {
   image?: string;
   name: string;
   email: string;
+  uid: string;
   leaderView?: boolean;
   icon?: React.ReactNode;
   table: Table;
 }
 
-export default function UserCard({ image, name, email, leaderView, icon, table }: UserCardProps) {
+export default function UserCard({ image, name, email, uid, leaderView, icon, table }: UserCardProps) {
   const transferLeadership = async () => {
-    table.leader = name
+    table.leader = uid
     await UpdateTable(table)
   }
 
   const kickUser = async () => {
-    table.users = table.users.filter(item => item !== name)
+    table.users = table.users.filter(item => item !== uid)
     await UpdateTable(table)
   }
 
