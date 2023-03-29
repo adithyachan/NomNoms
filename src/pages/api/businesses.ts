@@ -6,7 +6,7 @@ export default async function handler({ query }: any, res: any) {
     try {   
       let searchUrl = baseUrl
       
-      // if (query.offset) searchUrl += `offset=${query.offset}&`;
+      if (query.offset) searchUrl += `offset=${query.offset}&`;
       if (query.limit) searchUrl += `limit=${query.limit}&`;
       // if (query.term) searchUrl += `term=${query.term}&`;
       if (query.location) searchUrl += `location=${query.location}&`;

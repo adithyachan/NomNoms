@@ -17,3 +17,30 @@ export function useRestaurantListEndpoint(limit: number, zip: number, radius: nu
 export function useRestaurantBusinessEndpoint(id: string) {
   return useSWR(`/api/business?id=${id}`, fetcher);
 }
+
+export async function getRestaurantList(limit: number, zip: number, radius: number, categories: string, offset: number) {
+  const url = `/api/businesses?location=${zip}&radius=${radius}&categories=${categories}&limit=${limit}&offset=${offset}`
+
+  try {
+    const res = await fetch(url, options);
+    return res
+  }
+  catch (err) {
+    console.log(err)
+    throw err
+  }
+}
+
+export async function getRestaurantBusiness(id: string) {
+  const url = `/api/business?id=${id}`
+
+  try {
+    const res = await fetch(url, options);
+    return res
+  }
+  catch (err) {
+    console.log(err)
+    throw err
+  }
+
+}

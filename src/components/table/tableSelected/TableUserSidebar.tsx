@@ -14,8 +14,6 @@ export default function TableUserSidebar(props: {table: Table}) {
 
   useEffect(() => {
     const unsub = ReadUsers(setUsers)
-    console.log(users)
-    console.log(user.uid)
     return unsub
   }, [])
 
@@ -26,15 +24,17 @@ export default function TableUserSidebar(props: {table: Table}) {
         <UserCard 
           name={ users?.find((item) => item.uid == props.table.leader)?.username! } 
           email={ users?.find((item) => item.uid == props.table.leader)?.email! } 
+          uid={ user.uid! }
           icon={ <IconCrown className="h-5 w-5 fill-amber-500" /> } 
           leaderView={ props.table.leader == user.uid } 
           table={ props.table }
         />
-        {props.table.users.filter((item) => item != props.table.leader).map((item) => 
+        {props.table.users.filter((item) => item != props.table.leader).map((uid) => 
           <>
             <UserCard 
-              name={ users?.find((item) => item.uid == user.uid)?.username! } 
-              email={ users?.find((item) => item.uid == user.uid)?.email! } 
+              name={ users?.find((item) => item.uid == uid)?.username! } 
+              email={ users?.find((item) => item.uid == uid)?.email! }
+              uid={ uid }
               leaderView={ props.table.leader == user.uid } 
               table={ props.table } 
             />

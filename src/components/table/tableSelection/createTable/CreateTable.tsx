@@ -14,13 +14,11 @@ export default function CreateTable() {
   const { user } = useUser()
   const [value, setValue] = useInputState('');
   const [zip, setZip] = useInputState('');
-  const [price, setPrice] = useInputState('');
   const [cuisine, setCuisine] = useInputState('');
 
   const [error, setError] = useState(null)
   const [openedName, inputHandlersName] = useDisclosure();
   const [openedZip, inputHandlersZip] = useDisclosure();
-  const [openedPrice, inputHandlersPrice] = useDisclosure();
 
   // show code modal
   const [codeOpen, codeHandlers] = useDisclosure();
@@ -30,8 +28,7 @@ export default function CreateTable() {
   const special_chars_check = !special_chars.test(value)
   const length_check = value.length >= 4 && value.length <= 16
   const zip_check = zip.length == 5 && !Number.isNaN(zip)
-  const price_check = ["$", "$$", "$$$", "$$$$"].includes(price)
-  const valid = special_chars_check && length_check && zip_check && price_check && cuisine;
+  const valid = special_chars_check && length_check && zip_check && cuisine;
 
   const handleTableCreation = async () => {
     const tableJSON: ITable = {
@@ -42,7 +39,6 @@ export default function CreateTable() {
       leader: user.uid!,
       prefs: {
         zip: zip,
-        price: price,
         cuisine: cuisine,
       },
       expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
@@ -53,7 +49,6 @@ export default function CreateTable() {
       const code = await WriteTable(table)
       setValue('')
       setZip('')
-      setPrice('')
       setCuisine('')
       setCode(code!)
       codeHandlers.open()
@@ -98,22 +93,6 @@ export default function CreateTable() {
             mt="md"
             value={zip}
             onChange={setZip}
-          />
-        </Tooltip>
-        <Tooltip
-        label={price_check ? null : "Try $, $$, $$$, $$$$"}
-        position="left"
-        withArrow
-        opened={openedPrice && !price_check}
-        color={"red.8"}
-        >
-          <TextInput
-            placeholder="Price ($, $$, $$$, $$$$)"
-            mt="md"
-            onFocus={() => inputHandlersPrice.open()}
-            onBlur={() => inputHandlersPrice.close()}
-            value={price}
-            onChange={setPrice}
           />
         </Tooltip>
         <TextInput
