@@ -1,6 +1,6 @@
 import { ITable, Table } from "@/types/Table";
 import { collection, doc, QueryDocumentSnapshot, onSnapshot, query, DocumentSnapshot } from "firebase/firestore";
-import { ReadDocumentWithConverter, ReadCollectionWithConverter, WriteDocumentWithConverter, DeleteDocument } from "../FirestoreOperations";
+import { WriteDocumentWithConverter, DeleteDocument } from "../FirestoreOperations";
 import { useFirebaseFirestore } from "../hooks/useFirebase";
 
 // Name of collection to use
