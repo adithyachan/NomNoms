@@ -6,7 +6,7 @@ import { Card, Text, Button, Tooltip, Progress, NavLink } from '@mantine/core';
 
 
 export default function CardStack({ids, setState, setUserVotes, user} : any) {
-  const cards = ids.map((id: string) => <ShowCard key={id} id={id}/>)
+  const cards = ids ? ids.map((id: string) => <ShowCard key={id} id={id}/>): []
   const [index, setIndex] = useState(0)
   const [card, setCard] = useState(cards[index])
   const [canFinish, setCanFinish] = useState(false)
@@ -16,7 +16,7 @@ export default function CardStack({ids, setState, setUserVotes, user} : any) {
   // setVotes is meant to update the user's votes as they are going through the card stack,
   // setUserVotes will update the user's votes in the Table once the user hits Done.
 
-  const [votes, setVotes] = useState(ids.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {}))
+  const [votes, setVotes] = useState(ids ? ids.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {}) : {})
 
   cards.push(
     <div style={{height: '450px', width: '450px'}}>

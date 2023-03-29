@@ -1,10 +1,11 @@
 import { useRestaurantBusinessEndpoint } from "@/lib/utils/yelpAPI";
+import CardStack from "./CardStack";
 
 export default function LexSort(props : {ids : any , ascending : boolean}) {
     let list : (string|number)[][] = []
     for (var i = 0; i < props.ids.length; i++) {
         const {data : businessData, error : businessError , isLoading: isLoadingBusiness} = useRestaurantBusinessEndpoint(props.ids[i])
-        var name = businessData.name
+        var name = businessData?.name
         list[i] = [props.ids[i], name]
     }
     var temp = list[0]
@@ -29,4 +30,5 @@ export default function LexSort(props : {ids : any , ascending : boolean}) {
             }
         }
     }
+    return list.map((entry) => entry[0]);
 }
