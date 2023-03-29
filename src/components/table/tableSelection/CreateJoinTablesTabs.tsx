@@ -2,6 +2,7 @@ import { Tabs, Text } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
 import CreateTable from "./createTable/CreateTable";
 import JoinTable from "./joinTable/JoinTable"
+import IndividualTable from "./createTable/IndividualTable";
 
 export default function CreateJoinTableTabs(props: { activeTab: string | null, setActiveTab: Dispatch<SetStateAction<string | null>> }) {
   return (
