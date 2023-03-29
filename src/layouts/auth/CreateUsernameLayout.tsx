@@ -1,10 +1,6 @@
-import { useToggle, upperFirst } from '@mantine/hooks';
-import { isEmail, useForm } from '@mantine/form';
-import { useFirebaseAuth, useFirebaseFirestore } from '@/lib/firebase/hooks/useFirebase';
-// import { CreateAccountEmailandPassword } from '@/lib/firebase/auth/AuthService';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { IconRefresh, IconX } from '@tabler/icons-react';
+import { useForm } from '@mantine/form';
+import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
+import { IconRefresh } from '@tabler/icons-react';
 import {
   TextInput,
   createStyles,
@@ -19,25 +15,15 @@ import {
   Tooltip
 } from '@mantine/core';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import {
-  doc, 
-  getDoc, 
-  deleteDoc,
-  addDoc,
-  setDoc, 
-  DocumentReference,
-  CollectionReference,
-  Firestore,
-  DocumentSnapshot} from "firebase/firestore";
-import { ReadDocument } from '@/lib/firebase/FirestoreOperations';
-import { WriteDocument } from '@/lib/firebase/FirestoreOperations';
+import { useEffect, useState } from 'react';
+import { User, IUser } from '@/types/User';
+import { ReadUsers, WriteUser } from '@/lib/firebase/auth/AuthOperations';
 
 
 export default function AuthenticationForm(props: PaperProps) {
-  //const [type, toggle] = useToggle(['NomNom!']);
   const [username, setUsername] = useState("");
   const router = useRouter();
+  const [users, setUsers] = useState<User[]>([])
   const form = useForm({
     initialValues: {
       username: ''
@@ -48,45 +34,20 @@ export default function AuthenticationForm(props: PaperProps) {
   });
 
   //disable the button if the inputs are not valid
-    const HandleCreate = async (e : any) => {
+    const HandleCreate = async (e: any) => {
       e.preventDefault();
-      const firestore = useFirebaseFirestore()
-  // Get document with name
-  const auth = useFirebaseAuth();
+      const auth = useFirebaseAuth();
       const user = auth.currentUser;
-      if (ReadDocument("usernames", username) == undefined) {
+      const usernames: string[] = users.map((user) => user.username)
+      if (usernames.findIndex((uname) => uname == username) != -1) {
         alert("Username exists")
         return undefined
       } 
-      //const user = userCredential.user;
-      if (user) {
-        const UID = user.uid;
-        //const firestore = useFirebaseFirestore()
-    // Get document with name
-    // await firestore.collection('users').document(UID)
-    //       .get().then((DocumentSnapshot ds){
-    //     var email=ds.data['photourl'];
-    // });
-  }
-      //console.log(username)
+
       const UID = user?.uid;
       if (user?.email) {
-      WriteDocument("users", {username: username, email: user.email}, UID)
-      WriteDocument("usernames", {uid: UID}, username)
+        WriteUser({username: username, email: user.email, uid: UID!, tables: []} as IUser)
       }
-      // if () {
-      //   alert("Username should be one word")
-      //   return undefined
-      // }
-      if (user) {
-        const UID = user.uid;
-        //const firestore = useFirebaseFirestore()
-    // Get document with name
-    // await firestore.collection('users').document(UID)
-    //       .get().then((DocumentSnapshot ds){
-    //     var email=ds.data['photourl'];
-    // });
-  }
       var temp = 0  
       !/\s/.test(username) ? null : temp = 1
       if (temp == 1){
@@ -96,8 +57,6 @@ export default function AuthenticationForm(props: PaperProps) {
       console.log("working")
       console.log("working")
       console.log(username)
-      // const UID = user?.uid;
-      // WriteDocument("users", {username: username, email: ""} , UID)
       setTimeout(() => {
         router.push('/tables');
       }, 10)
@@ -140,7 +99,10 @@ export default function AuthenticationForm(props: PaperProps) {
 
   const { classes } = useStyles();
 
-  
+  useEffect(() => {
+    const unsub = ReadUsers(setUsers);
+    return unsub
+  }, [])
 
   return (
 
@@ -199,17 +161,6 @@ export default function AuthenticationForm(props: PaperProps) {
           <Button  
           className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`} type="submit"  >NomNom!</Button>
         </Group>
-
-        {/* <Anchor
-            component="button"
-            color="pink"
-            //onClick={() => console.log('here')}
-            size="xs"
-          >
-      
-          </Anchor>
-          <Button onClick={GetValue}
-          className={`bg-rose-500 hover:bg-rose-600 ${classes.control}`}>Randomize</Button> */}
         </Container>
       </form>
     
