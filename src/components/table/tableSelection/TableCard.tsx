@@ -5,12 +5,15 @@ import { useRouter } from "next/router";
 import { useDisclosure } from "@mantine/hooks";
 import { useUser } from "@/providers/AuthProvider";
 import { UpdateTable } from "@/lib/firebase/table/TableOperations";
-import { NotificationsProvider, showNotification } from "@mantine/notifications";
+import { useEffect, useState } from "react";
+import { ReadUsers } from "@/lib/firebase/auth/AuthOperations";
+import { User } from "@/types/User";
 
 export default function TableCard(props: {table: Table, id: string}) {
   const router = useRouter()
   const [opened, {open, close}] = useDisclosure()
   const { user } = useUser();
+  const [users, setUsers] = useState<User[]>();
 
   const removeTable = async () => {
     props.table.users = props.table.users.filter(item => item !== user.uid)
@@ -48,6 +51,11 @@ export default function TableCard(props: {table: Table, id: string}) {
     router.push("/tables/" + props.id)
   }
 
+  useEffect(() => {
+    const unsub = ReadUsers(setUsers)
+    return unsub
+  }, [])
+
   return (
     <>
       <LeaveModal />
@@ -76,6 +84,7 @@ export default function TableCard(props: {table: Table, id: string}) {
             </Button>
             { copy(process.env.NEXT_PUBLIC_VERCEL_URL + "/tables/" + props.id) }
           </Group>
+          <small>Leader: { users?.find((item) => item.uid == props.table.leader)?.username }</small>
         </Center>
       </Card>
     </>
