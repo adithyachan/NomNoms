@@ -19,7 +19,8 @@ export default function RestaurantPreview(props: { table: Table }) {
     setLoading(true)
 
     try {
-      const res = await getRestaurantList(limit, parseInt(props.table.prefs.zip), 10000, props.table.prefs.cuisine.toLowerCase() + ",food", offset)
+      //Removed offset from the end
+      const res = await getRestaurantList(limit, parseInt(props.table.prefs.zip), 10000, props.table.prefs.cuisine.toLowerCase() + ",food")
       const resJSON = await res.json()
       if (res.status >= 400) {
         showNotification({

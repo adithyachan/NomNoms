@@ -17,7 +17,7 @@ const MARKS = [
   { value: 99, label: '$$$$' },
 ];
 
-export default function PriceSlider(props : { setPrice : any }) {
+export default function PriceSlider(props : { setPrice : any } ) {
   const theme = useMantineTheme();
   const [checked, setChecked] = useState(false);
   const [valueMin, setValueMin] = useState(0);
@@ -49,7 +49,6 @@ export default function PriceSlider(props : { setPrice : any }) {
         onChange={(valueMinimum) => {
           setValueMin(valueMinimum!)
           props.setPrice({
-            price: 0,
             minPrice: valueMinimum,
             maxPrice: valueMax,
             checked: true,
@@ -72,7 +71,6 @@ export default function PriceSlider(props : { setPrice : any }) {
         onChange={(valueMaximum) => {
           setValueMin(valueMaximum!)
           props.setPrice({
-            price: 0,
             minPrice: valueMin,
             maxPrice: valueMaximum,
             checked: true,
@@ -87,7 +85,7 @@ export default function PriceSlider(props : { setPrice : any }) {
       : 
       <Slider
       label={(val) => MARKS.find((mark) => mark.value === val)?.label}
-      defaultValue={1}
+      defaultValue={99}
       value={sliderVal}
       step={33}
       marks={MARKS}
@@ -101,9 +99,8 @@ export default function PriceSlider(props : { setPrice : any }) {
         (value: number) => {
           setSliderVal(value)
           props.setPrice({
-            price: value,
-            minPrice: 0,
-            maxPrice: 0,
+            minPrice: 1,
+            maxPrice: value,
             checked: false,
             error: false
           })

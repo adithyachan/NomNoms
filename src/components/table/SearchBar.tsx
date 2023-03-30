@@ -1,9 +1,18 @@
 import { Text, TextInput, TextInputProps, ActionIcon, useMantineTheme, Autocomplete } from '@mantine/core';
 import { IconSearch, IconArrowRight, IconArrowLeft } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 
-export default function SearchBar(props: any) {
+export default function SearchBar(props : { setCuisine : any , data : string[]}) {
 
   const theme = useMantineTheme();
+
+  const [value, setValue] = useState('');
+
+  useEffect(() => {
+    props.setCuisine(value.split(" ")[0])
+  }, [value]);
+
+  console.log(props.data)
 
   return (
     <>
@@ -12,22 +21,15 @@ export default function SearchBar(props: any) {
       icon={<IconSearch size="1.1rem" stroke={1.5} />}
       radius="xl"
       size="md"
-      rightSection={
-        <ActionIcon size={32} radius="xl" color="red" variant="filled">
-          {theme.dir === 'ltr' ? (
-            <IconArrowRight size="1.1rem" stroke={1.5} />
-          ) : (
-            <IconArrowLeft size="1.1rem" stroke={1.5} />
-          )}
-        </ActionIcon>
-      }
+      value={value}
+      onChange={setValue}
       placeholder="Search Cuisines"
       rightSectionWidth={42}
-      data={['React', 'Angular', 'Svelte', 'Vue']}
+      data={props.data ?? null}
       transition="pop"
       transitionDuration={80}
       transitionTimingFunction='ease'
-
+      
     />
     </>
   );
