@@ -61,10 +61,12 @@ export default function TableSelectedLayout(props: {table: Table}) {
 
   const getRestaurantWithPrefs = (cuisine?: string, price?: {min: string, max: string}) => {
     let temp = data
+    console.log("before filters: " + temp)
     console.log(" TABLE: cuisine: " + cuisine)
     console.log(" TABLE: min: " + price?.min)
     console.log(" TABLE: max: " + price?.max)
     if (cuisine) {
+      /*
       temp = temp.filter((item) => 
       (item.categories as any[]) ? 
       item.categories.findIndex((i: any) => {
@@ -72,6 +74,20 @@ export default function TableSelectedLayout(props: {table: Table}) {
       }) != -1
       : item.categories.title == cuisine
       )
+      */
+      temp = temp.filter((item) => {
+        if (Array.isArray(item.categories)) {
+          // Use Array.some() instead of findIndex()
+          return item.categories.some((i: any) => {
+            // Return true if title matches cuisine
+            return i.title === cuisine;
+          });
+        } else {
+          return item.categories.title === cuisine;
+        }
+      });
+
+
     }
     if (price) {
       temp = temp.filter((item) => {
@@ -81,6 +97,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
         return itemPrice >= min && itemPrice <= max
       })
     }
+
     setPreview(temp)
   }
 
