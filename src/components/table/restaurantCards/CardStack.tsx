@@ -52,7 +52,7 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
   // setUserVotes will update the user's votes in the Table once the user hits Done.
 
   const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {}))
-  console.log(cards.length)
+  
   
   //setCards([cards3.get(ids[0]), cards3.get(ids[1]), cards3.get(ids[2])])
   
@@ -71,10 +71,8 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
     
   )
      useEffect(() => {
-      console.log("useeffect")
-      console.log(flag)
+      
       if (flag) {
-        console.log("cards change")
       // var cards4 = []
       //  for (var i = 0; i < ids.length; i++) {
       //     cards4[i] = cards3.get(ids[i])
@@ -88,7 +86,6 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
       setFlag ( false)
      } else {
       setCard(cards[index])
-      console.log("index change")
       if (index == cards.length - 1)
         setCanFinish(true); 
      }},[ids1,index])
@@ -131,7 +128,7 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
         delete votes[key]
       }
     })
-    console.log(votes)
+    //console.log(votes)
     setUserVotes(votes)
     setState('favorite')
     
@@ -141,7 +138,7 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
   }
 
   function handleSort() {
-    console.log(index)
+    //console.log(index)
     setFlag (true)
     const r = ids1[2]
   const g = ids1[1]
