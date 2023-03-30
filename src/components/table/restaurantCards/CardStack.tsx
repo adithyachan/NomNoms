@@ -1,43 +1,114 @@
 import ShowCard from "./Card";
 import React, { useEffect, useState } from 'react'
-import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX, IconChevronRight} from '@tabler/icons-react'
+import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconChevronRight} from '@tabler/icons-react'
 
 import { Card, Text, Button, Tooltip, Progress, NavLink } from '@mantine/core';
+type ComponentProps = {
+  id: string;
+};
 
+type ComponentMap = {
+  [key: string]: React.FC<ComponentProps>;
+};
+const componentMap: ComponentMap = {
+  myComponent: ShowCard,
+};
+const DynamicComponent = componentMap["myComponent"];
+export default function CardStack({listData,ids, setState, setUserVotes, user} : any) {
+  //console.log("All businesses: " + listData.businesses)
+  var prices = new Map()
+  var revinfo = new Map()
+  var rating = 0
+  var neededBusiness :any
+  var price = ""
+  const cards3  = new Map
+  var review_count = 0
+  for(var i =0; i < ids.length;i++) {
+    //console.log(listData[0])
+    neededBusiness = listData.businesses[i]
+    rating = neededBusiness.rating
+    price = neededBusiness.price 
+    review_count = neededBusiness.review_count
+    if (review_count == undefined) {
+      review_count = 0
+    }
+    if (price == undefined) {
+      price = ''
+    }
+    if (rating == undefined) {
+      rating = 0
+    }
+    prices.set(ids[i], price)
+    revinfo.set(ids[i], [rating, review_count])
 
-export default function CardStack({ids, setState, setUserVotes, user} : any) {
-  const cards = ids.map((id: string) => <ShowCard key={id} id={id}/>)
+   cards3.set(ids[i], <DynamicComponent id = {ids[i]} />)
+
+  }
+  //console.log(revinfo)
+
+ 
+  //const cards = ids.map((id: string) => <ShowCard key={id} id={id}/>)
+  const card6 = <div style={{height: '450px', width: '450px'}}>
+  <Card withBorder radius='md' style={{height: '100%'}}>
+    <div style={{padding: '5px'}}></div>
+    <Text weight={500}>That&apos;s it!</Text>
+    <div style={{padding: '5px'}}></div>
+    <Text size="sm" color="dimmed">
+      You may either go back and change your votes, or hit the check to submit
+      and wait for the rest of your tablemates to finish their votes.
+    </Text>
+  </Card>
+</div> 
+
+  const [ids1, setIds] = useState(ids)
+  const [cards, setCards] = useState([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6 ])
+  //console.log(cards.length + "Before push")
   const [index, setIndex] = useState(0)
   const [card, setCard] = useState(cards[index])
   const [canFinish, setCanFinish] = useState(false)
   const [canSkip, setCanSkip] = useState(true)
+  const [flag, setFlag] = useState(false)
+
   // not to be confused with setUserVotes, which is a setter function passed into this component
   // in order to set this user's votes. 
   // setVotes is meant to update the user's votes as they are going through the card stack,
   // setUserVotes will update the user's votes in the Table once the user hits Done.
 
-  const [votes, setVotes] = useState(ids.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {}))
+const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {}))
+  
+  
+  
+ // console.log("After push " + cards.length)
+     useEffect(() => {
+      
+      if (flag) {
+        console.log("Sorting")
+  //    console.log(cards.length + " Before") 
 
-  cards.push(
-    <div style={{height: '450px', width: '450px'}}>
-      <Card withBorder radius='md' style={{height: '100%'}}>
-        <div style={{padding: '5px'}}></div>
-        <Text weight={500}>That&apos;s it!</Text>
-        <div style={{padding: '5px'}}></div>
-        <Text size="sm" color="dimmed">
-          You may either go back and change your votes, or hit the check to submit
-          and wait for the rest of your tablemates to finish their votes.
-        </Text>
-      </Card>
-    </div>
-    
-  )
+      console.log(cards )
+      setCards([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6] )
+  console.log(cards)
+  //    console.log(cards + " After")
+  //console.log(card)
+       setIndex(0)
+    //   console.log(card)
+       //setCard(cards[0])
+       setCanSkip(false)
+       setCanFinish(false)
+       setVotes(ids1.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {})) 
+      setFlag ( false)
+     } else {
+      console.log("Changing id")
+      setCard(cards[index])
+      if (index == cards.length - 1)
+        setCanFinish(true); 
+     }},[ids1,index])
 
-  useEffect(() => {
-    setCard(cards[index])
-    if (index == cards.length - 1)
-      setCanFinish(true);
-  }, [index])
+  // useEffect(() => {
+  //   setCard(cards[index])
+  //   if (index == cards.length - 1)
+  //     setCanFinish(true);
+  // }, [index])
 
   
   function handleYesClick() {
@@ -46,7 +117,7 @@ export default function CardStack({ids, setState, setUserVotes, user} : any) {
       setCanSkip(false);
       setVotes((votes: any) => ({
         ...votes, 
-        [ids[index]]: 1,
+        [ids1[index]]: 1,
       }));
     }
   }
@@ -56,7 +127,7 @@ export default function CardStack({ids, setState, setUserVotes, user} : any) {
       setCanSkip(false);
       setVotes((votes: any) => ({
         ...votes, 
-        [ids[index]]: 0,
+        [ids1[index]]: 0,
       }));
     }
   }
@@ -71,13 +142,29 @@ export default function CardStack({ids, setState, setUserVotes, user} : any) {
         delete votes[key]
       }
     })
-    console.log(votes)
+    //console.log(votes)
     setUserVotes(votes)
     setState('favorite')
     
 
     // setUserVotes(votes)
     // TODO: redirect to waiting for other nomsters to finish their votes page
+  }
+
+  function handleSort() {
+    //console.log(index)
+  //setFlag (true)
+    //const r = ids1[2]
+    //const e = SortByPrice({hashm : prices})
+    //setIds(e)
+    //setIds(ReviewSort({
+    //  hashm: revinfo,
+    //  ascending: true
+    //}))
+  //const g = ids1[1]
+  //const b = ids1[0]
+  //setIds( [r,g,b])
+  
   }
   
   function FinishButton() {
@@ -100,6 +187,7 @@ export default function CardStack({ids, setState, setUserVotes, user} : any) {
     }
   }
   function YesButton() {
+    
     if (index == cards.length - 1) {
       return (
         <Button size="lg" disabled variant='light' radius='xl' color="green">
@@ -129,6 +217,13 @@ export default function CardStack({ids, setState, setUserVotes, user} : any) {
       )
     }
   }
+  function TestButton() {
+    //flag = true
+    
+    return (<Button size="lg" onClick={handleSort} variant='light' radius='xl' color="yellow">
+          <IconArrowBack color='black' size={20} stroke={1.5} />
+        </Button>)
+  }
   function BackButton() {
     if (index == 0) {
       return (
@@ -157,7 +252,7 @@ export default function CardStack({ids, setState, setUserVotes, user} : any) {
     }
   }
 
-  if (ids == undefined || ids.length == 0) return (<Text size="md" color="dimmed">Card stack is empty!</Text> )
+  if (ids1 == undefined || ids1.length == 0) return (<Text size="md" color="dimmed">Card stack is empty!</Text> )
 
   else{
     return (
@@ -174,7 +269,7 @@ export default function CardStack({ids, setState, setUserVotes, user} : any) {
               <YesButton />
               <NoButton />
               <FinishButton />
-              
+              <TestButton />
             </div>
             <Skip />
           </div>
