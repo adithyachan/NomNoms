@@ -61,6 +61,9 @@ export default function TableSelectedLayout(props: {table: Table}) {
 
   const getRestaurantWithPrefs = (cuisine?: string, price?: {min: string, max: string}) => {
     let temp = data
+    console.log(" TABLE: cuisine: " + cuisine)
+    console.log(" TABLE: min: " + price?.min)
+    console.log(" TABLE: max: " + price?.max)
     if (cuisine) {
       temp = temp.filter((item) => 
       (item.categories as any[]) ? 

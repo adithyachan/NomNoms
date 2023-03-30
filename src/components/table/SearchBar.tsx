@@ -12,8 +12,6 @@ export default function SearchBar(props : { setCuisine : any , data : string[]})
     props.setCuisine(value.split(" ")[0])
   }, [value]);
 
-  console.log(props.data)
-
   return (
     <>
     <Autocomplete

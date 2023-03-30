@@ -18,24 +18,17 @@ interface priceObj {
 
 export default function TablePrefSidebar(props: {table: Table, data: any[], setPrefs: (cuisine?: string, price?: {min: string, max: string}) => void}) {
 
-  const [priceObject, setPrice] = useState<priceObj>({
-    minPrice: 0, 
-    maxPrice: 0,
-    checked: false, 
-    error: false
-  });
+  const [priceObject, setPrice] = useState<priceObj>();
 
   const [ac, setAC] = useState<string[]>()
   const [cuisine, setCuisine] = useState("");
-
   const [error, setError] = useState(false);
-  var priceData = new Array("$", "$$", "$$$", "$$$$");
 
   const HandleSearch = async (e : any) => {
     e.preventDefault();
 
-    const [minPrice, setMinPrice] = useState("");
-    const [maxPrice, setMaxPrice] = useState("");
+    let minimumPrice = ""
+    let maximumPrice = ""
 
     if (priceObject?.checked) {
       //error checking for min and max price
@@ -43,54 +36,56 @@ export default function TablePrefSidebar(props: {table: Table, data: any[], setP
           priceObject.maxPrice == null || 
           priceObject.minPrice < 0 ||
           priceObject.minPrice > priceObject.maxPrice) {
-          setError(true);
-      } else {
+          
+            console.log("price Range: " + priceObject.minPrice + " : " + priceObject.maxPrice)  
+            setError(true);
+
+        } else {
+        console.log("price Range: " + priceObject.minPrice + " : " + priceObject.maxPrice)
         setError(false);
         //“$” means under $10; “$ $” means “$11-$30”; “$ $ $” means “$31-$60”; and “$ $ $ $” means “above $61”
         if (priceObject.minPrice < 10) {
-          setMinPrice("$")
+          minimumPrice = "$"
         } else if (priceObject.minPrice >= 10 || priceObject.minPrice <= 30) {
-          setMinPrice("$$")
+          minimumPrice = "$$"
         } else if (priceObject.minPrice >= 31 || priceObject.minPrice <= 60) {
-          setMinPrice("$$$")
+          minimumPrice = "$$$"
         } else if (priceObject.minPrice >= 61) {
-          setMinPrice("$$$$")
+          minimumPrice = "$$$$"
         } else {
-          setMinPrice("$")
+          minimumPrice = "$"
         }
 
         if (priceObject.maxPrice < 10) {
-          setMaxPrice("$")
+          maximumPrice = "$"
         } else if (priceObject.maxPrice >= 10 || priceObject.maxPrice <= 30) {
-          setMaxPrice("$$")
+          maximumPrice = "$$"
         } else if (priceObject.maxPrice >= 31 || priceObject.maxPrice <= 60) {
-          setMaxPrice("$$$")
+          maximumPrice = "$$$"
         } else if (priceObject.maxPrice >= 61) {
-          setMaxPrice("$$$$")
+          maximumPrice = "$$$$"
         } else {
-          setMaxPrice("$$$$")
-        }
-
-        
+          maximumPrice = "$$$$"
+        } 
       }
     } else {
+      console.log("priceslider")
       //grab price from slider
       setError(false);
-      setMinPrice("$");
-      if (priceObject?.maxPrice == 1) {
-        setMaxPrice("$")
-      } else if (priceObject?.maxPrice == 1) {
-        setMaxPrice("$$")
-      } else if (priceObject?.maxPrice == 1) {
-        setMaxPrice("$$$")
+      minimumPrice = "$"
+      if (priceObject?.maxPrice == 0) {
+        maximumPrice = "$"
+      } else if (priceObject?.maxPrice == 33) {
+        maximumPrice = "$$"
+      } else if (priceObject?.maxPrice == 66) {
+        maximumPrice = "$$$"
       } else {
-        setMaxPrice("$$$$")
+        maximumPrice = "$$$$"
       }
-      setMinPrice(minPrice);
-      setMaxPrice(maxPrice);
     }
 
-    props.setPrefs(cuisine, { min: minPrice, max: maxPrice })
+
+    props.setPrefs(cuisine, { min: minimumPrice, max: maximumPrice })
   }
 
   useEffect(() => {
@@ -116,11 +111,9 @@ export default function TablePrefSidebar(props: {table: Table, data: any[], setP
         }
       }
     })
-
     Object.keys(cuisines).forEach((cus) => {
       strings.push(`${cus} (${cuisines[cus]})`)
     })
-
     setAC(strings)
   }, [props.data])
 
@@ -135,7 +128,7 @@ export default function TablePrefSidebar(props: {table: Table, data: any[], setP
     <Text className="mb-10 text-xl text-center font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Your Preferences</Text>
     <SearchBar setCuisine={setCuisine} data={ac ?? []}></SearchBar>
     <PriceSlider setPrice={setPrice}></PriceSlider>  
-     {error ? <Text>Invalid Inputs</Text> : null} 
+     {error ? <Text color="red"> Invalid Inputs</Text> : null} 
     <Button 
       className="mt-20"
       color="red" 
