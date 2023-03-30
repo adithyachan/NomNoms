@@ -18,8 +18,8 @@ export function useRestaurantBusinessEndpoint(id: string) {
   return useSWR(`/api/business?id=${id}`, fetcher);
 }
 
-export async function getRestaurantList(limit: number, zip: number, radius: number, categories: string, offset: number) {
-  const url = `/api/businesses?location=${zip}&radius=${radius}&categories=${categories}&limit=${limit}&offset=${offset}`
+export async function getRestaurantList(limit: number, zip: number, radius: number, categories: string) {
+  const url = `/api/businesses?location=${zip}&radius=${radius}&categories=${categories}&limit=${limit}`
 
   try {
     const res = await fetch(url, options);

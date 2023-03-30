@@ -1,12 +1,12 @@
 import RestaurantPreview from "@/components/table/tableSelected/RestaurantPreview";
 import { Table } from "@/types/Table";
-import { Title } from "@mantine/core";
+import { Center, Button, Title } from "@mantine/core";
 
-export default function RestaurantListLayout(props: {table: Table}) {
+export default function RestaurantListLayout(props: {data: any[]}) {
+
   return(
     <>
-    {/* TODO: Add restuarant preview after preference selection*/}
-    <RestaurantPreview table={props.table}/>
+      { <RestaurantPreview data={props.data} /> }
     </>
   );
 }

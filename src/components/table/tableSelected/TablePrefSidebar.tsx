@@ -15,7 +15,7 @@ interface priceObj {
   error: boolean
 }
 
-export default function TablePrefSidebar(props: { table: Table }) {
+export default function TablePrefSidebar(props: {table: Table, data: any[], setPrefs: (cuisine?: string, price?: {min: string, max: string}) => void}) {
 
   const [priceObject, setPrice] = useState<priceObj>({
     price: 0, 
