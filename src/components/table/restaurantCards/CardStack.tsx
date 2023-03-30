@@ -1,8 +1,10 @@
 import ShowCard from "./Card";
 import React, { useEffect, useState } from 'react'
-import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconChevronRight} from '@tabler/icons-react'
-
-import { Card, Text, Button, Tooltip, Progress, NavLink } from '@mantine/core';
+import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX, IconChevronRight, IconSortAscending, IconSortDescending} from '@tabler/icons-react'
+import { Card, Text, Button, Tooltip, Progress, NavLink, MenuItemProps } from '@mantine/core';
+import { useRestaurantBusinessEndpoint } from "@/lib/utils/yelpAPI";
+import {List, Group, useMantineTheme } from '@mantine/core';
+//import { MenuItem } from "@mantine/core/lib/Menu/MenuItem/MenuItem";
 type ComponentProps = {
   id: string;
 };
@@ -121,6 +123,74 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
       }));
     }
   }
+  function handleSortClick() {
+    //const [ascending, setAscending] = useState(true);
+    var price = "$"
+    let list: (string | number)[][] = [];
+    console.log(ids)
+    for (var i = 0; i < ids.length; i++) {
+      //const { data: businessData, error: businessError, isLoading: isLoadingBusiness } = useRestaurantBusinessEndpoint(ids[i]);
+      //var price = businessData?.price;
+      list[i] = [ids[i], price];
+      price+="$"
+    }
+    var temp = list[0];
+    //if (ascending) {
+      for (var i = 0; i < ids.length - 1; i++) {
+        for (var j = 0; j < ids.length - i - 1; j++) {
+          if (list[j][1]?.toString().length < list[j + 1][1]?.toString().length) {
+            temp = list[j];
+            list[j] = list[j + 1];
+            list[j + 1] = temp;
+          }
+        }
+      }
+    // } else {
+    //   for (var i = 0; i < ids.length - 1; i++) {
+    //     for (var j = 0; j < ids.length - i - 1; j++) {
+    //       if (list[j][1]?.toString().length < list[j + 1][1]?.toString().length) {
+    //         temp = list[j];
+    //         list[j] = list[j + 1];
+    //         list[j + 1] = temp;
+    //       }
+    //     }
+    //   }
+    // }
+    ids = list.map((entry) => entry[0]);
+    //setCard(ids.map((id: string) => <ShowCard key={id} id={id}/>));
+    console.log(ids)
+  }
+  
+  const MyMenu: React.FC = () => {
+    const [opened, setOpened] = useState(false);
+    const theme = useMantineTheme();
+  
+    const handleClose = () => {
+      setOpened(false);
+    };
+  
+    const handleToggle = () => {
+      setOpened(!opened);
+    };
+  
+    return (
+      <div style={{ position: 'relative' }}>
+        <div style={{ position: 'absolute', top: 0, right: 0 }}>
+          <Button variant="outline" onClick={handleToggle}>
+            Sort
+          </Button>
+          {opened && (
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <SortPriceButton/>
+              <SortLexButton/>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+  
+
   function handleNoClick() {
     if (index < cards.length - 1) {
       setIndex(index + 1);
@@ -240,6 +310,71 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
     }
   }
 
+  
+  function SortPriceButton() {
+    const [ascending, setAscending] = useState(true);
+    const toggleAscending = () => {
+      setAscending(!ascending);
+      handleSortClick();
+      //console.log(ids)
+    };
+    if (ascending) {
+      return (
+        // <Button size="lg" onClick={toggleAscending} variant='light' radius='xl' color="yellow">
+        //   <IconSortAscending color='orange' size={20} stroke={1.5} />
+          <Tooltip label="Ascending price">
+          <span>
+          <Button size="lg" onClick={toggleAscending} variant='light' radius='xl' color="yellow">
+          <IconSortAscending color='orange' size={20} stroke={1.5} />
+        </Button>
+          </span>
+        </Tooltip>
+       // </Button>
+      );
+    } else {
+      return (
+        <Tooltip label="Descending price">
+          <span>
+          <Button size="lg" onClick={toggleAscending} variant='light' radius='xl' color="yellow">
+          <IconSortDescending color='orange' size={20} stroke={1.5} />
+        </Button>
+          </span>
+        </Tooltip>
+      );
+    }
+}
+
+function SortLexButton() {
+  const [ascending, setAscending] = useState(true);
+    const toggleAscending = () => {
+      setAscending(!ascending);
+    };
+    if (ascending) {
+      return (
+        // <Button size="lg" onClick={toggleAscending} variant='light' radius='xl' color="yellow">
+        //   <IconSortAscending color='orange' size={20} stroke={1.5} />
+          <Tooltip label="Ascending lex">
+          <span>
+          <Button size="lg" onClick={toggleAscending} variant='light' radius='xl' color="yellow">
+          <IconSortAscending color='orange' size={20} stroke={1.5} />
+        </Button>
+          </span>
+        </Tooltip>
+       // </Button>
+      );
+    } else {
+      return (
+        <Tooltip label="Descending lex">
+          <span>
+          <Button size="lg" onClick={toggleAscending} variant='light' radius='xl' color="yellow">
+          <IconSortDescending color='orange' size={20} stroke={1.5} />
+        </Button>
+          </span>
+        </Tooltip>
+      );
+    }
+}
+
   function Skip() {
     if (canSkip) {
       return (
@@ -257,8 +392,8 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
   else{
     return (
       <>
-        
         <Progress color="red" value={((index / (cards.length - 1)) * 100)} />
+        <MyMenu/>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           
           <div style={{paddingTop: '100px'}}>
@@ -269,12 +404,10 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
               <YesButton />
               <NoButton />
               <FinishButton />
-              <TestButton />
             </div>
             <Skip />
           </div>
         </div>
-
       </>
     )
     
