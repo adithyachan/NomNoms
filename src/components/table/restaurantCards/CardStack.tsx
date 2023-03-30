@@ -37,8 +37,21 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
   //onst cards = [cards3.get(ids[0]), cards3.get(ids[1]), cards3.get(ids[2]) ]
  //lists start
   //const cards = ids.map((id: string) => <ShowCard key={id} id={id}/>)
+  const card6 = <div style={{height: '450px', width: '450px'}}>
+  <Card withBorder radius='md' style={{height: '100%'}}>
+    <div style={{padding: '5px'}}></div>
+    <Text weight={500}>That&apos;s it!</Text>
+    <div style={{padding: '5px'}}></div>
+    <Text size="sm" color="dimmed">
+      You may either go back and change your votes, or hit the check to submit
+      and wait for the rest of your tablemates to finish their votes.
+    </Text>
+  </Card>
+</div> 
+
   const [ids1, setIds] = useState(ids)
-  const [cards, setCards] = useState([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]) ])
+  const [cards, setCards] = useState([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),card6 ])
+  console.log(cards.length + "Before push")
   const [index, setIndex] = useState(0)
   const [card, setCard] = useState(cards[index])
   const [canFinish, setCanFinish] = useState(false)
@@ -56,20 +69,22 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
   
   //setCards([cards3.get(ids[0]), cards3.get(ids[1]), cards3.get(ids[2])])
   
-  cards.push(
-    <div style={{height: '450px', width: '450px'}}>
-      <Card withBorder radius='md' style={{height: '100%'}}>
-        <div style={{padding: '5px'}}></div>
-        <Text weight={500}>That&apos;s it!</Text>
-        <div style={{padding: '5px'}}></div>
-        <Text size="sm" color="dimmed">
-          You may either go back and change your votes, or hit the check to submit
-          and wait for the rest of your tablemates to finish their votes.
-        </Text>
-      </Card>
-    </div>
+  // cards.push(
+  //   <div style={{height: '450px', width: '450px'}}>
+  //     <Card withBorder radius='md' style={{height: '100%'}}>
+  //       <div style={{padding: '5px'}}></div>
+  //       <Text weight={500}>That&apos;s it!</Text>
+  //       <div style={{padding: '5px'}}></div>
+  //       <Text size="sm" color="dimmed">
+  //         You may either go back and change your votes, or hit the check to submit
+  //         and wait for the rest of your tablemates to finish their votes.
+  //       </Text>
+  //     </Card>
+  //   </div>
     
-  )
+  // )
+  
+  console.log("After push " + cards.length)
      useEffect(() => {
       
       if (flag) {
@@ -77,7 +92,12 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
       //  for (var i = 0; i < ids.length; i++) {
       //     cards4[i] = cards3.get(ids[i])
       //  }
-       setCards([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]) ])
+      console.log(cards.length + " Before") 
+
+      console.log(cards + " Before")
+      setCards([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]), card6 ])
+      console.log(cards.length + " After")
+      console.log(cards + " After")
        setIndex(0)
        setCard(cards[0])
        setCanSkip(false)
@@ -144,7 +164,7 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
   const g = ids1[1]
   const b = ids1[0]
   setIds( [r,g,b])
-  console.log(index)
+  
   }
   
   function FinishButton() {
