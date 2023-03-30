@@ -108,7 +108,7 @@ export default function NavBar(props : any) {
   }
 
   const HandleDelete = async (e : any) => {
-
+    router.push('/auth/deleteAccount')
   }
 
   return (
