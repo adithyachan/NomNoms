@@ -8,8 +8,15 @@ import { NotificationsProvider, showNotification } from "@mantine/notifications"
 import { useState, useEffect } from "react";
 import { getRestaurantList } from "@/lib/utils/yelpAPI";
 import { IconX } from "@tabler/icons-react";
+import LoadingLayout from "@/layouts/LoadingLayout";
 
 const limit = 5;
+const priceMap = {
+  "$": 1,
+  "$$": 2,
+  "$$$": 3,
+  "$$$$": 4
+}
 
 export default function TableSelectedLayout(props: {table: Table}) {
   const [offset, setOffset] = useState(5)
@@ -36,7 +43,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
       }
       else if(res.ok) {
         setData(resJSON.businesses)
-        getSlice(resJSON.businesses, offset)
+        setPreview(resJSON.businesses)
       }
     }
     catch (err) {
@@ -54,14 +61,28 @@ export default function TableSelectedLayout(props: {table: Table}) {
 
   const getRestaurantWithPrefs = (cuisine?: string, price?: {min: string, max: string}) => {
     let temp = data
-  }
-  
-  const getSlice = (data: any[], offset: number) => {
-    setPreview(data.slice(0, offset))
+    if (cuisine) {
+      temp = temp.filter((item) => 
+      (item.categories as any[]) ? 
+      item.categories.findIndex((i: any) => {
+        i.title == cuisine
+      }) != -1
+      : item.categories.title == cuisine
+      )
+    }
+    if (price) {
+      temp = temp.filter((item) => {
+        const itemPrice = priceMap[item.price as "$" | "$$" | "$$$" | "$$$$"]
+        const min = priceMap[price.min as "$" | "$$" | "$$$" | "$$$$"]
+        const max = priceMap[price.max as "$" | "$$" | "$$$" | "$$$$"]
+        return itemPrice >= min && itemPrice <= max
+      })
+    }
+    setPreview(temp)
   }
 
   useEffect(() => {
-    if (!data) {
+    if (data.length == 0) {
       getRestaurantFirstTime()
     }
   }, [])
@@ -78,15 +99,18 @@ export default function TableSelectedLayout(props: {table: Table}) {
             <TablePrefSidebar data={data} setPrefs={getRestaurantWithPrefs} table={props.table} />
           </Grid.Col>
           <Grid.Col span={5}>
-            <Title className="text-center" order={2}>{"Table Name: " + props.table.name.toUpperCase()}</Title> 
-            <RestaurantListLayout data={preview} />
-            <Center className="mt-5">
-              <Button color="red" onClick={() => {
-                setOffset(offset + limit)
-              }}>
-                Load More
-              </Button>
-            </Center>
+            {loading ? <LoadingLayout /> : 
+            <>
+              <Title className="text-center" order={2}>{"Table Name: " + props.table.name.toUpperCase()}</Title> 
+              <RestaurantListLayout data={preview.slice(0, offset)} />
+              <Center className="mt-5">
+                <Button color="red" onClick={() => {
+                  setOffset(offset + limit)
+                }}>
+                  Load More
+                </Button>
+              </Center>
+            </>}
           </Grid.Col>
           <Grid.Col span="auto">
             <TableUserSidebar table={props.table} />
