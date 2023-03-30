@@ -1,22 +1,19 @@
 import TableCard from "@/components/table/tableSelection/TableCard";
-import { Center, Flex, Grid, ScrollArea, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { ReadTables } from "@/lib/firebase/table/TableOperations";
 import { Table } from "@/types/Table";
 import LoadingLayout from "@/layouts/LoadingLayout";
 import { useUser } from "@/providers/AuthProvider";
-import { Card, Title, Group, Tooltip, Menu, ActionIcon, Button } from "@mantine/core";
+import { Card, Group, Tooltip, ActionIcon, Button, TextInput, Center, Flex, Grid, ScrollArea, Text } from "@mantine/core";
 import { CopyButton } from "@mantine/core";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import { IconSettings } from "@tabler/icons-react";
+import IndividualSelectionLayout from "@/components/table/tableSelection/IndividualTableSelection";
 
 export default function UserTablesLayout() {
-  const router = useRouter()
-
   const { user } = useUser()
   const [tables, setTables] = useState<Table[]>()
   const [loading, setLoading] = useState(false)
+
 
   useEffect(() => {
     setLoading(true)
@@ -25,10 +22,6 @@ export default function UserTablesLayout() {
 
     return unsub
   }, [])
-
-  const joinTable = () => {
-    router.push("/tables/individual-table")
-  }
 
 
 
@@ -71,23 +64,14 @@ const copy = (link: string) => (
           {{ height: '100%', 
             width: '300px',
           }} > 
-
-          
-
-
              <Card  style={{
                 justifyContent: 'center' }} 
              className="shadow-lg bg-rose-100 shadow-rose-200 transition ease-in-out hover:shadow-xl delay-100 duration-500 hover:shadow-rose-300 rounded-lg">
               <Text className= "mb-3 text-5 font-black text-center " >Personal Table</Text>
-          
-
         <Center className="flex-col space-y-2">
-          <Group>
-          
-            <Button color="red" size="xs" compact  onClick={joinTable}>
-               Let&apos;s Eat! 
-            </Button>
-          </Group>
+          <IndividualSelectionLayout>
+
+          </IndividualSelectionLayout>
         </Center>
 
       </Card>

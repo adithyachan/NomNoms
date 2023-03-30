@@ -1,4 +1,3 @@
-import { Table } from "@/types/Table";
 import { Flex,
          Text, 
          Button
@@ -16,7 +15,7 @@ interface priceObj {
 }
 
 
-export default function TablePrefSidebar(props: {table: Table, data: any[], setPrefs: (cuisine?: string, price?: {min: string, max: string}) => void}) {
+export default function TablePrefSidebar(props: {data: any[], setPrefs: (cuisine?: string, price?: {min: string, max: string}) => void}) {
 
   const [priceObject, setPrice] = useState<priceObj>();
 

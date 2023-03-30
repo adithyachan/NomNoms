@@ -30,7 +30,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
     setLoading(true)
 
     try {
-      const res = await getRestaurantList(50, parseInt(props.table.prefs.zip), 10000, "food")
+      const res = await getRestaurantList(50, props.table.prefs.zip, 10000, "food")
       const resJSON = await res.json()
       if (res.status >= 400) {
         showNotification({
@@ -116,7 +116,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
         {/* Create Grid with 3 columns, 1st & 3rd are smaller. Middle is larger */}
         <Grid>
           <Grid.Col span="auto">
-            <TablePrefSidebar data={data} setPrefs={getRestaurantWithPrefs} table={props.table} />
+            <TablePrefSidebar data={data} setPrefs={getRestaurantWithPrefs}/>
           </Grid.Col>
           <Grid.Col span={5}>
             {loading ? <LoadingLayout /> : 

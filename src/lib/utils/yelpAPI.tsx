@@ -10,7 +10,7 @@ const options = {
 const fetcher = (url: string) => fetch(url, options).then(res => res.json());
 
 //CALLS WITH MULTIPLE CATEGORIES MUST NOT BE SPACE SEPARATED (e.g. categories should be 'mexican,japanese')
-export function useRestaurantListEndpoint(limit: number, zip: number, radius: number, categories: string) {
+export function useRestaurantListEndpoint(limit: number, zip: string, radius: number, categories: string) {
   return useSWR(`/api/businesses?limit=${limit}&location=${zip}&radius=${radius}&categories=${categories}`, fetcher);
 }
 
@@ -18,7 +18,7 @@ export function useRestaurantBusinessEndpoint(id: string) {
   return useSWR(`/api/business?id=${id}`, fetcher);
 }
 
-export async function getRestaurantList(limit: number, zip: number, radius: number, categories: string) {
+export async function getRestaurantList(limit: number, zip: string, radius: number, categories: string) {
   const url = `/api/businesses?location=${zip}&radius=${radius}&categories=${categories}&limit=${limit}`
 
   try {
