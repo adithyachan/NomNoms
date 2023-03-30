@@ -4,6 +4,9 @@ import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX, IconChevro
 import { Card, Text, Button, Tooltip, Progress, NavLink, MenuItemProps } from '@mantine/core';
 import { useRestaurantBusinessEndpoint } from "@/lib/utils/yelpAPI";
 import {List, Group, useMantineTheme } from '@mantine/core';
+import ReviewSort from "./SortReview";
+import SortByPrice from "./PriceSort";
+import SortByLex from "./LexSort";
 //import { MenuItem } from "@mantine/core/lib/Menu/MenuItem/MenuItem";
 type ComponentProps = {
   id: string;
@@ -17,19 +20,22 @@ const componentMap: ComponentMap = {
 };
 const DynamicComponent = componentMap["myComponent"];
 export default function CardStack({listData,ids, setState, setUserVotes, user} : any) {
-  //console.log("All businesses: " + listData.businesses)
+  console.log( listData.businesses)
+  var names = new Map()
   var prices = new Map()
   var revinfo = new Map()
   var rating = 0
   var neededBusiness :any
   var price = ""
+  var name = ""
   const cards3  = new Map
   var review_count = 0
   for(var i =0; i < ids.length;i++) {
     //console.log(listData[0])
     neededBusiness = listData.businesses[i]
     rating = neededBusiness.rating
-    price = neededBusiness.price 
+    price = neededBusiness.price
+    name = neededBusiness.name
     review_count = neededBusiness.review_count
     if (review_count == undefined) {
       review_count = 0
@@ -40,6 +46,7 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
     if (rating == undefined) {
       rating = 0
     }
+    names.set(ids[i], name)
     prices.set(ids[i], price)
     revinfo.set(ids[i], [rating, review_count])
 
@@ -223,14 +230,16 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
 
   function handleSort() {
     //console.log(index)
-  //setFlag (true)
+    setFlag (true)
     //const r = ids1[2]
-    //const e = SortByPrice({hashm : prices})
-    //setIds(e)
-    //setIds(ReviewSort({
-    //  hashm: revinfo,
-    //  ascending: true
-    //}))
+    // const e = SortByPrice({hashm : prices, ascending: false})
+    // setIds(e)
+    const f = SortByLex({hashm : names, ascending: true})
+    setIds(f)
+    // setIds(ReviewSort({
+    //   hashm: revinfo,
+    //   ascending: true
+    // }))
   //const g = ids1[1]
   //const b = ids1[0]
   //setIds( [r,g,b])
@@ -404,6 +413,7 @@ function SortLexButton() {
               <YesButton />
               <NoButton />
               <FinishButton />
+              <TestButton/>
             </div>
             <Skip />
           </div>
