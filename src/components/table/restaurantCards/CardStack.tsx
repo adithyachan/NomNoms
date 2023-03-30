@@ -1,9 +1,9 @@
 import ShowCard from "./Card";
-import React, {  ReactNode, useEffect, useState } from 'react'
-import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX, IconChevronRight} from '@tabler/icons-react'
+import React, { useEffect, useState } from 'react'
+import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconChevronRight} from '@tabler/icons-react'
 
 import { Card, Text, Button, Tooltip, Progress, NavLink } from '@mantine/core';
-import { JsxElement } from "typescript";
+import ReviewSort from "./SortReview";
 type ComponentProps = {
   id: string;
 };
@@ -16,26 +16,38 @@ const componentMap: ComponentMap = {
 };
 const DynamicComponent = componentMap["myComponent"];
 export default function CardStack({listData,ids, setState, setUserVotes, user} : any) {
-  //console.log(listData.businesses)
+  //console.log("All businesses: " + listData.businesses)
   var prices = new Map()
-  var names = []
-  var reviewNos = []
-  var ratings = []
+  var revinfo = new Map()
+  var rating = 0
   var neededBusiness :any
   var price = ""
   const cards3  = new Map
-//  {[key:string] : typeof DynamicComponent}= {}
+  var review_count = 0
   for(var i =0; i < ids.length;i++) {
     //console.log(listData[0])
     neededBusiness = listData.businesses[i]
+    rating = neededBusiness.rating
     price = neededBusiness.price 
+    review_count = neededBusiness.review_count
+    if (review_count == undefined) {
+      review_count = 0
+    }
+    if (price == undefined) {
+      price = ''
+    }
+    if (rating == undefined) {
+      rating = 0
+    }
     prices.set(ids[i], price)
+    revinfo.set(ids[i], [rating, review_count])
+
    cards3.set(ids[i], <DynamicComponent id = {ids[i]} />)
 
   }
+  //console.log(revinfo)
 
-  //onst cards = [cards3.get(ids[0]), cards3.get(ids[1]), cards3.get(ids[2]) ]
- //lists start
+ 
   //const cards = ids.map((id: string) => <ShowCard key={id} id={id}/>)
   const card6 = <div style={{height: '450px', width: '450px'}}>
   <Card withBorder radius='md' style={{height: '100%'}}>
@@ -50,61 +62,44 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
 </div> 
 
   const [ids1, setIds] = useState(ids)
-  const [cards, setCards] = useState([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),card6 ])
-  console.log(cards.length + "Before push")
+  const [cards, setCards] = useState([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6 ])
+  //console.log(cards.length + "Before push")
   const [index, setIndex] = useState(0)
   const [card, setCard] = useState(cards[index])
   const [canFinish, setCanFinish] = useState(false)
   const [canSkip, setCanSkip] = useState(true)
   const [flag, setFlag] = useState(false)
-  //setCards( [cards3.get(ids[1]), cards3.get(ids[0]), cards3.get(ids[2]) ])
 
   // not to be confused with setUserVotes, which is a setter function passed into this component
   // in order to set this user's votes. 
   // setVotes is meant to update the user's votes as they are going through the card stack,
   // setUserVotes will update the user's votes in the Table once the user hits Done.
 
-  const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {}))
+const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {}))
   
   
-  //setCards([cards3.get(ids[0]), cards3.get(ids[1]), cards3.get(ids[2])])
   
-  // cards.push(
-  //   <div style={{height: '450px', width: '450px'}}>
-  //     <Card withBorder radius='md' style={{height: '100%'}}>
-  //       <div style={{padding: '5px'}}></div>
-  //       <Text weight={500}>That&apos;s it!</Text>
-  //       <div style={{padding: '5px'}}></div>
-  //       <Text size="sm" color="dimmed">
-  //         You may either go back and change your votes, or hit the check to submit
-  //         and wait for the rest of your tablemates to finish their votes.
-  //       </Text>
-  //     </Card>
-  //   </div>
-    
-  // )
-  
-  console.log("After push " + cards.length)
+ // console.log("After push " + cards.length)
      useEffect(() => {
       
       if (flag) {
-      // var cards4 = []
-      //  for (var i = 0; i < ids.length; i++) {
-      //     cards4[i] = cards3.get(ids[i])
-      //  }
-      console.log(cards.length + " Before") 
+        console.log("Sorting")
+  //    console.log(cards.length + " Before") 
 
-      console.log(cards + " Before")
-      setCards([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]), card6 ])
-      console.log(cards.length + " After")
-      console.log(cards + " After")
+      console.log(cards )
+      setCards([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6] )
+  console.log(cards)
+  //    console.log(cards + " After")
+  //console.log(card)
        setIndex(0)
-       setCard(cards[0])
+    //   console.log(card)
+       //setCard(cards[0])
        setCanSkip(false)
        setCanFinish(false)
        setVotes(ids1.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {})) 
       setFlag ( false)
      } else {
+      console.log("Changing id")
       setCard(cards[index])
       if (index == cards.length - 1)
         setCanFinish(true); 
@@ -159,11 +154,17 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
 
   function handleSort() {
     //console.log(index)
-    setFlag (true)
-    const r = ids1[2]
-  const g = ids1[1]
-  const b = ids1[0]
-  setIds( [r,g,b])
+    //setFlag (true)
+    //const r = ids1[2]
+    //const e = SortByPrice({hashm : prices})
+    //setIds(e)
+    //setIds(ReviewSort({
+    //  hashm: revinfo,
+    //  ascending: true
+    //}))
+  //const g = ids1[1]
+  //const b = ids1[0]
+  //setIds( [r,g,b])
   
   }
   
