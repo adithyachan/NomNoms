@@ -67,7 +67,7 @@ export default function RestaurantPreview(props: { table: Table }) {
   return (
     <>
       <NotificationsProvider />
-      <Title className="text-center" order={2}>{"Table Name: " + props.table.name.toUpperCase()}</Title> 
+      <Title className="text-center" order={2}>{"Table Name: " + "Personal Table"}</Title>
       <Container mah={550} className="overflow-y-scroll space-y-3">
         { restaurantCards ?? null }
       </Container>

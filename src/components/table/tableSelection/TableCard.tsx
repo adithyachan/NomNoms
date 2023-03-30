@@ -85,6 +85,7 @@ export default function TableCard(props: {table: Table, id: string}) {
             <Button color="red" size="xs" compact  onClick={joinTable}>
               Join
             </Button>
+
             { copy(process.env.NEXT_PUBLIC_VERCEL_URL + "/tables/" + props.id) }
           </Group>
           <small>Leader: { users?.find((item) => item.uid == props.table.leader)?.username }</small>

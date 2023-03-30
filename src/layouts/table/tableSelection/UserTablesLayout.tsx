@@ -27,7 +27,7 @@ export default function UserTablesLayout() {
   }, [])
 
   const joinTable = () => {
-    router.push("/tables")
+    router.push("/tables/individual-table")
   }
 
 
@@ -64,13 +64,16 @@ const copy = (link: string) => (
           </ScrollArea> }
           <Text className="mb-8"></Text>
           <Text className="mb-3 text-5xl text-center font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Individual </Text>
-          <Text className=" text-3 mb-4 text-center font-light" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Feeling like solo exploring? Use your personal table below! </Text>
-          
+          <Text className=" text-3 mb-4 text-center font-light" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Feel like going on a solo date? Use your personal table below! </Text>
+
           <Center className="flex-col space-y-2">
           <div  style=
           {{ height: '100%', 
             width: '300px',
           }} > 
+
+          
+
 
              <Card  style={{
                 justifyContent: 'center' }} 
