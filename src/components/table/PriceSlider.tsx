@@ -17,16 +17,38 @@ const MARKS = [
   { value: 99, label: '$$$$' },
 ];
 
-export default function PriceSlider(props : { setPrice : any }) {
+export default function PriceSlider(props : { setPrice : any } ) {
   const theme = useMantineTheme();
   const [checked, setChecked] = useState(false);
   const [valueMin, setValueMin] = useState(0);
   const [valueMax, setValueMax] = useState(0);
+  const [sliderVal, setSliderVal] = useState(99);
 
-  const [sliderVal, setSliderVal] = useState(1);
+  useEffect(() => {
+    console.log("checked: " + checked)
+    if (!checked) {
+      console.log("hello" + sliderVal)
+      props.setPrice({
+        minPrice: 0,
+        maxPrice: sliderVal,
+        checked: false,
+        error: false
+      })
+      setValueMin(0);
+      setValueMax(0);
+    } else {
+      console.log("USEEFFECT: " + valueMin + " " + valueMax)
+      props.setPrice({
+        minPrice: valueMin,
+        maxPrice: valueMax,
+        checked: true,
+        error: false
+      })
+      setSliderVal(99)
+    }
+  }, [sliderVal, valueMin, valueMax]);
 
-  const [error, setError] = useState(false);
-  console.log(checked);
+
   return (
     <>
       {
@@ -40,6 +62,7 @@ export default function PriceSlider(props : { setPrice : any }) {
         <NumberInput
         label="Min Price"
         defaultValue={0}
+        value={valueMin}
         parser={(value) => value?.replace(/\$\s?|(,*)/g, '')}
         formatter={(value) =>
         !Number.isNaN(parseFloat(value!))
@@ -48,13 +71,6 @@ export default function PriceSlider(props : { setPrice : any }) {
         }
         onChange={(valueMinimum) => {
           setValueMin(valueMinimum!)
-          props.setPrice({
-            price: 0,
-            minPrice: valueMinimum,
-            maxPrice: valueMax,
-            checked: true,
-            error: false
-          })
         }}
         withAsterisk
         />
@@ -63,6 +79,7 @@ export default function PriceSlider(props : { setPrice : any }) {
         <NumberInput
         label="Max Price"
         defaultValue={0}
+        value={valueMax}
         parser={(value) => value?.replace(/\$\s?|(,*)/g, '')}
         formatter={(value) =>
         !Number.isNaN(parseFloat(value!))
@@ -70,14 +87,7 @@ export default function PriceSlider(props : { setPrice : any }) {
           : '$ '
         }
         onChange={(valueMaximum) => {
-          setValueMin(valueMaximum!)
-          props.setPrice({
-            price: 0,
-            minPrice: valueMin,
-            maxPrice: valueMaximum,
-            checked: true,
-            error: false
-          })
+          setValueMax(valueMaximum!)
         }}
         withAsterisk
         />
@@ -87,7 +97,7 @@ export default function PriceSlider(props : { setPrice : any }) {
       : 
       <Slider
       label={(val) => MARKS.find((mark) => mark.value === val)?.label}
-      defaultValue={1}
+      defaultValue={99}
       value={sliderVal}
       step={33}
       marks={MARKS}
@@ -97,18 +107,7 @@ export default function PriceSlider(props : { setPrice : any }) {
           color: "red"
         }
       }}
-      onChange={
-        (value: number) => {
-          setSliderVal(value)
-          props.setPrice({
-            price: value,
-            minPrice: 0,
-            maxPrice: 0,
-            checked: false,
-            error: false
-          })
-        } 
-      }
+      onChange={setSliderVal}
     /> 
       }
       </Grid.Col>
@@ -120,7 +119,6 @@ export default function PriceSlider(props : { setPrice : any }) {
           setValueMin(0);
           setValueMax(0);
           props.setPrice({
-            price: 0,
             minPrice: 0,
             maxPrice: 0,
             checked: !checked,
