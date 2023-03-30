@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconChevronRight} from '@tabler/icons-react'
 
 import { Card, Text, Button, Tooltip, Progress, NavLink } from '@mantine/core';
-import ReviewSort from "./SortReview";
 type ComponentProps = {
   id: string;
 };
@@ -154,7 +153,7 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
 
   function handleSort() {
     //console.log(index)
-    //setFlag (true)
+  //setFlag (true)
     //const r = ids1[2]
     //const e = SortByPrice({hashm : prices})
     //setIds(e)
