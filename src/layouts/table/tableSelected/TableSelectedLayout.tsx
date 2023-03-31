@@ -11,6 +11,9 @@ import { IconX } from "@tabler/icons-react";
 import LoadingLayout from "@/layouts/LoadingLayout";
 
 const limit = 5;
+const numFetch = 50;
+const radius = 10000;
+const food =  "food"
 const priceMap = {
   "$": 1,
   "$$": 2,
@@ -19,18 +22,33 @@ const priceMap = {
 }
 
 export default function TableSelectedLayout(props: {table: Table}) {
-  const [offset, setOffset] = useState(5)
+  const [offset, setOffset] = useState(limit)
   const [data, setData] = useState<any[]>([])
-  const [preview, setPreview] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  
-  const getRestaurantFirstTime = async () => {
+
+  const getRestaurantWithPrefs = async (cuisine?: string, price?: {min: string, max: string}) => {
+    let p : string | undefined = undefined
+    if (price) {
+      p = ""
+      for (let i = priceMap[price.min as keyof typeof priceMap]; 
+        i <= priceMap[price.max as keyof typeof priceMap]; i++) {
+          p += `${i}, `
+      }
+      p.substring(0, p.length - 2)
+    }
+
     setError(false)
     setLoading(true)
 
     try {
-      const res = await getRestaurantList(50, props.table.prefs.zip, 10000, "food")
+      const res = await getRestaurantList(
+        numFetch, 
+        props.table.prefs.zip,
+        radius, 
+        cuisine !== food ? cuisine + "," + food : food, 
+        p
+      );
       const resJSON = await res.json()
       if (res.status >= 400) {
         showNotification({
@@ -42,8 +60,8 @@ export default function TableSelectedLayout(props: {table: Table}) {
         setError(true)
       }
       else if(res.ok) {
+        console.log(resJSON.businesses)
         setData(resJSON.businesses)
-        setPreview(resJSON.businesses)
       }
     }
     catch (err) {
@@ -56,54 +74,13 @@ export default function TableSelectedLayout(props: {table: Table}) {
       setError(true)
       console.log(err)
     }
+    setOffset(limit);
     setLoading(false);
-  }
-
-  const getRestaurantWithPrefs = (cuisine?: string, price?: {min: string, max: string}) => {
-    let temp = data
-    console.log("before filters: " + temp)
-    console.log(" TABLE: cuisine: " + cuisine)
-    console.log(" TABLE: min: " + price?.min)
-    console.log(" TABLE: max: " + price?.max)
-    if (cuisine) {
-      /*
-      temp = temp.filter((item) => 
-      (item.categories as any[]) ? 
-      item.categories.findIndex((i: any) => {
-        i.title == cuisine
-      }) != -1
-      : item.categories.title == cuisine
-      )
-      */
-      temp = temp.filter((item) => {
-        if (Array.isArray(item.categories)) {
-          // Use Array.some() instead of findIndex()
-          return item.categories.some((i: any) => {
-            // Return true if title matches cuisine
-            return i.title === cuisine;
-          });
-        } else {
-          return item.categories.title === cuisine;
-        }
-      });
-
-
-    }
-    if (price) {
-      temp = temp.filter((item) => {
-        const itemPrice = priceMap[item.price as "$" | "$$" | "$$$" | "$$$$"]
-        const min = priceMap[price.min as "$" | "$$" | "$$$" | "$$$$"]
-        const max = priceMap[price.max as "$" | "$$" | "$$$" | "$$$$"]
-        return itemPrice >= min && itemPrice <= max
-      })
-    }
-
-    setPreview(temp)
   }
 
   useEffect(() => {
     if (data.length == 0) {
-      getRestaurantFirstTime()
+      getRestaurantWithPrefs(food)
     }
   }, [])
 
@@ -122,10 +99,10 @@ export default function TableSelectedLayout(props: {table: Table}) {
             {loading ? <LoadingLayout /> : 
             <>
               <Title className="text-center" order={2}>{"Table Name: " + props.table.name.toUpperCase()}</Title> 
-              <RestaurantListLayout data={preview.slice(0, offset)} />
+              <RestaurantListLayout data={data.slice(0, offset)} />
               <Center className="mt-5">
                 <Button color="red" onClick={() => {
-                  setOffset(offset + limit)
+                  setOffset(offset + limit > data.length ? data.length : offset + limit)
                 }}>
                   Load More
                 </Button>
