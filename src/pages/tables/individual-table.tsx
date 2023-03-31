@@ -2,7 +2,7 @@
 import { useRouter } from "next/router";
 import NavBar from "@/components/NavBar";
 import { Container, Title, Center, Button, Flex, Tooltip, TextInput} from "@mantine/core";
-import TablePrefSidebar from "@/components/table/tableSelected/TablePrefSidebar";
+import TablePrefSidebarIndiv from "@/components/table/tableSelected/TablePrefSidebarIndiv";
 import { Grid } from "@mantine/core";
 import RestaurantListIndividualLayout from "@/layouts/table/tableSelected/RestaurantListIndividualLayout";
 import { useState, useEffect } from "react";
@@ -38,9 +38,8 @@ export default function TablePage(props: any) {
     setLoading(true)
     /*parseInt(props.table.prefs.zip)*/
     try {
-      const res = await getRestaurantList(50, "08540", 10000, "food")
+      const res = await getRestaurantList(50, zip, 10000, "food")
       const resJSON = await res.json()
-
       console.log(resJSON)
       if (res.status >= 400) {
         showNotification({
@@ -70,21 +69,12 @@ export default function TablePage(props: any) {
     setLoading(false);
   }
 
-  const getRestaurantWithPrefs = (cuisine?: string, price?: {min: string, max: string}) => {
+  const getRestaurantWithPrefs = (zip?: string, cuisine?: string, price?: {min: string, max: string}) => {
     if (zip_check && data.length == 0) {
       getRestaurantFirstTime()
     } else{
       let temp = data
       if (cuisine) {
-        /*
-        temp = temp.filter((item) => 
-        (item.categories as any[]) ? 
-        item.categories.findIndex((i: any) => {
-          i.title == cuisine
-        }) != -1
-        : item.categories.title == cuisine
-        )
-        */
         temp = temp.filter((item) => {
           if (Array.isArray(item.categories)) {
             // Use Array.some() instead of findIndex()
@@ -96,8 +86,6 @@ export default function TablePage(props: any) {
             return item.categories.title === cuisine;
           }
         });
-
-
       }
       if (price) {
         temp = temp.filter((item) => {
@@ -126,24 +114,7 @@ export default function TablePage(props: any) {
                 direction="column"
                 wrap="wrap"
           >
-              {error ? <small className="text-red-500">error</small> : null}
-            <Tooltip
-            label={zip_check ? null : "Invalid Zip Code"}
-            position="left"
-            withArrow
-            opened={openedZip && !zip_check}
-            color={"red.8"}
-              >
-              <TextInput
-                placeholder="Zip Code"
-                onFocus={() => inputHandlersZip.open()}
-                onBlur={() => inputHandlersZip.close()}
-                mt="md"
-                value={zip}
-                onChange={setZip}
-              />
-            </Tooltip>
-            <TablePrefSidebar data={data} setPrefs={getRestaurantWithPrefs} />
+            <TablePrefSidebarIndiv data={data} setPrefs={getRestaurantWithPrefs} />
 
           </Flex>
         </Grid.Col>

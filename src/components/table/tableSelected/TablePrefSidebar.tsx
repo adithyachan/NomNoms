@@ -5,7 +5,6 @@ import { Flex,
 import PriceSlider from "../PriceSlider";
 import SearchBar from "../SearchBar";
 import { useState, useEffect } from 'react';
-import { stringify } from "querystring";
 
 interface priceObj {
   minPrice: number,
@@ -82,7 +81,6 @@ export default function TablePrefSidebar(props: {data: any[], setPrefs: (cuisine
         maximumPrice = "$$$$"
       }
     }
-
 
     props.setPrefs(cuisine, { min: minimumPrice, max: maximumPrice })
   }
