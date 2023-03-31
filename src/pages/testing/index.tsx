@@ -6,7 +6,7 @@ export default function Test() {
     const ids = ["8iBf92OQexHN0yjMDEaYJA","uGBc1xGAR9YEY0DtINPV9A"];
     //const ascending = true;
     //PriceSort({ids,ascending});
-    const test = LexSort({ids: ids, ascending: true})
+    //const test = LexSort({ids: ids, ascending: true})
     // return(ShowCard({id: test[0]}));
     // return <ShowCard id={test[2]} />;
     return (
