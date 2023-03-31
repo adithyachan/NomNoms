@@ -22,6 +22,7 @@ import {
   Stack,
   Autocomplete,
   Tooltip,
+  BackgroundImage,
 } from '@mantine/core';
 import { GoogleButton, GithubButton} from "@/components/auth/SocialButtons"
 import { showNotification } from '@mantine/notifications';
@@ -180,20 +181,24 @@ export default function CreateAccount (props: PaperProps) {
     icon: {
       color: theme.colors.red[theme.colorScheme === 'dark' ? 7 : 6],
     },
+
+    background: {
+
+    }
   }));
 
   const { classes } = useStyles();
 
-  
+  //bg-gradient-to-r mt-5 from-rose-50 via-white to-rose-50
 
   return (
     <form onSubmit={form.onSubmit(HandleCreate)}>
-    <Paper radius="md" p="xl" withBorder {...props}>
-    <NotificationsProvider>
-      <Container size={500} my={50} 
-          className="mt-40 bg-gradient-to-r from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
-          <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
 
+    <Paper className={`${classes.background}`} p="xl" withBorder {...props}  >
+    <NotificationsProvider>
+      <Container size={500} 
+          className="bg-gradient-to-r mt-5 from-rose-50 via-white to-rose-50 p-10 rounded-xl shadow-rose-200 shadow-lg transition ease-in-out duration-300 hover:shadow-2xl hover:shadow-rose-300">
+          <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center"/>
           <Title className= {classes.title} align = "center">
               Not a Nomster yet?
           </Title>
@@ -281,15 +286,17 @@ export default function CreateAccount (props: PaperProps) {
         <GoogleButton radius="xl">Google</GoogleButton>
         <GithubButton radius="xl">GitHub</GithubButton>
           </Group>
-        </Container>
-
-      <Text size="sm" weight={200} align="center">
+          <Text size="sm" weight={200} align="center">
         By creating an account, you agree to our <Anchor href="https://mantine.dev/" target="_blank">
           Terms of Service and Private Policy </Anchor>
       </Text> 
+        </Container>
+
+
     </NotificationsProvider>
     </Paper>
+
     </form>
-   
+
   );
 }
