@@ -29,11 +29,10 @@ export default function TablePage(props: any) {
   const [preview, setPreview] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  const [zip, setZip] = useInputState('');
-  const [openedZip, inputHandlersZip] = useDisclosure();
-  const zip_check = zip.length == 5 && !Number.isNaN(zip)
+  const [zipCheck, setZipCheck] = useState("")
 
-  const getRestaurantFirstTime = async () => {
+
+  const getRestaurantFirstTime = async (zip : string) => {
     setError(false)
     setLoading(true)
     /*parseInt(props.table.prefs.zip)*/
@@ -70,8 +69,9 @@ export default function TablePage(props: any) {
   }
 
   const getRestaurantWithPrefs = (zip?: string, cuisine?: string, price?: {min: string, max: string}) => {
-    if (zip_check && data.length == 0) {
-      getRestaurantFirstTime()
+    if (zipCheck != zip! || data.length == 0) {
+      setZipCheck(zip!)
+      getRestaurantFirstTime(zip!)
     } else{
       let temp = data
       if (cuisine) {

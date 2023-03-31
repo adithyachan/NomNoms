@@ -35,7 +35,6 @@ export default function TablePrefSidebarIndiv(props: {data: any[], setPrefs: (zi
                 console.log("price Range: " + priceObject.minPrice + " : " + priceObject.maxPrice)  
                 setError(true);
             } else {
-            console.log("price Range: " + priceObject.minPrice + " : " + priceObject.maxPrice)
             setError(false);
             //“$” means under $10; “$ $” means “$11-$30”; “$ $ $” means “$31-$60”; and “$ $ $ $” means “above $61”
             if (priceObject.minPrice < 10) {
@@ -62,8 +61,6 @@ export default function TablePrefSidebarIndiv(props: {data: any[], setPrefs: (zi
             } 
         }
         } else {
-            console.log("priceslider")
-            //grab price from slider
             setError(false);
             minimumPrice = "$"
             if (priceObject?.maxPrice == 0) {
@@ -78,13 +75,12 @@ export default function TablePrefSidebarIndiv(props: {data: any[], setPrefs: (zi
         }
 
         if (zip_check) {
-            setError(false);
+            props.setPrefs(zip, cuisine, { min: minimumPrice, max: maximumPrice })
         } else {
-            setError(true);
+            setError(true)
         }
 
-        props.setPrefs(zip, cuisine, { min: minimumPrice, max: maximumPrice })
-
+        console.log("ERROR: " + error)
     }
 
     useEffect(() => {
@@ -124,7 +120,6 @@ return (
             gap="xl"
             className="bg-white p-10 rounded-3xl shadow-lg shadow-rose-100 flex-col justify-center">
                 <Text className="mb-10 text-xl text-center font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Your Preferences</Text>
-                {error ? <small className="text-red-500">error</small> : null}
                 <Tooltip
                 label={zip_check ? null : "Invalid Zip Code"}
                 position="left"
