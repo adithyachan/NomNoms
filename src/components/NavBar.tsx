@@ -26,6 +26,8 @@ import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 import { useUser } from '@/providers/AuthProvider';
 import { useRouter } from "next/router";
 import { deleteUser, signOut } from "firebase/auth";
+import { User } from "@/types/User";
+import { ReadUsers } from "@/lib/firebase/auth/AuthOperations";
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -61,9 +63,16 @@ export default function NavBar(props : any) {
   const { classes, theme, cx } = useStyles();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const [users, setUsers] =  useState<User[]>();
   const { user } = useUser();
   const auth = useFirebaseAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    ReadUsers(setUsers)
+  }, [])
+
+  const userName = users?.find((item) => item.uid == user.uid)?.username!
 
 
   const HandleChange = () => {
@@ -145,7 +154,7 @@ export default function NavBar(props : any) {
                     <Group spacing={7}>
                       <Avatar alt={user.email!} radius="xl" size={20} />
                       <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                        {user.email}
+                        {userName!}
                       </Text>
                       <IconChevronDown size={20} stroke={1.5} />
                     </Group>
