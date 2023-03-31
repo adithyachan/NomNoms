@@ -1,7 +1,7 @@
 import ShowCard from "./Card";
 import React, { useEffect, useState } from 'react'
-import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX, IconChevronRight, IconSortAscending, IconSortDescending} from '@tabler/icons-react'
-import { Card, Text, Button, Tooltip, Progress, NavLink, MenuItemProps } from '@mantine/core';
+import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX, IconChevronRight, IconSortAscending, IconSortDescending, IconChevronDown} from '@tabler/icons-react'
+import { Card, Text, Button, Tooltip, Progress, NavLink, MenuItemProps, Input, Select } from '@mantine/core';
 import { useRestaurantBusinessEndpoint } from "@/lib/utils/yelpAPI";
 import {List, Group, useMantineTheme } from '@mantine/core';
 import ReviewSort from "./SortReview";
@@ -85,7 +85,8 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
 
 const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {}))
   
-  
+const [value, setSelectedValue] = useState<string |null>('');
+
   
  // console.log("After push " + cards.length)
      useEffect(() => {
@@ -130,73 +131,6 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
       }));
     }
   }
-  function handleSortClick() {
-    //const [ascending, setAscending] = useState(true);
-    var price = "$"
-    let list: (string | number)[][] = [];
-    console.log(ids)
-    for (var i = 0; i < ids.length; i++) {
-      //const { data: businessData, error: businessError, isLoading: isLoadingBusiness } = useRestaurantBusinessEndpoint(ids[i]);
-      //var price = businessData?.price;
-      list[i] = [ids[i], price];
-      price+="$"
-    }
-    var temp = list[0];
-    //if (ascending) {
-      for (var i = 0; i < ids.length - 1; i++) {
-        for (var j = 0; j < ids.length - i - 1; j++) {
-          if (list[j][1]?.toString().length < list[j + 1][1]?.toString().length) {
-            temp = list[j];
-            list[j] = list[j + 1];
-            list[j + 1] = temp;
-          }
-        }
-      }
-    // } else {
-    //   for (var i = 0; i < ids.length - 1; i++) {
-    //     for (var j = 0; j < ids.length - i - 1; j++) {
-    //       if (list[j][1]?.toString().length < list[j + 1][1]?.toString().length) {
-    //         temp = list[j];
-    //         list[j] = list[j + 1];
-    //         list[j + 1] = temp;
-    //       }
-    //     }
-    //   }
-    // }
-    ids = list.map((entry) => entry[0]);
-    //setCard(ids.map((id: string) => <ShowCard key={id} id={id}/>));
-    console.log(ids)
-  }
-  
-  const MyMenu: React.FC = () => {
-    const [opened, setOpened] = useState(false);
-    const theme = useMantineTheme();
-  
-    const handleClose = () => {
-      setOpened(false);
-    };
-  
-    const handleToggle = () => {
-      setOpened(!opened);
-    };
-  
-    return (
-      <div style={{ position: 'relative' }}>
-        <div style={{ position: 'absolute', top: 0, right: 0 }}>
-          <Button variant="outline" onClick={handleToggle}>
-            Sort
-          </Button>
-          {opened && (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <SortPriceButton/>
-              <SortLexButton/>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-  
 
   function handleNoClick() {
     if (index < cards.length - 1) {
@@ -228,22 +162,47 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
     // TODO: redirect to waiting for other nomsters to finish their votes page
   }
 
-  function handleSort() {
-    //console.log(index)
-    setFlag (true)
-    //const r = ids1[2]
-    // const e = SortByPrice({hashm : prices, ascending: false})
-    // setIds(e)
-    const f = SortByLex({hashm : names, ascending: true})
-    setIds(f)
-    // setIds(ReviewSort({
-    //   hashm: revinfo,
-    //   ascending: true
-    // }))
-  //const g = ids1[1]
-  //const b = ids1[0]
-  //setIds( [r,g,b])
+  const handleSort = (ascending: boolean) => {
+    
+    if (value == 'Price') {
+      setFlag (true)
+      const e = SortByPrice({hashm : prices, ascending: ascending})
+      setIds(e)
+    }
+    else if (value == 'Review Info') {
+      setFlag (true)
+      setIds(ReviewSort({
+          hashm: revinfo,
+          ascending: ascending
+        }))
+    }
+    else if (value == 'Lex') {
+      setFlag (true)
+      const f = SortByLex({hashm : names, ascending: ascending})
+      setIds(f)
+    }
+  }
+
+  function SettingValue(value : string|null) {
+    setSelectedValue(value) 
+    console.log(value)
+   }
+    function TypeSortButton() {
+      return (
+        <Select
   
+        value={value}
+        onChange={(value) => SettingValue(value)}//setSelectedValue(value)}
+        placeholder="Sort by"
+        clearable
+        data={[
+          { value: "Price", label: "Price" },
+      { value: "Review Info", label: "Review Info" },
+      { value: "Lex", label: "Lexicographically" },
+        ]}
+      />
+  
+    )
   }
   
   function FinishButton() {
@@ -296,13 +255,30 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
       )
     }
   }
-  function TestButton() {
+  function AscendingButton() {
     //flag = true
     
-    return (<Button size="lg" onClick={handleSort} variant='light' radius='xl' color="yellow">
-          <IconArrowBack color='black' size={20} stroke={1.5} />
-        </Button>)
+    return (<Tooltip label="Ascending">
+    <span>
+    <Button size="lg" onClick={() => handleSort(true)} variant='light' radius='xl' color="yellow">
+    <IconSortAscending color='orange' size={20} stroke={1.5} />
+  </Button>
+    </span>
+  </Tooltip>)
   }
+  function DescendingButton() {
+    //flag = true
+    
+    return (<Tooltip label="Descending">
+    <span>
+    <Button size="lg" onClick={() => handleSort(false)} variant='light' radius='xl' color="yellow">
+    <IconSortDescending color='orange' size={20} stroke={1.5} />
+  </Button>
+    </span>
+  </Tooltip>)
+  }
+
+
   function BackButton() {
     if (index == 0) {
       return (
@@ -319,70 +295,6 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
     }
   }
 
-  
-  function SortPriceButton() {
-    const [ascending, setAscending] = useState(true);
-    const toggleAscending = () => {
-      setAscending(!ascending);
-      handleSortClick();
-      //console.log(ids)
-    };
-    if (ascending) {
-      return (
-        // <Button size="lg" onClick={toggleAscending} variant='light' radius='xl' color="yellow">
-        //   <IconSortAscending color='orange' size={20} stroke={1.5} />
-          <Tooltip label="Ascending price">
-          <span>
-          <Button size="lg" onClick={toggleAscending} variant='light' radius='xl' color="yellow">
-          <IconSortAscending color='orange' size={20} stroke={1.5} />
-        </Button>
-          </span>
-        </Tooltip>
-       // </Button>
-      );
-    } else {
-      return (
-        <Tooltip label="Descending price">
-          <span>
-          <Button size="lg" onClick={toggleAscending} variant='light' radius='xl' color="yellow">
-          <IconSortDescending color='orange' size={20} stroke={1.5} />
-        </Button>
-          </span>
-        </Tooltip>
-      );
-    }
-}
-
-function SortLexButton() {
-  const [ascending, setAscending] = useState(true);
-    const toggleAscending = () => {
-      setAscending(!ascending);
-    };
-    if (ascending) {
-      return (
-        // <Button size="lg" onClick={toggleAscending} variant='light' radius='xl' color="yellow">
-        //   <IconSortAscending color='orange' size={20} stroke={1.5} />
-          <Tooltip label="Ascending lex">
-          <span>
-          <Button size="lg" onClick={toggleAscending} variant='light' radius='xl' color="yellow">
-          <IconSortAscending color='orange' size={20} stroke={1.5} />
-        </Button>
-          </span>
-        </Tooltip>
-       // </Button>
-      );
-    } else {
-      return (
-        <Tooltip label="Descending lex">
-          <span>
-          <Button size="lg" onClick={toggleAscending} variant='light' radius='xl' color="yellow">
-          <IconSortDescending color='orange' size={20} stroke={1.5} />
-        </Button>
-          </span>
-        </Tooltip>
-      );
-    }
-}
 
   function Skip() {
     if (canSkip) {
@@ -402,10 +314,9 @@ function SortLexButton() {
     return (
       <>
         <Progress color="red" value={((index / (cards.length - 1)) * 100)} />
-        <MyMenu/>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           
-          <div style={{paddingTop: '100px'}}>
+          <div style={{paddingTop: '30px'}}>
 
             {card}
             <div style={{paddingBottom: '30px', paddingTop: '10px', justifyContent: 'center', alignItems: 'center', display: 'flex', gap: 35}}>
@@ -413,8 +324,12 @@ function SortLexButton() {
               <YesButton />
               <NoButton />
               <FinishButton />
-              <TestButton/>
-            </div>
+            </div >
+            <div style={{paddingBottom: '30px', paddingTop: '10px', justifyContent: 'center', alignItems: 'center', display: 'flex', gap: 35}}>
+            <AscendingButton/>
+            <TypeSortButton/>
+              <DescendingButton/>
+              </div>
             <Skip />
           </div>
         </div>

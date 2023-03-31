@@ -18,7 +18,7 @@ export default function Voting({zip, prefs}: any) {
       return <Loader color="FF5858" />;
     } else {
       const ids = listData.businesses.map((business: any) => business.id);
-      return <CardStack ids={ids} setState={setState} setUserVotes={setVotes}/>;
+      return <CardStack listData = {listData} ids={ids} setState={setState} setUserVotes={setVotes}/>;
     }
   } else if (state === 'favorite') {
 
