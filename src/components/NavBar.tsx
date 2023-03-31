@@ -69,7 +69,8 @@ export default function NavBar(props : any) {
   const router = useRouter();
 
   useEffect(() => {
-    ReadUsers(setUsers)
+    const unsub = ReadUsers(setUsers)
+    return unsub
   }, [])
 
   const userName = users?.find((item) => item.uid == user.uid)?.username!
