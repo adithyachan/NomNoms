@@ -123,7 +123,7 @@ export default function NavBar(props : any) {
             className="w-fit"
             />
             <Group className='space-x-3'>
-              {/[a-zA-Z0-9]{20}/g.test(router.asPath) ? <Button leftIcon={<IconDoorExit />} color='red' onClick={() => router.push("/tables")}>
+              {/[a-zA-Z0-9]{20}/g.test(router.asPath) || router.asPath.includes("individual-table") ? <Button leftIcon={<IconDoorExit />} color='red' onClick={() => router.push("/tables")}>
                 Back to home
               </Button> : null}
               <Menu

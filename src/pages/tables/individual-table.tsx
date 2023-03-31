@@ -101,9 +101,9 @@ export default function TablePage(props: any) {
 
   return (
     <>
-    <>
-      <NavBar>
-      </NavBar>
+    <NavBar>
+      
+    </NavBar>
     <Container fluid className="p-10 bg-gradient-to-b from-rose-100 to-white">
       {/* Create Grid with 3 columns, 1st & 3rd are smaller. Middle is larger */}
       <Grid>
@@ -134,8 +134,6 @@ export default function TablePage(props: any) {
         </Grid.Col>
       </Grid>
     </Container>
-    </>
-
     </>
   )
 }

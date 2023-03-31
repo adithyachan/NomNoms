@@ -23,7 +23,7 @@ export default function SearchBar(props : { setCuisine : any , data : string[]})
       onChange={setValue}
       placeholder="Start typing to search for cuisines"
       rightSectionWidth={42}
-      data={data}
+      data={props.data ?? null}
       transition="pop"
       transitionDuration={80}
       transitionTimingFunction='ease'
