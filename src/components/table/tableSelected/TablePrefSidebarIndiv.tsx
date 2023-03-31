@@ -37,7 +37,7 @@ export default function TablePrefSidebarIndiv(props: {data: any[], setPrefs: (zi
             } else {
             setError(false);
             //“$” means under $10; “$ $” means “$11-$30”; “$ $ $” means “$31-$60”; and “$ $ $ $” means “above $61”
-            if (priceObject.minPrice < 10) {
+            if (priceObject.minPrice > 0 && priceObject.minPrice < 10) {
                 minimumPrice = "$"
             } else if (priceObject.minPrice >= 10 && priceObject.minPrice <= 30) {
                 minimumPrice = "$$"
@@ -48,7 +48,7 @@ export default function TablePrefSidebarIndiv(props: {data: any[], setPrefs: (zi
             } else {
                 minimumPrice = ""
             }
-            if (priceObject.maxPrice < 10) {
+            if (priceObject.maxPrice > 0 && priceObject.maxPrice < 10) {
                 maximumPrice = "$"
             } else if (priceObject.maxPrice >= 10 && priceObject.maxPrice <= 30) {
                 maximumPrice = "$$"
