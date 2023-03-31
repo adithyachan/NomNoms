@@ -61,34 +61,16 @@ export default function TableSelectedLayout(props: {table: Table}) {
 
   const getRestaurantWithPrefs = (cuisine?: string, price?: {min: string, max: string}) => {
     let temp = data
-    console.log("before filters: " + temp)
-    console.log(" TABLE: cuisine: " + cuisine)
-    console.log(" TABLE: min: " + price?.min)
-    console.log(" TABLE: max: " + price?.max)
+    // console.log("before filters: " + temp)
+    // console.log(" TABLE: cuisine: " + cuisine)
+    // console.log(" TABLE: min: " + price?.min)
+    // console.log(" TABLE: max: " + price?.max)
     if (cuisine) {
-      /*
-      temp = temp.filter((item) => 
-      (item.categories as any[]) ? 
-      item.categories.findIndex((i: any) => {
-        i.title == cuisine
-      }) != -1
-      : item.categories.title == cuisine
-      )
-      */
-      temp = temp.filter((item) => {
-        if (Array.isArray(item.categories)) {
-          // Use Array.some() instead of findIndex()
-          return item.categories.some((i: any) => {
-            // Return true if title matches cuisine
-            return i.title === cuisine;
-          });
-        } else {
-          return item.categories.title === cuisine;
-        }
-      });
-
-
+      temp = temp.filter(item => 
+        item.categories.map((i: any) => i.title).includes(cuisine) 
+      );
     }
+
     if (price) {
       temp = temp.filter((item) => {
         const itemPrice = priceMap[item.price as "$" | "$$" | "$$$" | "$$$$"]
@@ -97,6 +79,8 @@ export default function TableSelectedLayout(props: {table: Table}) {
         return itemPrice >= min && itemPrice <= max
       })
     }
+
+    console.log(temp)
 
     setPreview(temp)
   }
@@ -124,11 +108,11 @@ export default function TableSelectedLayout(props: {table: Table}) {
               <Title className="text-center" order={2}>{"Table Name: " + props.table.name.toUpperCase()}</Title> 
               <RestaurantListLayout data={preview.slice(0, offset)} />
               <Center className="mt-5">
-                <Button color="red" onClick={() => {
-                  setOffset(offset + limit)
+                {offset < preview.length ? <Button color="red" onClick={() => {
+                  setOffset(offset + limit > preview.length ? preview.length : offset + limit)
                 }}>
                   Load More
-                </Button>
+                </Button> : null}
               </Center>
             </>}
           </Grid.Col>
