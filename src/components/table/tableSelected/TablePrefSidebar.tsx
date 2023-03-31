@@ -34,37 +34,35 @@ export default function TablePrefSidebar(props: {data: any[], setPrefs: (cuisine
           priceObject.maxPrice == null || 
           priceObject.minPrice < 0 ||
           priceObject.minPrice > priceObject.maxPrice) {
-          
             console.log("price Range: " + priceObject.minPrice + " : " + priceObject.maxPrice)  
             setError(true);
-
         } else {
         console.log("price Range: " + priceObject.minPrice + " : " + priceObject.maxPrice)
         setError(false);
         //“$” means under $10; “$ $” means “$11-$30”; “$ $ $” means “$31-$60”; and “$ $ $ $” means “above $61”
-        if (priceObject.minPrice < 10) {
-          minimumPrice = "$"
-        } else if (priceObject.minPrice >= 10 || priceObject.minPrice <= 30) {
-          minimumPrice = "$$"
-        } else if (priceObject.minPrice >= 31 || priceObject.minPrice <= 60) {
-          minimumPrice = "$$$"
-        } else if (priceObject.minPrice >= 61) {
-          minimumPrice = "$$$$"
-        } else {
-          minimumPrice = "$"
-        }
-
-        if (priceObject.maxPrice < 10) {
-          maximumPrice = "$"
-        } else if (priceObject.maxPrice >= 10 || priceObject.maxPrice <= 30) {
-          maximumPrice = "$$"
-        } else if (priceObject.maxPrice >= 31 || priceObject.maxPrice <= 60) {
-          maximumPrice = "$$$"
-        } else if (priceObject.maxPrice >= 61) {
-          maximumPrice = "$$$$"
-        } else {
-          maximumPrice = "$$$$"
-        } 
+            //“$” means under $10; “$ $” means “$11-$30”; “$ $ $” means “$31-$60”; and “$ $ $ $” means “above $61”
+          if (priceObject.minPrice < 10) {
+              minimumPrice = "$"
+          } else if (priceObject.minPrice >= 10 && priceObject.minPrice <= 30) {
+              minimumPrice = "$$"
+          } else if (priceObject.minPrice >= 31 && priceObject.minPrice <= 60) {
+              minimumPrice = "$$$"
+          } else if (priceObject.minPrice >= 61 && priceObject.maxPrice <= 200) {
+              minimumPrice = "$$$$"
+          } else {
+              minimumPrice = ""
+          }
+          if (priceObject.maxPrice < 10) {
+              maximumPrice = "$"
+          } else if (priceObject.maxPrice >= 10 && priceObject.maxPrice <= 30) {
+              maximumPrice = "$$"
+          } else if (priceObject.maxPrice >= 31 && priceObject.maxPrice <= 60) {
+              maximumPrice = "$$$"
+          } else if (priceObject.maxPrice >= 61 && priceObject.maxPrice <= 200 ) {
+              maximumPrice = "$$$$"
+          } else {
+              maximumPrice = ""
+          } 
       }
     } else {
       console.log("priceslider")
@@ -123,7 +121,7 @@ export default function TablePrefSidebar(props: {data: any[], setPrefs: (cuisine
     <Flex 
     gap="xl"
     className="bg-white p-10 rounded-3xl shadow-lg shadow-rose-100 flex-col justify-center">
-    <Text className="mb-10 text-xl text-center font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Your Preferences</Text>
+    <Text className="mb-10 text-5xl text-center font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Your Preferences</Text>
     <SearchBar setCuisine={setCuisine} data={ac ?? []}></SearchBar>
     <PriceSlider setPrice={setPrice}></PriceSlider>  
      {error ? <Text color="red"> Invalid Inputs</Text> : null} 

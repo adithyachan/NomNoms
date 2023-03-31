@@ -1,7 +1,7 @@
 import TablePrefSidebar from "@/components/table/tableSelected/TablePrefSidebar";
 import TableUserSidebar from "@/components/table/tableSelected/TableUserSidebar";
 import { Table } from "@/types/Table";
-import { Container, Grid, Title, Center, Button, Flex } from "@mantine/core";
+import { Container, Grid, Title, Center, Button, Flex, Image, Text } from "@mantine/core";
 import RestaurantListLayout from "./RestaurantListLayout";
 import NavBar from "@/components/NavBar";
 import { NotificationsProvider, showNotification } from "@mantine/notifications";
@@ -26,6 +26,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const [preview, setPreview] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+  const [noRes, setNoRes] = useState(false)
 
   const router = useRouter()
   const HandleVoting = () => {
@@ -74,6 +75,8 @@ export default function TableSelectedLayout(props: {table: Table}) {
   }
 
   const getRestaurantWithPrefs = (cuisine?: string, price?: {min: string, max: string}) => {
+
+
     let temp = data
     // console.log("before filters: " + temp)
     // console.log(" TABLE: cuisine: " + cuisine)
@@ -98,9 +101,13 @@ export default function TableSelectedLayout(props: {table: Table}) {
     }
 
     // console.log(temp)
-
-    setPreview(temp)
-    setOffset(temp.length > limit ? limit : temp.length)
+    if (temp.length != 0) {
+      setPreview(temp)
+      setOffset(temp.length > limit ? limit : temp.length)
+      setNoRes(false)
+    } else if (price?.min == "" || price?.max == "") {
+      setNoRes(true)
+    }
   }
 
   useEffect(() => {
@@ -114,16 +121,39 @@ export default function TableSelectedLayout(props: {table: Table}) {
     <NotificationsProvider>
       <NavBar>
       </NavBar>
-      <Container fluid className="p-10 bg-gradient-to-b from-rose-100 to-white">
+      
+      <Container fluid className="p-3 bg-gradient-to-b from-rose-100 to-white">
+        
         {/* Create Grid with 3 columns, 1st & 3rd are smaller. Middle is larger */}
+        <Title className="mb-3 text-center text-3xl font-black " variant="gradient" gradient={{from: "red.7", to: "red.4"}} order={2}>{"Table Name: " + props.table.name.toUpperCase()}</Title> 
         <Grid>
           <Grid.Col span="auto">
             <TablePrefSidebar data={data} setPrefs={getRestaurantWithPrefs}/>
           </Grid.Col>
           <Grid.Col span={5}>
             {loading ? <LoadingLayout /> : 
-            <>
-              <Title className="text-center" order={2}>{"Table Name: " + props.table.name.toUpperCase()}</Title> 
+              <>
+              {noRes ? 
+              <>
+              <Flex
+                    gap="sm"
+                    justify="center"
+                    align="center"
+                    direction="column"
+                    wrap="wrap"
+              >
+              <Text className="text-xl font-bold text-red-500" ta="center" mt={100}>
+                  No Restaurants Found.
+              </Text>
+
+              <Image  
+              width={400} src="/images/unfound.png">
+              </Image>
+              </Flex>
+              </>
+              :
+
+              <>          
               <RestaurantListLayout data={preview.slice(0, offset)} />
               <Center className="mt-5">
                 {offset < preview.length ? 
@@ -138,10 +168,16 @@ export default function TableSelectedLayout(props: {table: Table}) {
                   >
                   Vote!
                   </Button>
-                </Flex>
-                : null}
+                  </Flex>
+                : 
+                null
+                }
               </Center>
-            </>}
+              </>
+
+              }
+            </>
+            }
           </Grid.Col>
           <Grid.Col span="auto">
             <TableUserSidebar table={props.table} />
