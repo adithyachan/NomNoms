@@ -1,8 +1,13 @@
 import ShowCard from "./Card";
 import React, { useEffect, useState } from 'react'
-import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconChevronRight} from '@tabler/icons-react'
-
-import { Card, Text, Button, Tooltip, Progress, NavLink } from '@mantine/core';
+import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX, IconChevronRight, IconSortAscending, IconSortDescending, IconChevronDown} from '@tabler/icons-react'
+import { Card, Text, Button, Tooltip, Progress, NavLink, MenuItemProps, Input, Select } from '@mantine/core';
+import { useRestaurantBusinessEndpoint } from "@/lib/utils/yelpAPI";
+import {List, Group, useMantineTheme } from '@mantine/core';
+import ReviewSort from "./SortReview";
+import SortByPrice from "./PriceSort";
+import SortByLex from "./LexSort";
+//import { MenuItem } from "@mantine/core/lib/Menu/MenuItem/MenuItem";
 type ComponentProps = {
   id: string;
 };
@@ -15,19 +20,22 @@ const componentMap: ComponentMap = {
 };
 const DynamicComponent = componentMap["myComponent"];
 export default function CardStack({listData,ids, setState, setUserVotes, user} : any) {
-  //console.log("All businesses: " + listData.businesses)
+  console.log( listData.businesses)
+  var names = new Map()
   var prices = new Map()
   var revinfo = new Map()
   var rating = 0
   var neededBusiness :any
   var price = ""
+  var name = ""
   const cards3  = new Map
   var review_count = 0
   for(var i =0; i < ids.length;i++) {
     //console.log(listData[0])
     neededBusiness = listData.businesses[i]
     rating = neededBusiness.rating
-    price = neededBusiness.price 
+    price = neededBusiness.price
+    name = neededBusiness.name
     review_count = neededBusiness.review_count
     if (review_count == undefined) {
       review_count = 0
@@ -38,6 +46,7 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
     if (rating == undefined) {
       rating = 0
     }
+    names.set(ids[i], name)
     prices.set(ids[i], price)
     revinfo.set(ids[i], [rating, review_count])
 
@@ -61,7 +70,13 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
 </div> 
 
   const [ids1, setIds] = useState(ids)
-  const [cards, setCards] = useState([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6 ])
+  var c1 = []
+  for (var i = 0; i < ids1.length; i++) {
+    c1[i] = cards3.get(ids1[i])
+  }
+  c1[i] = card6
+  const [cards, setCards] = useState(c1)
+  //const [cards, setCards] = useState([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6 ])
   //console.log(cards.length + "Before push")
   const [index, setIndex] = useState(0)
   const [card, setCard] = useState(cards[index])
@@ -76,33 +91,41 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
 
 const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {}))
   
-  
+const [value, setSelectedValue] = useState<string |null>('');
+
   
  // console.log("After push " + cards.length)
      useEffect(() => {
-      
       if (flag) {
         console.log("Sorting")
   //    console.log(cards.length + " Before") 
 
       console.log(cards )
-      setCards([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6] )
-  console.log(cards)
+      setIndex(0)
+      var c1 = []
+      for (var i = 0; i < ids1.length; i++) {
+        c1[i] = cards3.get(ids1[i])
+      }
+      c1[i] = card6
+      setCards(c1)
+     // setCards([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6] )
+      console.log(cards)
   //    console.log(cards + " After")
   //console.log(card)
-       setIndex(0)
+       
     //   console.log(card)
-       //setCard(cards[0])
+       setCard(cards[0])
        setCanSkip(false)
        setCanFinish(false)
        setVotes(ids1.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {})) 
-      setFlag ( false)
+        setFlag ( false)
      } else {
       console.log("Changing id")
       setCard(cards[index])
       if (index == cards.length - 1)
-        setCanFinish(true); 
-     }},[ids1,index])
+      setCanFinish(true); 
+     }
+    },[ids1, index, cards])
 
   // useEffect(() => {
   //   setCard(cards[index])
@@ -120,7 +143,9 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
         [ids1[index]]: 1,
       }));
     }
+    console.log( listData.businesses)
   }
+
   function handleNoClick() {
     if (index < cards.length - 1) {
       setIndex(index + 1);
@@ -134,6 +159,7 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
   function handleBackClick() {
     if (index > 0) 
       setIndex(index - 1);
+      console.log( listData.businesses)
   }
   function handleFinishClick() {
     
@@ -151,20 +177,47 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
     // TODO: redirect to waiting for other nomsters to finish their votes page
   }
 
-  function handleSort() {
-    //console.log(index)
-  //setFlag (true)
-    //const r = ids1[2]
-    //const e = SortByPrice({hashm : prices})
-    //setIds(e)
-    //setIds(ReviewSort({
-    //  hashm: revinfo,
-    //  ascending: true
-    //}))
-  //const g = ids1[1]
-  //const b = ids1[0]
-  //setIds( [r,g,b])
+  const handleSort = (ascending: boolean) => {
+    
+    if (value == 'Price') {
+      setFlag (true)
+      const e = SortByPrice({hashm : prices, ascending: ascending})
+      setIds(e)
+    }
+    else if (value == 'Review Info') {
+      setFlag (true)
+      setIds(ReviewSort({
+          hashm: revinfo,
+          ascending: ascending
+        }))
+    }
+    else if (value == 'Lex') {
+      setFlag (true)
+      const f = SortByLex({hashm : names, ascending: ascending})
+      setIds(f)
+    }
+  }
+
+  function SettingValue(value : string|null) {
+    setSelectedValue(value) 
+    console.log(value)
+   }
+    function TypeSortButton() {
+      return (
+        <Select
   
+        value={value}
+        onChange={(value) => SettingValue(value)}//setSelectedValue(value)}
+        placeholder="Sort by"
+        clearable
+        data={[
+          { value: "Price", label: "Price" },
+      { value: "Review Info", label: "Review Info" },
+      { value: "Lex", label: "Lexicographically" },
+        ]}
+      />
+  
+    )
   }
   
   function FinishButton() {
@@ -217,13 +270,30 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
       )
     }
   }
-  function TestButton() {
+  function AscendingButton() {
     //flag = true
     
-    return (<Button size="lg" onClick={handleSort} variant='light' radius='xl' color="yellow">
-          <IconArrowBack color='black' size={20} stroke={1.5} />
-        </Button>)
+    return (<Tooltip label="Ascending">
+    <span>
+    <Button size="lg" onClick={() => handleSort(true)} variant='light' radius='xl' color="yellow">
+    <IconSortAscending color='orange' size={20} stroke={1.5} />
+  </Button>
+    </span>
+  </Tooltip>)
   }
+  function DescendingButton() {
+    //flag = true
+    
+    return (<Tooltip label="Descending">
+    <span>
+    <Button size="lg" onClick={() => handleSort(false)} variant='light' radius='xl' color="yellow">
+    <IconSortDescending color='orange' size={20} stroke={1.5} />
+  </Button>
+    </span>
+  </Tooltip>)
+  }
+
+
   function BackButton() {
     if (index == 0) {
       return (
@@ -239,6 +309,7 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
       )
     }
   }
+
 
   function Skip() {
     if (canSkip) {
@@ -257,24 +328,25 @@ const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc,
   else{
     return (
       <>
-        
         <Progress color="red" value={((index / (cards.length - 1)) * 100)} />
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           
-          <div style={{paddingTop: '100px'}}>
-
+          <div style={{paddingTop: '30px'}}>
             {card}
             <div style={{paddingBottom: '30px', paddingTop: '10px', justifyContent: 'center', alignItems: 'center', display: 'flex', gap: 35}}>
               <BackButton />
               <YesButton />
               <NoButton />
               <FinishButton />
-              <TestButton />
-            </div>
+            </div >
+            <div style={{paddingBottom: '30px', paddingTop: '10px', justifyContent: 'center', alignItems: 'center', display: 'flex', gap: 35}}>
+            <AscendingButton/>
+            <TypeSortButton/>
+              <DescendingButton/>
+              </div>
             <Skip />
           </div>
         </div>
-
       </>
     )
     

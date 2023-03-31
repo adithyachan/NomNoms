@@ -1,0 +1,16 @@
+export default function SortByPrice(props : {hashm: Map<any, any>, ascending: boolean}): string[] {
+    if (props.ascending) {
+    const entries = Array.from(props.hashm.entries());
+    entries.sort((a, b) => a[1].toString().length - b[1].toString().length);
+    const keys = entries.map((entry) => entry[0].toString());
+    return keys;
+    }
+    else {
+      const entries = Array.from(props.hashm.entries());
+    entries.sort((b, a) => a[1].toString().length - b[1].toString().length);
+    const keys = entries.map((entry) => entry[0].toString());
+    return keys;
+    }
+  }
+
+
