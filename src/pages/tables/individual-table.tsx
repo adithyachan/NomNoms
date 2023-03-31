@@ -1,16 +1,15 @@
 // Next Imports
 import { useRouter } from "next/router";
 import NavBar from "@/components/NavBar";
-import { Container, Title, Center, Button, Flex, Tooltip, TextInput} from "@mantine/core";
+import { Container, Title, Center, Button, Flex, Tooltip, TextInput, Text, Image} from "@mantine/core";
 import TablePrefSidebarIndiv from "@/components/table/tableSelected/TablePrefSidebarIndiv";
 import { Grid } from "@mantine/core";
 import RestaurantListIndividualLayout from "@/layouts/table/tableSelected/RestaurantListIndividualLayout";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { getRestaurantList } from "@/lib/utils/yelpAPI";
-import { showNotification } from "@mantine/notifications";
+import { showNotification, NotificationsProvider } from "@mantine/notifications";
 import { IconX } from "@tabler/icons-react";
 import LoadingLayout from "@/layouts/LoadingLayout";
-import { useDisclosure, useInputState } from "@mantine/hooks";
 
 const limit = 5;
 
@@ -30,6 +29,7 @@ export default function TablePage(props: any) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [zipCheck, setZipCheck] = useState("")
+  const [noRes, setNoRes] = useState(false)
 
 
   const getRestaurantFirstTime = async (zip : string) => {
@@ -95,17 +95,24 @@ export default function TablePage(props: any) {
           return itemPrice >= min && itemPrice <= max
         })
       }
-      setPreview(temp)      
+      if (temp.length != 0) {
+        setPreview(temp)
+        setOffset(temp.length > limit ? limit : temp.length)
+        setNoRes(false)
+      } else if (price?.min == "" || price?.max == "") {
+        setNoRes(true)
+      }
+
     } 
   }
 
   return (
+  /*   
     <>
     <NavBar>
-      
     </NavBar>
     <Container fluid className="p-10 bg-gradient-to-b from-rose-100 to-white">
-      {/* Create Grid with 3 columns, 1st & 3rd are smaller. Middle is larger */}
+ 
       <Grid>
         <Grid.Col span="auto">
           <Flex 
@@ -134,6 +141,67 @@ export default function TablePage(props: any) {
         </Grid.Col>
       </Grid>
     </Container>
+    </>
+  */
+    <>
+    <NotificationsProvider>
+      <NavBar>
+      </NavBar>
+      
+      <Container fluid className="p-3 bg-gradient-to-b from-rose-100 to-white">
+        
+        {/* Create Grid with 3 columns, 1st & 3rd are smaller. Middle is larger */}
+        <Title className="mb-3 text-center text-4xl font-black " variant="gradient" gradient={{from: "red.7", to: "red.4"}} order={2}>{"A Table for One"}</Title> 
+        <Grid>
+          <Grid.Col span={5}>
+            <TablePrefSidebarIndiv data={data} setPrefs={getRestaurantWithPrefs}/>
+          </Grid.Col>
+          <Grid.Col span="auto">
+            {loading ? <LoadingLayout /> : 
+              <>
+              {noRes ? 
+              <>
+              <Flex
+                    gap="sm"
+                    justify="center"
+                    align="center"
+                    direction="column"
+                    wrap="wrap"
+              >
+              <Text className="text-xl font-bold text-red-500" ta="center" mt={100}>
+                  No Restaurants Found.
+              </Text>
+
+              <Image  
+              width={400} src="/images/unfound.png">
+              </Image>
+              </Flex>
+              </>
+              :
+              <>          
+              <RestaurantListIndividualLayout data={preview.slice(0, offset)} />
+              <Center className="mt-5">
+                {offset < preview.length ? 
+                <Flex direction="column" align="center" gap="sm">
+                  <Button fullWidth color="red" onClick={() => {
+                    setOffset(offset + limit > preview.length ? preview.length : offset + limit)
+                  }}>
+                    Load More
+                  </Button> 
+                  </Flex>
+                : 
+                null
+                }
+              </Center>
+              </>
+
+              }
+            </>
+            }
+          </Grid.Col>
+        </Grid>
+      </Container>
+    </NotificationsProvider>
     </>
   )
 }

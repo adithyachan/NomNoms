@@ -39,25 +39,25 @@ export default function TablePrefSidebarIndiv(props: {data: any[], setPrefs: (zi
             //“$” means under $10; “$ $” means “$11-$30”; “$ $ $” means “$31-$60”; and “$ $ $ $” means “above $61”
             if (priceObject.minPrice < 10) {
                 minimumPrice = "$"
-            } else if (priceObject.minPrice >= 10 || priceObject.minPrice <= 30) {
+            } else if (priceObject.minPrice >= 10 && priceObject.minPrice <= 30) {
                 minimumPrice = "$$"
-            } else if (priceObject.minPrice >= 31 || priceObject.minPrice <= 60) {
+            } else if (priceObject.minPrice >= 31 && priceObject.minPrice <= 60) {
                 minimumPrice = "$$$"
-            } else if (priceObject.minPrice >= 61) {
+            } else if (priceObject.minPrice >= 61 && priceObject.maxPrice <= 200) {
                 minimumPrice = "$$$$"
             } else {
-                minimumPrice = "$"
+                minimumPrice = ""
             }
             if (priceObject.maxPrice < 10) {
                 maximumPrice = "$"
-            } else if (priceObject.maxPrice >= 10 || priceObject.maxPrice <= 30) {
+            } else if (priceObject.maxPrice >= 10 && priceObject.maxPrice <= 30) {
                 maximumPrice = "$$"
-            } else if (priceObject.maxPrice >= 31 || priceObject.maxPrice <= 60) {
+            } else if (priceObject.maxPrice >= 31 && priceObject.maxPrice <= 60) {
                 maximumPrice = "$$$"
-            } else if (priceObject.maxPrice >= 61) {
+            } else if (priceObject.maxPrice >= 61 && priceObject.maxPrice <= 200 ) {
                 maximumPrice = "$$$$"
             } else {
-                maximumPrice = "$$$$"
+                maximumPrice = ""
             } 
         }
         } else {
@@ -117,9 +117,9 @@ return (
     <>
         <form onSubmit={HandleSearch}>
             <Flex 
-            gap="xl"
-            className="bg-white p-10 rounded-3xl shadow-lg shadow-rose-100 flex-col justify-center">
-                <Text className="mb-10 text-xl text-center font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Your Preferences</Text>
+                gap="xl"
+                className="bg-white p-10 rounded-3xl shadow-lg shadow-rose-100 flex-col justify-center">
+                <Text className="mb-10 text-3xl text-center font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Your Preferences</Text>
                 <Tooltip
                 label={zip_check ? null : "Invalid Zip Code"}
                 position="left"
