@@ -14,7 +14,6 @@ export default function CreateTable() {
   const { user } = useUser()
   const [value, setValue] = useInputState('');
   const [zip, setZip] = useInputState('');
-  const [cuisine, setCuisine] = useInputState('');
 
   const [error, setError] = useState(null)
   const [openedName, inputHandlersName] = useDisclosure();
@@ -28,7 +27,7 @@ export default function CreateTable() {
   const special_chars_check = !special_chars.test(value)
   const length_check = value.length >= 4 && value.length <= 16
   const zip_check = zip.length == 5 && !Number.isNaN(zip)
-  const valid = special_chars_check && length_check && zip_check && cuisine;
+  const valid = special_chars_check && length_check && zip_check
 
   const handleTableCreation = async () => {
     const tableJSON: ITable = {
@@ -40,7 +39,6 @@ export default function CreateTable() {
       leader: user.uid!,
       prefs: {
         zip: zip,
-        cuisine: cuisine,
       },
       expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
     }
@@ -51,7 +49,6 @@ export default function CreateTable() {
       const code = await WriteTable(table)
       setValue('')
       setZip('')
-      setCuisine('')
       setCode(code!)
       codeHandlers.open()
     }
@@ -97,12 +94,7 @@ export default function CreateTable() {
             onChange={setZip}
           />
         </Tooltip>
-        <TextInput
-          placeholder="Cuisine"
-          mt="md"
-          value={cuisine}
-          onChange={setCuisine}
-        />
+
       </Container>
       <Center>
         <Button color="red" disabled={!valid} onClick={handleTableCreation}>Create</Button>
