@@ -9,7 +9,7 @@ export default function SearchBar(props : { setCuisine : any , data : string[]})
   const [value, setValue] = useState('');
 
   useEffect(() => {
-    props.setCuisine(value.split(" ")[0])
+    props.setCuisine(value.split(" (")[0])
   }, [value]);
 
   return (
