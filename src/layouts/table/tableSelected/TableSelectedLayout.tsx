@@ -1,7 +1,7 @@
 import TablePrefSidebar from "@/components/table/tableSelected/TablePrefSidebar";
 import TableUserSidebar from "@/components/table/tableSelected/TableUserSidebar";
 import { Table } from "@/types/Table";
-import { Container, Grid, Title, Center, Button } from "@mantine/core";
+import { Container, Grid, Title, Center, Button, Flex } from "@mantine/core";
 import RestaurantListLayout from "./RestaurantListLayout";
 import NavBar from "@/components/NavBar";
 import { NotificationsProvider, showNotification } from "@mantine/notifications";
@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { getRestaurantList } from "@/lib/utils/yelpAPI";
 import { IconX } from "@tabler/icons-react";
 import LoadingLayout from "@/layouts/LoadingLayout";
+import { useRouter } from "next/router";
 
 const numFetch = 50;
 const limit = 5;
@@ -25,6 +26,11 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const [preview, setPreview] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+
+  const router = useRouter()
+  const HandleVoting = () => {
+    router.push(router.asPath + "/voting")
+  }
   
   let temp: any[] = []
   const getRestaurantFirstTime = async (n: number = 5) => {
@@ -120,11 +126,20 @@ export default function TableSelectedLayout(props: {table: Table}) {
               <Title className="text-center" order={2}>{"Table Name: " + props.table.name.toUpperCase()}</Title> 
               <RestaurantListLayout data={preview.slice(0, offset)} />
               <Center className="mt-5">
-                {offset < preview.length ? <Button color="red" onClick={() => {
-                  setOffset(offset + limit > preview.length ? preview.length : offset + limit)
-                }}>
-                  Load More
-                </Button> : null}
+                {offset < preview.length ? 
+                <Flex direction="column" align="center" gap="sm">
+                  <Button fullWidth color="red" onClick={() => {
+                    setOffset(offset + limit > preview.length ? preview.length : offset + limit)
+                  }}>
+                    Load More
+                  </Button> 
+                  <Button fullWidth color="red"
+                    onClick={HandleVoting}
+                  >
+                  Vote!
+                  </Button>
+                </Flex>
+                : null}
               </Center>
             </>}
           </Grid.Col>
