@@ -40,7 +40,6 @@ export default function CreateTable() {
       leader: user.uid!,
       prefs: {
         zip: zip,
-        cuisine: cuisine,
       },
       expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
     }

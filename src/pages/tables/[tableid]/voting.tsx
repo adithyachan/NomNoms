@@ -19,7 +19,7 @@ export default function RestaurantVoting() {
   
   return (
     <>
-      <Voting zip={table?.prefs.zip ?? 10019} prefs={table?.prefs.cuisine ?? 'indian'} />
+      <Voting zip={table?.prefs.zip ?? 10019} prefs={'food'} />
     </>
   )
 }
