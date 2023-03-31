@@ -70,7 +70,13 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
 </div> 
 
   const [ids1, setIds] = useState(ids)
-  const [cards, setCards] = useState([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6 ])
+  var c1 = []
+  for (var i = 0; i < ids1.length; i++) {
+    c1[i] = cards3.get(ids1[i])
+  }
+  c1[i] = card6
+  const [cards, setCards] = useState(c1)
+  //const [cards, setCards] = useState([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6 ])
   //console.log(cards.length + "Before push")
   const [index, setIndex] = useState(0)
   const [card, setCard] = useState(cards[index])
@@ -90,29 +96,36 @@ const [value, setSelectedValue] = useState<string |null>('');
   
  // console.log("After push " + cards.length)
      useEffect(() => {
-      
       if (flag) {
         console.log("Sorting")
   //    console.log(cards.length + " Before") 
 
       console.log(cards )
-      setCards([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6] )
-  console.log(cards)
+      setIndex(0)
+      var c1 = []
+      for (var i = 0; i < ids1.length; i++) {
+        c1[i] = cards3.get(ids1[i])
+      }
+      c1[i] = card6
+      setCards(c1)
+     // setCards([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6] )
+      console.log(cards)
   //    console.log(cards + " After")
   //console.log(card)
-       setIndex(0)
+       
     //   console.log(card)
-       //setCard(cards[0])
+       setCard(cards[0])
        setCanSkip(false)
        setCanFinish(false)
        setVotes(ids1.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {})) 
-      setFlag ( false)
+        setFlag ( false)
      } else {
       console.log("Changing id")
       setCard(cards[index])
       if (index == cards.length - 1)
-        setCanFinish(true); 
-     }},[ids1,index])
+      setCanFinish(true); 
+     }
+    },[ids1, index, cards])
 
   // useEffect(() => {
   //   setCard(cards[index])
@@ -130,6 +143,7 @@ const [value, setSelectedValue] = useState<string |null>('');
         [ids1[index]]: 1,
       }));
     }
+    console.log( listData.businesses)
   }
 
   function handleNoClick() {
@@ -145,6 +159,7 @@ const [value, setSelectedValue] = useState<string |null>('');
   function handleBackClick() {
     if (index > 0) 
       setIndex(index - 1);
+      console.log( listData.businesses)
   }
   function handleFinishClick() {
     
@@ -317,7 +332,6 @@ const [value, setSelectedValue] = useState<string |null>('');
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           
           <div style={{paddingTop: '30px'}}>
-
             {card}
             <div style={{paddingBottom: '30px', paddingTop: '10px', justifyContent: 'center', alignItems: 'center', display: 'flex', gap: 35}}>
               <BackButton />
