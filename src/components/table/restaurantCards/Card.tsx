@@ -109,7 +109,13 @@ export default function ShowCard(props : {id : string }) {
           cuisineLength = cuisines.length
         }
         const cuisineList = new Array(cuisineLength) 
-        const openTimes = businessData.hours[0].is_open_now
+        var hoursExists = true;
+        var openTimes = undefined
+        if (businessData.hours != undefined) {
+          hoursExists = false
+          openTimes = businessData.hours[0].is_open_now
+        }
+        
         var boolExists = true
         if (openTimes == undefined) {
           boolExists = false
