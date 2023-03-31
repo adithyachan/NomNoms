@@ -18,17 +18,13 @@ export default function ShowCard(props : {id : string }) {
   const {data : businessData, error : businessError , isLoading: isLoadingBusiness} = useRestaurantBusinessEndpoint(props.id)
 
   //  if(businessError) {
-  //   console.log(businessError)
   //   return <>error</>
   //  } else if (businessData) {
-  //   console.log(businessData)
   //   return <>data</>
   //  } else {
-  //   console.log(isLoadingBusiness)
   //   return <>isLoading</>
   //  } 
     if (businessError) {
-        console.log(businessError)
         if (businessError.code == ("BUSINESS_NOT_FOUND")) {
           return (
             <div style={{ height: '450px', 
@@ -84,10 +80,11 @@ export default function ShowCard(props : {id : string }) {
         if (imageUrl == undefined) {
           imageUrl = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
         }
-        const photos = businessData.photos 
+        var photos = businessData.photos 
         var photosExists = true
         if (photos == undefined) {
           photosExists = false
+          photos=[imageUrl]
         }
         const pricePoint = businessData.price
         var priceExists = true
@@ -109,27 +106,74 @@ export default function ShowCard(props : {id : string }) {
           cuisineLength = cuisines.length
         }
         const cuisineList = new Array(cuisineLength) 
-        var hoursExists = true;
-        var openTimes = undefined
-        if (businessData.hours != undefined) {
-          hoursExists = false
-          openTimes = businessData.hours[0].is_open_now
+        for(var i = 0;i < cuisines.length;i++) {
+          cuisineList[i] = cuisines[i].title;
         }
+        if (businessData.hours == undefined) {
+          businessData.hours = [
+            {
+              "open": [
+                {
+                  "is_overnight": false,
+                  "start": "0600",
+                  "end": "1600",
+                  "day": 0
+                },
+                {
+                  "is_overnight": false,
+                  "start": "0600",
+                  "end": "1600",
+                  "day": 1
+                },
+                {
+                  "is_overnight": false,
+                  "start": "0600",
+                  "end": "1600",
+                  "day": 2
+                },
+                {
+                  "is_overnight": false,
+                  "start": "0600",
+                  "end": "1600",
+                  "day": 3
+                },
+                {
+                  "is_overnight": false,
+                  "start": "0600",
+                  "end": "1600",
+                  "day": 4
+                },
+                {
+                  "is_overnight": false,
+                  "start": "0700",
+                  "end": "1600",
+                  "day": 5
+                },
+                {
+                  "is_overnight": false,
+                  "start": "0700",
+                  "end": "1600",
+                  "day": 6
+                }
+              ],
+              "hours_type": "REGULAR",
+              "is_open_now": true
+            }]
+        }
+        var openTimes =  businessData.hours[0].is_open_now
+       
         
         var boolExists = true
         if (openTimes == undefined) {
           boolExists = false
         }
-        //console.log(businessData.hours[0])
          
         const operationTimes = businessData.hours[0]
         var timeExists = true
         if (operationTimes == undefined) {
           timeExists = false
         }
-        for(var i = 0;i < cuisines.length;i++) {
-          cuisineList[i] = cuisines[i].title;
-        }
+       
         var data = JSON.stringify(operationTimes.open)
         const formattedHours = GetHours(data)
         const ths = (
