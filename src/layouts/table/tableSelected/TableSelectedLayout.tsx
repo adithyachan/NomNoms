@@ -10,6 +10,7 @@ import { getRestaurantList } from "@/lib/utils/yelpAPI";
 import { IconX } from "@tabler/icons-react";
 import LoadingLayout from "@/layouts/LoadingLayout";
 
+const numFetch = 50;
 const limit = 5;
 const priceMap = {
   "$": 1,
@@ -25,37 +26,44 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   
-  const getRestaurantFirstTime = async () => {
+  let temp: any[] = []
+  const getRestaurantFirstTime = async (n: number = 5) => {
     setError(false)
     setLoading(true)
 
-    try {
-      const res = await getRestaurantList(50, props.table.prefs.zip, 10000, "food")
-      const resJSON = await res.json()
-      if (res.status >= 400) {
+    for (let i = 0; i < n; i++) {
+      try {
+        const res = await getRestaurantList(numFetch, props.table.prefs.zip, 10000, "food", i * numFetch)
+        const resJSON = await res.json()
+        if (res.status >= 400) {
+          showNotification({
+            title: "Yikes",
+            message: resJSON.error,
+            icon: <IconX />,
+            color: "red"
+          })
+          setError(true)
+        }
+        else if(res.ok) {
+          temp = temp.concat(resJSON.businesses)
+        }
+      }
+      catch (err) {
         showNotification({
           title: "Yikes",
-          message: resJSON.error,
+          message: "Failed to fetch data",
           icon: <IconX />,
           color: "red"
         })
         setError(true)
-      }
-      else if(res.ok) {
-        setData(resJSON.businesses)
-        setPreview(resJSON.businesses)
+        console.log(err)
       }
     }
-    catch (err) {
-      showNotification({
-        title: "Yikes",
-        message: "Failed to fetch data",
-        icon: <IconX />,
-        color: "red"
-      })
-      setError(true)
-      console.log(err)
-    }
+
+    console.log(temp)
+
+    setData(temp)
+    setPreview(temp)
     setLoading(false);
   }
 
@@ -66,6 +74,9 @@ export default function TableSelectedLayout(props: {table: Table}) {
     // console.log(" TABLE: min: " + price?.min)
     // console.log(" TABLE: max: " + price?.max)
     if (cuisine) {
+      temp.forEach(item => 
+        console.log(item.categories.map((i: any) => i.title))
+      )
       temp = temp.filter(item => 
         item.categories.map((i: any) => i.title).includes(cuisine) 
       );
@@ -80,9 +91,10 @@ export default function TableSelectedLayout(props: {table: Table}) {
       })
     }
 
-    console.log(temp)
+    // console.log(temp)
 
     setPreview(temp)
+    setOffset(temp.length > limit ? limit : temp.length)
   }
 
   useEffect(() => {

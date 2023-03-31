@@ -50,12 +50,11 @@ export default function TablePage() {
     }
     if (!tables) {
       const unsubTables = ReadTables(setTables)
-      return unsubTables
     }
     else {
-      if (tables?.map((table) => table.id).includes(tableid as string)) {
+      if (tables.map((table) => table.id).includes(tableid as string)) {
         if (!table) {
-          ReadTable(tableid as string, setTable)
+          const unsub = ReadTable(tableid as string, setTable)
         }
         else if (((new Date()).getTime() - table.lastAccessed.toDate().getTime()) / 1000 > 2) {
           updateTable()

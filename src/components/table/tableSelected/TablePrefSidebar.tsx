@@ -113,6 +113,7 @@ export default function TablePrefSidebar(props: {data: any[], setPrefs: (cuisine
     Object.keys(cuisines).forEach((cus) => {
       strings.push(`${cus} (${cuisines[cus]})`)
     })
+    console.log(strings)
     setAC(strings)
   }, [props.data])
 
