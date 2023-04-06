@@ -142,10 +142,12 @@ const [value, setSelectedValue] = useState<string |null>('');
       }));
     }
   }
+
   function handleBackClick() {
     if (index > 0) 
       setIndex(index - 1);
   }
+
   function handleFinishClick() {
     
     Object.keys(votes).forEach(key => {
@@ -155,6 +157,25 @@ const [value, setSelectedValue] = useState<string |null>('');
     })
     setUserVotes(votes)
     setState('favorite')
+    
+
+    // setUserVotes(votes)
+    // TODO: redirect to waiting for other nomsters to finish their votes page
+  }
+
+  function handleRandomFinishClick() {
+
+    const keys = Object.keys(votes);
+  const randomKey = keys[Math.floor(Math.random() * keys.length)];
+
+  Object.keys(votes).forEach(key => {
+    if (key !== randomKey) {
+      delete votes[key];
+    }
+  });
+  console.log(votes)
+  setUserVotes(votes);
+  setState('favorite')
     
 
     // setUserVotes(votes)
@@ -306,6 +327,18 @@ const [value, setSelectedValue] = useState<string |null>('');
     }
   }
 
+  function Random() {
+    if (canSkip) {
+      return (
+        <NavLink onClick={() => handleRandomFinishClick()} active={true} variant="subtle" color="blue" label="Choose a random option" rightSection={<IconChevronRight size="0.8rem" stroke={1.5}/>} />
+      )
+    } else {
+      return (
+        <></>
+      )
+    }
+  }
+
   if (ids1 == undefined || ids1.length == 0) return (<Text size="md" color="dimmed">Card stack is empty!</Text> )
 
   else{
@@ -328,6 +361,7 @@ const [value, setSelectedValue] = useState<string |null>('');
               <DescendingButton/>
               </div>
             <Skip />
+            <Random/>
           </div>
         </div>
       </>
