@@ -1,13 +1,10 @@
 import ShowCard from "./Card";
 import React, { useEffect, useState } from 'react'
-import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconX, IconChevronRight, IconSortAscending, IconSortDescending, IconChevronDown} from '@tabler/icons-react'
-import { Card, Text, Button, Tooltip, Progress, NavLink, MenuItemProps, Input, Select } from '@mantine/core';
-import { useRestaurantBusinessEndpoint } from "@/lib/utils/yelpAPI";
-import {List, Group, useMantineTheme } from '@mantine/core';
+import { IconArrowBack, IconCheck, IconThumbDown, IconThumbUp, IconChevronRight, IconSortAscending, IconSortDescending} from '@tabler/icons-react'
+import { Card, Text, Button, Tooltip, Progress, NavLink, Select } from '@mantine/core';
 import ReviewSort from "./SortReview";
 import SortByPrice from "./PriceSort";
 import SortByLex from "./LexSort";
-//import { MenuItem } from "@mantine/core/lib/Menu/MenuItem/MenuItem";
 type ComponentProps = {
   id: string;
 };
@@ -15,11 +12,13 @@ type ComponentProps = {
 type ComponentMap = {
   [key: string]: React.FC<ComponentProps>;
 };
+
 const componentMap: ComponentMap = {
   myComponent: ShowCard,
 };
+
 const DynamicComponent = componentMap["myComponent"];
-export default function CardStack({listData,ids, setState, setUserVotes, user} : any) {
+export default function CardStack({listData,ids, setState, setUserVotes} : any) {
   var names = new Map()
   var prices = new Map()
   var revinfo = new Map()
@@ -27,34 +26,21 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
   var neededBusiness :any
   var price = ""
   var name = ""
-  const cards3  = new Map
+  const newCards  = new Map
   var review_count = 0
-  for(var i =0; i < ids.length;i++) {
-    neededBusiness = listData.businesses[i]
-    rating = neededBusiness.rating
-    price = neededBusiness.price
-    name = neededBusiness.name
-    review_count = neededBusiness.review_count
-    if (review_count == undefined) {
-      review_count = 0
-    }
-    if (price == undefined) {
-      price = ''
-    }
-    if (rating == undefined) {
-      rating = 0
-    }
-    names.set(ids[i], name)
-    prices.set(ids[i], price)
-    revinfo.set(ids[i], [rating, review_count])
+  ids.forEach((id: string, i: string | number) => {
+    const neededBusiness = listData.businesses[i];
+    let { rating, price, name, review_count } = neededBusiness;
+    review_count = review_count || 0;
+    price = price || '';
+    rating = rating || 0;
+    names.set(id, name);
+    prices.set(id, price);
+    revinfo.set(id, [rating, review_count]);
+    newCards.set(id, <DynamicComponent id={id} />);
+  });  
 
-   cards3.set(ids[i], <DynamicComponent id = {ids[i]} />)
-
-  }
-
- 
-  //const cards = ids.map((id: string) => <ShowCard key={id} id={id}/>)
-  const card6 = <div style={{height: '450px', width: '450px'}}>
+  const finalCard = <div style={{height: '450px', width: '450px'}}>
   <Card withBorder radius='md' style={{height: '100%'}}>
     <div style={{padding: '5px'}}></div>
     <Text weight={500}>That&apos;s it!</Text>
@@ -69,11 +55,10 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
   const [ids1, setIds] = useState(ids)
   var c1 = []
   for (var i = 0; i < ids1.length; i++) {
-    c1[i] = cards3.get(ids1[i])
+    c1[i] = newCards.get(ids1[i])
   }
-  c1[i] = card6
+  c1[i] = finalCard
   const [cards, setCards] = useState(c1)
-  //const [cards, setCards] = useState([cards3.get(ids1[0]), cards3.get(ids1[1]), cards3.get(ids1[2]),cards3.get(ids1[3]), cards3.get(ids1[4]), cards3.get(ids1[5]),cards3.get(ids1[6]), cards3.get(ids1[7]), cards3.get(ids1[8]),cards3.get(ids1[9]),card6 ])
   const [index, setIndex] = useState(0)
   const [card, setCard] = useState(cards[index])
   const [canFinish, setCanFinish] = useState(false)
@@ -86,9 +71,7 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
   // setUserVotes will update the user's votes in the Table once the user hits Done.
 
 const [votes, setVotes] = useState(ids1.reduce((acc: any, cur: any) => ({...acc, [cur]: 0}), {}))
-  
 const [value, setSelectedValue] = useState<string |null>('');
-
   
      useEffect(() => {
       if (flag) {
@@ -96,9 +79,9 @@ const [value, setSelectedValue] = useState<string |null>('');
       setIndex(0)
       var c1 = []
       for (var i = 0; i < ids1.length; i++) {
-        c1[i] = cards3.get(ids1[i])
+        c1[i] = newCards.get(ids1[i])
       }
-      c1[i] = card6
+      c1[i] = finalCard
       setCards(c1)
     
        
@@ -113,12 +96,6 @@ const [value, setSelectedValue] = useState<string |null>('');
       setCanFinish(true); 
      }
     },[ids1, index, cards])
-
-  // useEffect(() => {
-  //   setCard(cards[index])
-  //   if (index == cards.length - 1)
-  //     setCanFinish(true);
-  // }, [index])
 
   
   function handleYesClick() {
