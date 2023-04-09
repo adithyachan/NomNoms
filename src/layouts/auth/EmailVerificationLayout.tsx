@@ -1,27 +1,34 @@
-
 import LoadingLayout from "@/layouts/LoadingLayout";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from 'react';
-
-import { Center } from "@mantine/core";
+import { useEffect, useState } from 'react';
+import { Center, Text } from "@mantine/core";
+import { useUser } from "@/providers/AuthProvider";
 export default function EmailVerificationLayout() {
-    const oobCode = useRef<null | string>(null);
-    const router = useRouter();
-    const [isLoading, setIsLoading] = useState(true);
+
+    const { user } = useUser()
+    const [loading, setLoading] = useState(true);
     
     useEffect(() => {
-      const queryParams = new URLSearchParams(window.location.search)
-      oobCode.current = queryParams.get("oobCode");
-      if (!oobCode.current) {
-        router.push("/auth/login")
-      }
-    })
-
+        if (!user.loading) {
+            setLoading(true)
+        } else {
+            setLoading(false)
+        }
+    }, [user])
     return (
         <>
+        {loading ?
+        <>
+        <Center>
+            <Text>
+            Error
+            </Text>
+        </Center>
+        </>
+        :
         <Center>
             <LoadingLayout fullscreen = {true} logo = {true} verification={true}/>
         </Center>
+        }
         </>
     );
 }
