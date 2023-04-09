@@ -8,27 +8,14 @@ export default function EmailVerificationLayout() {
     const [loading, setLoading] = useState(true);
     
     useEffect(() => {
-        if (!user.loading) {
-            setLoading(true)
-        } else {
-            setLoading(false)
-        }
-    }, [user])
+
+    }, [])
+    
     return (
         <>
-        {loading ?
-        <>
-        <Center>
-            <Text>
-            Error
-            </Text>
-        </Center>
-        </>
-        :
         <Center>
             <LoadingLayout fullscreen = {true} logo = {true} verification={true}/>
         </Center>
-        }
         </>
     );
 }
