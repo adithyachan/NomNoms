@@ -1,9 +1,8 @@
 import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { ReadDocument, WriteDocument, WriteDocumentWithConverter } from '@/lib/firebase/FirestoreOperations'; 
-import { getFirestore } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import {  signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { ReadDocument } from '@/lib/firebase/FirestoreOperations'; 
 
 import {
   TextInput,
@@ -35,6 +34,7 @@ import { useState } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { IUser, User } from '@/types/User';
 import { WriteUser } from '@/lib/firebase/auth/AuthOperations';
+import { error } from 'console';
 
 
 export default function CreateAccount (props: PaperProps) {
@@ -81,7 +81,6 @@ export default function CreateAccount (props: PaperProps) {
   const HandleCreate = async (e : any) => {
     const auth = useFirebaseAuth();
     console.log("register");
-
     if (ReadDocument("usernames", username) == undefined) {
         alert("Username exists")
         return undefined
@@ -92,6 +91,7 @@ export default function CreateAccount (props: PaperProps) {
       alert("Username should be one word")
       return undefined
     }
+
     createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
     .then((userCredential) => {
       // Signed in 
@@ -99,8 +99,17 @@ export default function CreateAccount (props: PaperProps) {
       const UID = user?.uid;
       WriteUser({username: username, email: form.values.email, uid: UID, tables: []} as IUser)
       resetForm();
+
+      sendEmailVerification(user).then(() => {
+        console.log("email sent")
+      }).catch((error) => {
+        console.log("email sent")
+      })
+
+
       router.push("/tables");
       console.log("auth working")
+ 
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -115,7 +124,6 @@ export default function CreateAccount (props: PaperProps) {
           icon: <IconX size={16} />,           
         })
       }
-
       resetForm();
       console.log("auth working")
     });
