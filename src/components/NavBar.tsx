@@ -17,6 +17,7 @@ import {
   IconTrash,
   IconSwitchHorizontal,
   IconChevronDown,
+  IconAddressBook,
   IconCheck,
   IconX,
   IconDoorExit
@@ -78,6 +79,10 @@ export default function NavBar(props : any) {
 
   const HandleChange = () => {
     router.push('auth/changePass')
+  }
+
+  const HandleViewProfile = () => {
+    router.push('/auth/viewProfile')
   }
  
   const HandleSignOut = async (e : any) => {
@@ -163,6 +168,12 @@ export default function NavBar(props : any) {
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Settings</Menu.Label>
+
+                  <Menu.Item
+                  icon={<IconAddressBook size="14" stroke={1.5} />}
+                  onClick={HandleViewProfile}
+                  > Change Profile Picture
+                  </Menu.Item>
                   <Menu.Item 
                   icon={<IconSwitchHorizontal size="14" 
                   stroke={1.5} 
@@ -171,10 +182,13 @@ export default function NavBar(props : any) {
                   >
                     Change Password
                   </Menu.Item>
+
                   <Menu.Item 
                   icon={<IconLogout size="14" stroke={1.5} />}
                   onClick={HandleSignOut}
                   >Logout</Menu.Item>
+
+                  
                   <Menu.Divider />
                   <Menu.Label>Danger zone</Menu.Label>
                   <Menu.Item 
