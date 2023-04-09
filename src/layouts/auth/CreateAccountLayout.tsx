@@ -93,7 +93,6 @@ export default function CreateAccount (props: PaperProps) {
       const UID = user?.uid;
       WriteUser({username: username, email: form.values.email, uid: UID, tables: []} as IUser)
       resetForm();
-
       sendEmailVerification(user).then(() => {
         console.log("email sent")
         showNotification({
@@ -114,10 +113,8 @@ export default function CreateAccount (props: PaperProps) {
         })
       })
 
-
       router.push("/auth/verification");
       console.log("auth working")
- 
     })
     .catch((error) => {
       const errorCode = error.code;

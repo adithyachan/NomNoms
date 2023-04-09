@@ -1,16 +1,19 @@
 import LoadingLayout from "@/layouts/LoadingLayout";
-import { useEffect, useState } from 'react';
-import { Center, Text } from "@mantine/core";
+import { useEffect } from 'react';
+import { Center } from "@mantine/core";
 import { useUser } from "@/providers/AuthProvider";
+import { useRouter } from "next/router";
 export default function EmailVerificationLayout() {
-
+    
     const { user } = useUser()
-    const [loading, setLoading] = useState(true);
-    
-    useEffect(() => {
+    const router = useRouter();
 
-    }, [])
-    
+    useEffect(() => {
+        if (user.verified) {
+            router.push('/tables')
+        }
+    }, [user])
+
     return (
         <>
         <Center>
