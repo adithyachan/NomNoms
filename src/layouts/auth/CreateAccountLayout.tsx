@@ -26,14 +26,10 @@ import { GoogleButton, GithubButton} from "@/components/auth/SocialButtons"
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
 import { IconCheck, IconRefresh, IconX } from '@tabler/icons-react';
-import { formatDiagnostic } from 'typescript';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from "next/router";
 import { useState } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
 import { IUser, User } from '@/types/User';
 import { WriteUser } from '@/lib/firebase/auth/AuthOperations';
-import { error } from 'console';
 
 
 export default function CreateAccount (props: PaperProps) {
@@ -119,7 +115,7 @@ export default function CreateAccount (props: PaperProps) {
       })
 
 
-      router.push("/tables");
+      router.push("/auth/verification");
       console.log("auth working")
  
     })
