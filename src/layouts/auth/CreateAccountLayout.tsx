@@ -3,7 +3,6 @@ import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import {  signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { ReadDocument } from '@/lib/firebase/FirestoreOperations'; 
-
 import {
   TextInput,
   PasswordInput,
@@ -48,13 +47,12 @@ export default function CreateAccount (props: PaperProps) {
       password: '',
       confirmpassword: '',
       username: '',
-      terms: true,
+      terms: false,
     },
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) => (val.length < 6 ? 'Password should include at least 6 characters' : null),
       username: (val) => (!/\S/.test(val) ? null : 'Username should be one word'),
-
       confirmpassword: (val, values) =>
         val !== values.password ? 'Passwords did not match' : null,
     },
@@ -68,14 +66,14 @@ export default function CreateAccount (props: PaperProps) {
     form.values.password = '',
     form.values.username = '',
     form.values.confirmpassword = '',
-    form.values.terms = true
+    form.values.username = '',
+    form.values.terms = false
   }
 
   //route user to login page
   const HandleLogin = (e : any) => {
     router.push('/auth/login')
   }
-
 
   //HandleCreate 
   const HandleCreate = async (e : any) => {
@@ -102,8 +100,22 @@ export default function CreateAccount (props: PaperProps) {
 
       sendEmailVerification(user).then(() => {
         console.log("email sent")
+        showNotification({
+          title: 'Email Verification Sent!',
+          message: 'An email has been sent to verify your email ',
+          autoClose: 3000,
+          color: 'green',
+          icon: <IconCheck size={16} />,           
+        })
       }).catch((error) => {
-        console.log("email sent")
+        console.log("email not sent")
+        showNotification({
+          title: 'Email Verification Error.',
+          message: 'There was an error verifying your email. Please try again later.',
+          autoClose: 3000,
+          color: 'red',
+          icon: <IconCheck size={16} />,           
+        })
       })
 
 
@@ -137,9 +149,7 @@ export default function CreateAccount (props: PaperProps) {
     var random = myarray1[Math.floor(Math.random() * myarray1.length)] + myarray2[Math.floor(Math.random() * myarray2.length)];
     setUsername(random);
   }
-
     const provider = new GoogleAuthProvider();
-
     const HandleGoogle = async (e: any) => {
       const auth = useFirebaseAuth();
           console.log("checking google")
