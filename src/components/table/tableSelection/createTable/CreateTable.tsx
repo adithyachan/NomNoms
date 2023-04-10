@@ -7,6 +7,7 @@ import { WriteTable } from "@/lib/firebase/table/TableOperations"
 import { Timestamp } from "firebase/firestore"
 import CodeModal from "./CodeModal";
 import { useUser } from "@/providers/AuthProvider";
+import { DatePicker } from "@mantine/dates";
 
 const special_chars = /[ `!@#$%^&*()+_\-=\[\]{};':"\\|,.<>\/?]/
 
@@ -95,6 +96,22 @@ export default function CreateTable() {
             onChange={setZip}
           />
         </Tooltip>
+
+        <TextInput
+            placeholder="Table Description"
+            onFocus={() => inputHandlersName.open()}
+            onBlur={() => inputHandlersName.close()}
+            mt="md"
+            value={value}
+            onChange={setValue}
+          />
+
+<DatePicker
+      label="Pick date and time"
+      placeholder="Pick date and time"
+      maw={400}
+      mx="auto"
+    />
 
       </Container>
       <Center>
