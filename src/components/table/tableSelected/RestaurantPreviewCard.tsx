@@ -5,6 +5,7 @@ const defaultImage = "https://images.unsplash.com/photo-1517248135467-4c7edcad34
 
 export default function RestaurantPreviewCard(props: {data: any}) {
   const restaurant = props.data
+  const router = useRouter()
   
   return (
     <div className="shadow-lg shadow-rose 200 rounded-2xl transition ease-in-out hover:shadow-xl hover:shadow-rose-300 duration-300 delay-75">

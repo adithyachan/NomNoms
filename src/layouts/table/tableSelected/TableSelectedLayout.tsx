@@ -13,6 +13,12 @@ import { useRouter } from "next/router";
 
 const numFetch = 50;
 const limit = 5;
+const priceMap = {
+  "$": 1,
+  "$$": 2,
+  "$$$": 3,
+  "$$$$": 4
+}
 
 export default function TableSelectedLayout(props: {table: Table}) {
   const [offset, setOffset] = useState(5)
@@ -69,6 +75,8 @@ export default function TableSelectedLayout(props: {table: Table}) {
   }
 
   const getRestaurantWithPrefs = (cuisine?: string, price?: {min: string, max: string}) => {
+
+
     let temp = data
     // console.log("before filters: " + temp)
     // console.log(" TABLE: cuisine: " + cuisine)
@@ -85,13 +93,14 @@ export default function TableSelectedLayout(props: {table: Table}) {
 
     if (price) {
       temp = temp.filter((item) => {
-        const itemPrice = item.price.length
-        const min = price.min.length
-        const max = price.max.length
+        const itemPrice = priceMap[item.price as "$" | "$$" | "$$$" | "$$$$"]
+        const min = priceMap[price.min as "$" | "$$" | "$$$" | "$$$$"]
+        const max = priceMap[price.max as "$" | "$$" | "$$$" | "$$$$"]
         return itemPrice >= min && itemPrice <= max
       })
     }
 
+    // console.log(temp)
     if (temp.length != 0) {
       setPreview(temp)
       setOffset(temp.length > limit ? limit : temp.length)
@@ -100,15 +109,6 @@ export default function TableSelectedLayout(props: {table: Table}) {
       setNoRes(true)
     }
   }
-
-  const sortBy = (by: string) => {
-    if (by == "price") {
-      const sorted = [...preview].sort((a, b) => {
-        return a.price ? a.price.length : 0 - b.price ? b.price.length : 0
-      })
-      setPreview(sorted)
-    }
-  } 
 
   useEffect(() => {
     if (data.length == 0) {
@@ -135,44 +135,46 @@ export default function TableSelectedLayout(props: {table: Table}) {
               <>
               {noRes ? 
               <>
-                <Flex
-                  gap="sm"
-                  justify="center"
-                  align="center"
-                  direction="column"
-                  wrap="wrap"
-                >
-                  <Text className="text-xl font-bold text-red-500" ta="center" mt={100}>
-                      No Restaurants Found.
-                  </Text>
-                  <Image width={400} src="/images/unfound.png" alt="notfound" />
-                </Flex>
+              <Flex
+                    gap="sm"
+                    justify="center"
+                    align="center"
+                    direction="column"
+                    wrap="wrap"
+              >
+              <Text className="text-xl font-bold text-red-500" ta="center" mt={100}>
+                  No Restaurants Found.
+              </Text>
+
+              <Image  
+              width={400} src="/images/unfound.png">
+              </Image>
+              </Flex>
               </>
               :
+
               <>          
               <RestaurantListLayout data={preview.slice(0, offset)} />
               <Center className="mt-5">
                 {offset < preview.length ? 
-                  <Flex direction="row" align="between" gap="sm">
-                    <Button color="red" onClick={() => sortBy("price")}>
-                      Sort By
-                    </Button>
-                    <Button fullWidth color="red"
-                      onClick={HandleVoting}
-                    >
-                      Vote!
-                    </Button>
-                    <Button fullWidth color="red" onClick={() => {
-                      setOffset(offset + limit > preview.length ? preview.length : offset + limit)
-                    }}>
-                      Load More
-                    </Button>
+                <Flex direction="column" align="center" gap="sm">
+                  <Button fullWidth color="red" onClick={() => {
+                    setOffset(offset + limit > preview.length ? preview.length : offset + limit)
+                  }}>
+                    Load More
+                  </Button> 
+                  <Button fullWidth color="red"
+                    onClick={HandleVoting}
+                  >
+                  Vote!
+                  </Button>
                   </Flex>
                 : 
                 null
                 }
               </Center>
               </>
+
               }
             </>
             }
