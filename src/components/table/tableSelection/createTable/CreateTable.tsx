@@ -15,10 +15,14 @@ export default function CreateTable() {
   const { user } = useUser()
   const [value, setValue] = useInputState('');
   const [zip, setZip] = useInputState('');
+  const [date, setDate] = useInputState('');
+  const [desc, setDesc] = useInputState('');
 
   const [error, setError] = useState(null)
   const [openedName, inputHandlersName] = useDisclosure();
   const [openedZip, inputHandlersZip] = useDisclosure();
+  const [openedDesc, inputHandlersDesc] = useDisclosure();
+  const [openedDate, inputHandlersDate] = useDisclosure();
 
   // show code modal
   const [codeOpen, codeHandlers] = useDisclosure();
@@ -42,6 +46,8 @@ export default function CreateTable() {
         zip: zip,
       },
       expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
+      description: desc,
+      date: date,
     }
     tableJSON.users[user.uid!] = {}
     const table = new Table(tableJSON)
@@ -95,23 +101,41 @@ export default function CreateTable() {
             onChange={setZip}
           />
         </Tooltip>
-
+        <Tooltip
+        label={""}
+        position="left"
+        withArrow
+        opened={openedDesc}
+        color={"red.8"}
+        >
         <TextInput
             placeholder="Table Description"
-            onFocus={() => inputHandlersName.open()}
-            onBlur={() => inputHandlersName.close()}
+            onFocus={() => inputHandlersDesc.open()}
+            onBlur={() => inputHandlersDesc.close()}
             mt="md"
-            value={value}
-            onChange={setValue}
+            value={desc}
+            onChange={setDesc}
           />
+</Tooltip>
 
+<Tooltip
+        label={""}
+        position="left"
+        withArrow
+        opened={openedDate}
+        color={"red.8"}
+        >
 <DatePicker
       label="Pick date and time"
       placeholder="Pick date and time"
+      onFocus={() => inputHandlersDate.open()}
+      onBlur={() => inputHandlersDate.close()}
+      // value={date}
+      // onChange={setDate}
       maw={400}
       mx="auto"
     />
-
+</Tooltip>
       </Container>
       <Center>
         <Button color="red" disabled={!valid} onClick={handleTableCreation}>Create</Button>
