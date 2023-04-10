@@ -18,9 +18,7 @@ import {
   Checkbox,
   Anchor,
   Stack,
-  Autocomplete,
   Tooltip,
-  BackgroundImage,
 } from '@mantine/core';
 import { GoogleButton, GithubButton} from "@/components/auth/SocialButtons"
 import { showNotification } from '@mantine/notifications';

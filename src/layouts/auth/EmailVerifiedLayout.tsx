@@ -10,6 +10,8 @@ export default function EmailVerifiedLayout() {
       oobCode.current = queryParams.get("oobCode");
       if (!oobCode.current) {
         router.push("/auth/login")
+      } else {
+        router.push('/tables')
       }
     })
 
