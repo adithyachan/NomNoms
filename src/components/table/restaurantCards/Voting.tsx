@@ -12,6 +12,17 @@ export default function Voting({zip, prefs, votes, setVotes, table}: any) {
   const { user } = useUser()
   const { data: listData, error: listError, isLoading: listIsLoading } = useRestaurantListEndpoint(10, zip, 3200, prefs);
   const router = useRouter()
+  useEffect(() => {
+    if (state === 'complete') {
+      const uid = user?.uid;
+      if (uid) {
+        table.users[uid] = votes;
+        table.numDoneVoting++;
+        UpdateTable(table);
+        router.push(`/tables/${router.query.tableid}/results`);
+      }
+    }
+  }, [state]);
   if (state === 'stack') {
     if (listError) {
       return <>Error loading restaurants</>;
@@ -35,14 +46,21 @@ export default function Voting({zip, prefs, votes, setVotes, table}: any) {
     }
 
     return <FavoritePicker ids={ids} votes={votes} setVotes={setVotes} setState={setState} listData={listData.businesses}/>
-  } else if (state === 'complete') {
-    const uid = user.uid
-    if (uid != null) {
-      table.users[uid] = votes
-    }
-    UpdateTable(table)
-    router.push('/voting/results')
   }
+  // } else if (state === 'complete') {
+  //   const uid = user.uid
+  //   if (uid != null) {
+  //     table.users[uid] = votes
+  //     let added = false
+  //     if (! added) {
+  //       table.numDoneVoting++
+  //       added = true
+  //     }
+  //   }
+  //   UpdateTable(table)
+  //   // router.push('/voting/results')
+  //   router.push(`/tables/${router.query.tableid}/results`);
+  // }
     // votes variable should be sent to database somewhere to be aggregated along with others' votes
     // user should be redirected to waiting page
   
