@@ -1,16 +1,17 @@
 import TablePrefSidebar from "@/components/table/tableSelected/TablePrefSidebar";
 import TableUserSidebar from "@/components/table/tableSelected/TableUserSidebar";
 import { Table } from "@/types/Table";
-import { Container, Grid, Title, Center, Button, Flex, Image, Text, SegmentedControl } from "@mantine/core";
+import { Container, Grid, Title, Center, Button, Flex, Image, Text, SegmentedControl, Menu } from "@mantine/core";
 import RestaurantListLayout from "./RestaurantListLayout";
 import NavBar from "@/components/NavBar";
 import { NotificationsProvider, showNotification } from "@mantine/notifications";
 import { useState, useEffect } from "react";
 import { getRestaurantList } from "@/lib/utils/yelpAPI";
-import { IconX } from "@tabler/icons-react";
+import { IconAbc, IconChevronDown, IconChevronUp, IconCoin, IconCurrencyDollar, IconWorld, IconX } from "@tabler/icons-react";
 import LoadingLayout from "@/layouts/LoadingLayout";
 import { useRouter } from "next/router";
 import BestCard from "@/components/table/tableSelected/ShowingBestCard";
+import { useToggle } from "@mantine/hooks";
 
 const numFetch = 50;
 const limit = 5;
@@ -29,6 +30,8 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const [error, setError] = useState(false)
   const [noRes, setNoRes] = useState(false)
   const [value, setValue] = useState('rated');
+  const [sortDir, toggle] = useToggle()
+  const [sortVar, setSortBy] = useState("")
 
   const router = useRouter()
   const HandleVoting = () => {
@@ -124,6 +127,27 @@ export default function TableSelectedLayout(props: {table: Table}) {
       setNoRes(true)
     }
   }
+
+  const sortBy = (by: string, dir: boolean) => {
+    const comp = (a: any, b: any) => {
+      if ((!a[by] && !b[by]) || a[by] == b[by])
+        return 0
+      if (!a[by]) 
+        return dir ? 1 : -1
+      if (!b[by])
+        return dir ? -1 : 1
+
+      if (a[by] > b[by])
+        return dir ? 1 : -1
+      else if (a[by] < b[by])
+        return dir ? -1 : 1
+      else
+        return 0
+    }
+    const sorted = [...preview].sort(comp)
+    setPreview(sorted)
+  }
+
   useEffect(() => {
     if (data.length == 0) {
       getRestaurantFirstTime()
@@ -146,51 +170,98 @@ export default function TableSelectedLayout(props: {table: Table}) {
           <Grid.Col span={5}>
             {loading ? <LoadingLayout /> : 
               <>
-              {noRes ? 
-              <>
-              <Flex
-                    gap="sm"
-                    justify="center"
-                    align="center"
-                    direction="column"
-                    wrap="wrap"
-              >
-              <Text className="text-xl font-bold text-red-500" ta="center" mt={100}>
-                  No Restaurants Found.
-              </Text>
+                {noRes ? 
+                  <>
+                    <Flex
+                          gap="sm"
+                          justify="center"
+                          align="center"
+                          direction="column"
+                          wrap="wrap"
+                    >
+                      <Text className="text-xl font-bold text-red-500" ta="center" mt={100}>
+                          No Restaurants Found.
+                      </Text>
 
-              <Image  
-              width={400} src="/images/unfound.png">
-              </Image>
-              </Flex>
-              </>
-              :
-
-              <>          
-              <RestaurantListLayout data={preview.slice(0, offset)} />
-              <Center className="mt-5">
-                {offset < preview.length ? 
-                <Flex direction="column" align="center" gap="sm">
-                  <Button fullWidth color="red" onClick={() => {
-                    setOffset(offset + limit > preview.length ? preview.length : offset + limit)
-                  }}>
-                    Load More
-                  </Button> 
-                  <Button fullWidth color="red"
-                    onClick={HandleVoting}
-                  >
-                  Vote!
-                  </Button>
-                  </Flex>
-                : 
-                null
-                }
-              </Center>
-              </>
-
-              }
-            </>
-            }
+                      <Image width={400} src="/images/unfound.png" />
+                    </Flex>
+                  </>
+                :
+                <>        
+                  <RestaurantListLayout data={preview.slice(0, offset)} />
+                  {offset < preview.length ? 
+                    <Flex direction="column" align="center" gap="sm">
+                      <Button fullWidth color="red" onClick={() => {
+                        setOffset(offset + limit > preview.length ? preview.length : offset + limit)
+                      }}>
+                        Load More
+                      </Button> 
+                      <Button fullWidth color="red"
+                        onClick={HandleVoting}
+                      >
+                        Vote!
+                      </Button>
+                      <Flex direction="row" align="between" justify="space-around" className="w-full mt-3">
+                        <Button.Group>
+                          <Menu>
+                            <Menu.Target>
+                              <Button color="gray">
+                                Sort By
+                              </Button>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                              <Menu.Item 
+                                onClick={() => {
+                                  sortBy("price", sortDir)
+                                  setSortBy("price")
+                                }} 
+                                rightSection={<IconCurrencyDollar className="ml-5 h-5 w-5"/>}
+                              >
+                                Price
+                              </Menu.Item>
+                              <Menu.Item 
+                                onClick={() => {
+                                  sortBy("name", sortDir)
+                                  setSortBy("name")
+                                }}
+                                rightSection={<IconAbc className="ml-5 h-5 w-5"/>}
+                              >
+                                Name
+                              </Menu.Item>
+                              <Menu.Item 
+                                onClick={() => {
+                                  sortBy("distance", sortDir)
+                                  setSortBy("distance")
+                                }} 
+                                rightSection={<IconWorld className="ml-5 h-5 w-5"/>}
+                              >
+                                Distance
+                              </Menu.Item>
+                            </Menu.Dropdown>
+                          </Menu>
+                          <Button color="gray" onClick={() => {
+                            toggle()
+                            sortBy(sortVar, !sortDir)
+                          }}>
+                            {sortDir ? <IconChevronDown /> : <IconChevronUp />}
+                          </Button>
+                        </Button.Group>
+                        
+                        <Button color="red"
+                          onClick={HandleVoting}
+                        >
+                          Vote!
+                        </Button>
+                        <Button color="red" onClick={() => {
+                          setOffset(offset + limit > preview.length ? preview.length : offset + limit)
+                        }}>
+                          Load More
+                        </Button>
+                      </Flex>
+                    </Flex>
+                  : null}
+                </>}
+              </>}
           </Grid.Col>
           <Grid.Col span="auto">
             <TableUserSidebar table={props.table} />
