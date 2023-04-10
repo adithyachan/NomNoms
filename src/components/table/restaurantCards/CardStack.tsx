@@ -148,7 +148,7 @@ const [value, setSelectedValue] = useState<string |null>('');
   }
 
   function handleVetoClick() {
-    console.log(votes)
+    // console.log(votes)
     Object.keys(votes).forEach(key => {
       if (votes[key] == 0 || votes[key] == 1) {
         delete votes[key]
@@ -157,7 +157,7 @@ const [value, setSelectedValue] = useState<string |null>('');
     let votes2 = votes
     votes2[ids1[index]] = 1.5 
     setVotes(votes2)
-    console.log(votes)
+    // console.log(votes)
     setUserVotes(votes)
     setState('favorite')
   }

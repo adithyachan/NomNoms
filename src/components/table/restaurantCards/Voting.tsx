@@ -1,13 +1,15 @@
 import CardStack from "@/components/table/restaurantCards/CardStack";
 import { useRestaurantListEndpoint } from "@/lib/utils/yelpAPI";
 import { Loader } from "@mantine/core";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FavoritePicker from "@/components/table/restaurantCards/FavoritePicker";
 import { useRouter } from "next/router";
+import { ReadTable, UpdateTable } from "@/lib/firebase/table/TableOperations";
+import { useUser } from "@/providers/AuthProvider";
 
-export default function Voting({zip, prefs}: any) {
+export default function Voting({zip, prefs, votes, setVotes, table}: any) {
   const [state, setState] = useState('stack'); // can be stack, favorite, done
-  const [votes, setVotes] = useState();
+  const { user } = useUser()
   const { data: listData, error: listError, isLoading: listIsLoading } = useRestaurantListEndpoint(10, zip, 3200, prefs);
   const router = useRouter()
   if (state === 'stack') {
@@ -33,9 +35,16 @@ export default function Voting({zip, prefs}: any) {
     }
 
     return <FavoritePicker ids={ids} votes={votes} setVotes={setVotes} setState={setState} listData={listData.businesses}/>
-  } 
+  } else if (state === 'complete') {
+    const uid = user.uid
+    if (uid != null) {
+      table.users[uid] = votes
+    }
+    UpdateTable(table)
+    router.push('/voting/results')
+  }
     // votes variable should be sent to database somewhere to be aggregated along with others' votes
     // user should be redirected to waiting page
-  router.push('/voting/results')
+  
   return <></>
 }
