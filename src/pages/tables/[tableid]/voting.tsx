@@ -11,10 +11,10 @@ export default function RestaurantVoting() {
   const[votes, setVotes] = useState()
 
   useEffect(() => {
-      if (tableid !== undefined) {
-        const unsub = ReadTable(tableid as string, setTable)
-        return unsub
-      }
+    if (tableid !== undefined) {
+      const unsub = ReadTable(tableid as string, setTable)
+      return unsub
+    }
   }, [tableid])
   
   
