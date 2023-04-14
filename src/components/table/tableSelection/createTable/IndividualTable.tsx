@@ -34,6 +34,8 @@ export default function CreateTable() {
     const tableJSON: ITable = {
       id: "",
       name: value,
+      description: "",
+      date: "",
       lastAccessed: Timestamp.fromDate(new Date()),
       // users: [user.uid!],
       users: {},

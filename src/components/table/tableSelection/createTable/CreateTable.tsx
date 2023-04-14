@@ -35,9 +35,14 @@ export default function CreateTable() {
   const valid = special_chars_check && length_check && zip_check
 
   const handleTableCreation = async () => {
+    console.log(value)
+    console.log(desc)
+    console.log(date)
     const tableJSON: ITable = {
       id: "",
       name: value,
+      description: desc,
+      date: date,
       lastAccessed: Timestamp.fromDate(new Date()),
       // users: [user.uid!],
       users: {},
@@ -46,16 +51,18 @@ export default function CreateTable() {
         zip: zip,
       },
       expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
-      description: desc,
-      date: date,
     }
+    console.log(tableJSON)
     tableJSON.users[user.uid!] = {}
     const table = new Table(tableJSON)
     
     try {
+      //console.log(table)
       const code = await WriteTable(table)
       setValue('')
       setZip('')
+      setDesc('')
+      setDate('')
       setCode(code!)
       codeHandlers.open()
     }
@@ -101,13 +108,8 @@ export default function CreateTable() {
             onChange={setZip}
           />
         </Tooltip>
-        <Tooltip
-        label={""}
-        position="left"
-        withArrow
-        opened={openedDesc}
-        color={"red.8"}
-        >
+
+      
         <TextInput
             placeholder="Table Description"
             onFocus={() => inputHandlersDesc.open()}
@@ -116,26 +118,18 @@ export default function CreateTable() {
             value={desc}
             onChange={setDesc}
           />
-</Tooltip>
-
-<Tooltip
-        label={""}
-        position="left"
-        withArrow
-        opened={openedDate}
-        color={"red.8"}
-        >
+          
+         
 <DatePicker
       label="Pick date and time"
       placeholder="Pick date and time"
       onFocus={() => inputHandlersDate.open()}
       onBlur={() => inputHandlersDate.close()}
-      // value={date}
-      // onChange={setDate}
+      value={date ? new Date(date) : null}
+      onChange={(date) => setDate(date?.toISOString())}
       maw={400}
       mx="auto"
     />
-</Tooltip>
       </Container>
       <Center>
         <Button color="red" disabled={!valid} onClick={handleTableCreation}>Create</Button>

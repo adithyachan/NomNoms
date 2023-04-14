@@ -84,6 +84,7 @@ export const ReadTables =  (setDocs: any) => {
  * @returns id of the object that was written
  */
 export const WriteTable = async (data: ITable) => {
+  console.log(data);
   const firestore = useFirebaseFirestore()
   try {
     const docRef = doc(collection(firestore, collectionName)).withConverter(tableConverter);
