@@ -146,8 +146,23 @@ const [value, setSelectedValue] = useState<string |null>('');
     if (index > 0) 
       setIndex(index - 1);
   }
+
+  function handleVetoClick() {
+    // console.log(votes)
+    Object.keys(votes).forEach(key => {
+      if (votes[key] == 0 || votes[key] == 1) {
+        delete votes[key]
+      }
+    })
+    let votes2 = votes
+    votes2[ids1[index]] = 1.5 
+    setVotes(votes2)
+    // console.log(votes)
+    setUserVotes(votes)
+    setState('favorite')
+  }
+
   function handleFinishClick() {
-    
     Object.keys(votes).forEach(key => {
       if (votes[key] == 0) {
         delete votes[key]
@@ -292,7 +307,12 @@ const [value, setSelectedValue] = useState<string |null>('');
       )
     }
   }
-
+ 
+  function VetoSkip() {
+    return (
+      <NavLink onClick={() => handleVetoClick()} active={true} variant="subtle" color="red" label="Set as Favorite and skip voting" rightSection={<IconChevronRight size="0.8rem" stroke={1.5}/>} />
+    ) 
+  }
 
   function Skip() {
     if (canSkip) {
@@ -327,6 +347,7 @@ const [value, setSelectedValue] = useState<string |null>('');
             <TypeSortButton/>
               <DescendingButton/>
               </div>
+            <VetoSkip />
             <Skip />
           </div>
         </div>

@@ -14,12 +14,12 @@ interface priceObj {
 }
 
 
-export default function TablePrefSidebar(props: {data: any[], setPrefs: (cuisine?: string, price?: {min: string, max: string}) => void}) {
+export default function TablePrefSidebar(props: {data: any[], setPrefs: (cuisine?: string[], price?: {min: string, max: string}) => void}) {
 
   const [priceObject, setPrice] = useState<priceObj>();
 
   const [ac, setAC] = useState<string[]>()
-  const [cuisine, setCuisine] = useState("");
+  const [cuisine, setCuisine] = useState<string []>([]);
   const [error, setError] = useState(false);
 
   const HandleSearch = async (e : any) => {

@@ -4,7 +4,7 @@ import { NavLink, Button, Footer } from '@mantine/core'
 import { IconChevronRight} from '@tabler/icons-react'
 import { useRouter } from 'next/router';
 
-export default function FavoritePicker({ ids, votes, setVotes, listData}: any) {
+export default function FavoritePicker({ ids, votes, setVotes, listData, setState}: any) {
   const router = useRouter()
   const [favorite, setFavorite] = useState();
   const [localVotes, setLocalVotes] = useState(votes)
@@ -17,14 +17,12 @@ export default function FavoritePicker({ ids, votes, setVotes, listData}: any) {
           [favorite]: 1.5,
         };
         setVotes(updatedVotes); // Call setVotes with the updated localVotes
-        
-        router.push('/voting/results')
+        setState('complete')
+        // router.push('/voting/results')
       });
     }
   }
-  useEffect(() => {
-    console.log(votes);
-  }, [votes]);
+  
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

@@ -1,7 +1,7 @@
 import TablePrefSidebar from "@/components/table/tableSelected/TablePrefSidebar";
 import TableUserSidebar from "@/components/table/tableSelected/TableUserSidebar";
 import { Table } from "@/types/Table";
-import { Container, Grid, Title, Center, Button, Flex, Image, Text } from "@mantine/core";
+import { Container, Grid, Title, Center, Button, Flex, Image, Text, SegmentedControl } from "@mantine/core";
 import RestaurantListLayout from "./RestaurantListLayout";
 import NavBar from "@/components/NavBar";
 import { NotificationsProvider, showNotification } from "@mantine/notifications";
@@ -10,6 +10,7 @@ import { getRestaurantList } from "@/lib/utils/yelpAPI";
 import { IconX } from "@tabler/icons-react";
 import LoadingLayout from "@/layouts/LoadingLayout";
 import { useRouter } from "next/router";
+import BestCard from "@/components/table/tableSelected/ShowingBestCard";
 
 const numFetch = 50;
 const limit = 5;
@@ -27,6 +28,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [noRes, setNoRes] = useState(false)
+  const [value, setValue] = useState('rated');
 
   const router = useRouter()
   const HandleVoting = () => {
@@ -74,7 +76,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
     setLoading(false);
   }
 
-  const getRestaurantWithPrefs = (cuisine?: string, price?: {min: string, max: string}) => {
+  const getRestaurantWithPrefs = (cuisine?: string[], price?: {min: string, max: string}) => {
 
 
     let temp = data
@@ -82,6 +84,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
     // console.log(" TABLE: cuisine: " + cuisine)
     // console.log(" TABLE: min: " + price?.min)
     // console.log(" TABLE: max: " + price?.max)
+    /*
     if (cuisine) {
       temp.forEach(item => 
         console.log(item.categories.map((i: any) => i.title))
@@ -90,6 +93,18 @@ export default function TableSelectedLayout(props: {table: Table}) {
         item.categories.map((i: any) => i.title).includes(cuisine) 
       );
     }
+    */
+
+    if (cuisine) {
+      temp = temp.filter(item => {
+        const categories = item.categories.map((i: any) => i.title);
+        return cuisine.some(c => categories.includes(c));
+      });
+    }
+
+    console.log("CUISINE: " + cuisine)
+
+    console.log("TEMP: " + temp)
 
     if (price) {
       temp = temp.filter((item) => {
@@ -109,13 +124,11 @@ export default function TableSelectedLayout(props: {table: Table}) {
       setNoRes(true)
     }
   }
-
   useEffect(() => {
     if (data.length == 0) {
       getRestaurantFirstTime()
     }
   }, [])
-
   return (
     <>
     <NotificationsProvider>
@@ -181,6 +194,22 @@ export default function TableSelectedLayout(props: {table: Table}) {
           </Grid.Col>
           <Grid.Col span="auto">
             <TableUserSidebar table={props.table} />
+            { loading ? <></>  :<> {!noRes &&
+            <Center className="mt-5">
+            <Flex direction="column" align="center" gap="17.5px">
+            <SegmentedControl transitionDuration={500} transitionTimingFunction="linear" radius = 'lg' color = "red"  style = {{backgroundColor:"white"}}  value={value} onChange={setValue}
+              data={[
+                { label: 'Best Rated', value: 'rated' },
+                { label: 'Most Reviewed', value: 'review' },
+              ]} 
+            />
+            <BestCard preview = {preview} value={value}  />
+            </Flex>
+            </Center>
+            } 
+            </>
+          }
+          
           </Grid.Col>
         </Grid>
       </Container>

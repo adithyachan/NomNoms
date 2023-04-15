@@ -8,18 +8,19 @@ export default function RestaurantVoting() {
   const router = useRouter()
   const { tableid } = router.query
   const[table, setTable] = useState<Table>()
+  const[votes, setVotes] = useState()
 
   useEffect(() => {
-      if (tableid !== undefined) {
-        const unsub = ReadTable(tableid as string, setTable)
-        return unsub
-      }
+    if (tableid !== undefined) {
+      const unsub = ReadTable(tableid as string, setTable)
+      return unsub
+    }
   }, [tableid])
   
   
   return (
     <>
-      <Voting zip={table?.prefs.zip ?? 10019} prefs={'food'} />
+      <Voting zip={table?.prefs.zip ?? 10019} prefs={'food'} votes={votes} setVotes={setVotes} table={table}/>
     </>
   )
 }
