@@ -1,7 +1,7 @@
 import TablePrefSidebar from "@/components/table/tableSelected/TablePrefSidebar";
 import TableUserSidebar from "@/components/table/tableSelected/TableUserSidebar";
 import { Table } from "@/types/Table";
-import { Container, Grid, Title, Center, Button, Flex, Image, Text } from "@mantine/core";
+import { Container, Grid, Title, Center, Button, Flex, Image, Text, SegmentedControl } from "@mantine/core";
 import RestaurantListLayout from "./RestaurantListLayout";
 import NavBar from "@/components/NavBar";
 import { NotificationsProvider, showNotification } from "@mantine/notifications";
@@ -10,6 +10,7 @@ import { getRestaurantList } from "@/lib/utils/yelpAPI";
 import { IconX } from "@tabler/icons-react";
 import LoadingLayout from "@/layouts/LoadingLayout";
 import { useRouter } from "next/router";
+import BestCard from "@/components/table/tableSelected/ShowingBestCard";
 
 const numFetch = 50;
 const limit = 5;
@@ -27,6 +28,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [noRes, setNoRes] = useState(false)
+  const [value, setValue] = useState('rated');
 
   const router = useRouter()
   const HandleVoting = () => {
@@ -109,13 +111,11 @@ export default function TableSelectedLayout(props: {table: Table}) {
       setNoRes(true)
     }
   }
-
   useEffect(() => {
     if (data.length == 0) {
       getRestaurantFirstTime()
     }
   }, [])
-
   return (
     <>
     <NotificationsProvider>
@@ -181,6 +181,22 @@ export default function TableSelectedLayout(props: {table: Table}) {
           </Grid.Col>
           <Grid.Col span="auto">
             <TableUserSidebar table={props.table} />
+            { loading ? <></>  :<> {!noRes &&
+            <Center className="mt-5">
+            <Flex direction="column" align="center" gap="17.5px">
+            <SegmentedControl transitionDuration={500} transitionTimingFunction="linear" radius = 'lg' color = "red"  style = {{backgroundColor:"white"}}  value={value} onChange={setValue}
+              data={[
+                { label: 'Best Rated', value: 'rated' },
+                { label: 'Most Reviewed', value: 'review' },
+              ]} 
+            />
+            <BestCard preview = {preview} value={value}  />
+            </Flex>
+            </Center>
+            } 
+            </>
+          }
+          
           </Grid.Col>
         </Grid>
       </Container>
