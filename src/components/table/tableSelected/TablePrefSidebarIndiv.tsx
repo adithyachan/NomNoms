@@ -12,11 +12,11 @@ interface priceObj {
 }
 
 
-export default function TablePrefSidebarIndiv(props: {data: any[], setPrefs: (zip?: string, cuisine?: string, price?: {min: string, max: string}) => void}) {
+export default function TablePrefSidebarIndiv(props: {data: any[], setPrefs: (zip?: string, cuisine?: string [], price?: {min: string, max: string}) => void}) {
 
     const [priceObject, setPrice] = useState<priceObj>();
     const [ac, setAC] = useState<string[]>()
-    const [cuisine, setCuisine] = useState("");
+    const [cuisine, setCuisine] = useState<string[]>([]);
     const [error, setError] = useState(false);
     const [zip, setZip] = useInputState('');
     const [openedZip, inputHandlersZip] = useDisclosure();
