@@ -1,19 +1,19 @@
 import LoadingLayout from "@/layouts/LoadingLayout";
 import { useEffect } from 'react';
 import { Center } from "@mantine/core";
-import { useUser } from "@/providers/AuthProvider";
 import { useRouter } from "next/router";
+import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
+import { useUser } from "@/providers/AuthProvider";
 export default function EmailVerificationLayout() {
-    
-
     const router = useRouter();
+    const auth = useFirebaseAuth();
     const { user } = useUser()
 
     useEffect(() => {
-        if (user.verified) {
+        if (auth.currentUser?.emailVerified) {
             router.push('/tables')
         }
-    }, [user])
+    }, [auth])
 
     return (
         <>

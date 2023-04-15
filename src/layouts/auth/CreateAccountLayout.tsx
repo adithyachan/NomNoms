@@ -92,6 +92,7 @@ export default function CreateAccount (props: PaperProps) {
       const UID = user?.uid;
       WriteUser({username: username, email: form.values.email, uid: UID, tables: []} as IUser)
       resetForm();
+      console.log("VERIFIED (create account): " + auth.currentUser?.emailVerified)
       sendEmailVerification(user).then(() => {
         console.log("email sent")
         showNotification({
@@ -133,9 +134,6 @@ export default function CreateAccount (props: PaperProps) {
       resetForm();
       console.log("auth working")
     });
-
-    auth.currentUser?.reload() 
-  
   }
 
   const GetValue = () => {

@@ -17,7 +17,6 @@ export const useUser = () => useContext(AuthContext);
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserType>({ email: null, uid: null, loading: true, verified: false });
   const auth = useFirebaseAuth();
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
