@@ -106,7 +106,7 @@ export default function ShowCard(props : {id : string }) {
           cuisineLength = cuisines.length
         }
         const cuisineList = new Array(cuisineLength) 
-        for(var i = 0;i < cuisines.length;i++) {
+        for(var i = 0;i < cuisineLength;i++) {
           cuisineList[i] = cuisines[i].title;
         }
         if (businessData.hours == undefined) {
