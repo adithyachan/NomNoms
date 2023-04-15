@@ -7,7 +7,7 @@ import NavBar from "@/components/NavBar";
 import { NotificationsProvider, showNotification } from "@mantine/notifications";
 import { useState, useEffect } from "react";
 import { getRestaurantList } from "@/lib/utils/yelpAPI";
-import { IconAbc, IconChevronDown, IconChevronUp, IconCoin, IconCurrencyDollar, IconWorld, IconX } from "@tabler/icons-react";
+import { IconAbc, IconChevronDown, IconChevronUp, IconCurrencyDollar, IconWorld, IconX } from "@tabler/icons-react";
 import LoadingLayout from "@/layouts/LoadingLayout";
 import { useRouter } from "next/router";
 import BestCard from "@/components/table/tableSelected/ShowingBestCard";
