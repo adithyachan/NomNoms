@@ -68,12 +68,26 @@ export default function TablePage(props: any) {
     setLoading(false);
   }
 
-  const getRestaurantWithPrefs = (zip?: string, cuisine?: string, price?: {min: string, max: string}) => {
+  const getRestaurantWithPrefs = (zip?: string, cuisine?: string[], price?: {min: string, max: string}) => {
     if (zipCheck != zip! || data.length == 0) {
       setZipCheck(zip!)
       getRestaurantFirstTime(zip!)
     } else{
       let temp = data
+      if (cuisine) {
+        temp = temp.filter((item) => {
+          if (Array.isArray(item.categories)) {
+            return item.categories.some((i: any) => {
+              // Check if any cuisine matches any item in the cuisine array
+              return cuisine.includes(i.title);
+            });
+          } else {
+            // Check if the cuisine array includes the item's category title
+            return cuisine.includes(item.categories.title);
+          }
+        });
+      }
+      /*
       if (cuisine) {
         temp = temp.filter((item) => {
           if (Array.isArray(item.categories)) {
@@ -87,6 +101,7 @@ export default function TablePage(props: any) {
           }
         });
       }
+      */
       if (price) {
         temp = temp.filter((item) => {
           const itemPrice = priceMap[item.price as "$" | "$$" | "$$$" | "$$$$"]
@@ -107,42 +122,6 @@ export default function TablePage(props: any) {
   }
 
   return (
-  /*   
-    <>
-    <NavBar>
-    </NavBar>
-    <Container fluid className="p-10 bg-gradient-to-b from-rose-100 to-white">
- 
-      <Grid>
-        <Grid.Col span="auto">
-          <Flex 
-                justify="center"
-                align="center"
-                direction="column"
-                wrap="wrap"
-          >
-            <TablePrefSidebarIndiv data={data} setPrefs={getRestaurantWithPrefs} />
-
-          </Flex>
-        </Grid.Col>
-        <Grid.Col span={5}>
-        {loading ? <LoadingLayout /> : 
-            <>
-              <Title className="text-center" order={2}>{"Table Name: Personal Tables"}</Title> 
-              <RestaurantListIndividualLayout data={preview.slice(0, offset)} />
-              <Center className="mt-5">
-                <Button color="red" onClick={() => {
-                  setOffset(offset + limit)
-                }}>
-                  Load More
-                </Button>
-              </Center>
-            </>}
-        </Grid.Col>
-      </Grid>
-    </Container>
-    </>
-  */
     <>
     <NotificationsProvider>
       <NavBar>
