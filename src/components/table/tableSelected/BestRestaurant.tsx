@@ -2,7 +2,7 @@ import { BackgroundImage, Button, Container, Rating, Title } from "@mantine/core
 import RestaurantPreviewCard from "./RestaurantPreviewCard";
 
 export default function RestaurantBest(props : {parameter : string, listDataReview : any,listDataRated : any}) {
-    if (props.parameter == "review" ) {
+   
         return (
             <Container>
                 <div className="shadow-lg shadow-rose 200 rounded-2xl transition ease-in-out hover:shadow-xl hover:shadow-rose-300 duration-300 delay-75">
@@ -22,13 +22,8 @@ export default function RestaurantBest(props : {parameter : string, listDataRevi
     </div>
         </Container>
         )
-    } else if (props.parameter == "rated") {
-        return(
-            <Container>
-
-         </Container>
-        )
-    }
+    
+    
     
 
 }
