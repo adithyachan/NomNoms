@@ -176,6 +176,10 @@ const [value, setSelectedValue] = useState<string |null>('');
     // TODO: redirect to waiting for other nomsters to finish their votes page
   }
 
+  function handleReshuffleClick() {
+
+  }
+
   const handleSort = (ascending: boolean) => {
     
     if (value == 'Price') {
@@ -326,6 +330,12 @@ const [value, setSelectedValue] = useState<string |null>('');
     }
   }
 
+  function Reshuffle() {
+    return (
+      <NavLink onClick={() => handleReshuffleClick()} active={true} variant="subtle" color="red" label="Unhappy with the choices? Reshuffle your restaurants!" rightSection={<IconChevronRight size="0.8rem" stroke={1.5}/>} />
+    )
+  }
+
   if (ids1 == undefined || ids1.length == 0) return (<Text size="md" color="dimmed">Card stack is empty!</Text> )
 
   else{
@@ -349,6 +359,7 @@ const [value, setSelectedValue] = useState<string |null>('');
               </div>
             <VetoSkip />
             <Skip />
+            <Reshuffle /> 
           </div>
         </div>
       </>
