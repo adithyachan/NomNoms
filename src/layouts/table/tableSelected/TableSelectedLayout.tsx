@@ -181,9 +181,9 @@ export default function TableSelectedLayout(props: {table: Table}) {
           </Grid.Col>
           <Grid.Col span="auto">
             <TableUserSidebar table={props.table} />
-            {!noRes &&
+            { loading ? <></>  :<> {!noRes &&
             <Center className="mt-5">
-            <Flex direction="column" align="center" gap="sm">
+            <Flex direction="column" align="center" gap="17.5px">
             <SegmentedControl transitionDuration={500} transitionTimingFunction="linear" radius = 'lg' color = "red"  style = {{backgroundColor:"white"}}  value={value} onChange={setValue}
               data={[
                 { label: 'Best Rated', value: 'rated' },
@@ -193,7 +193,10 @@ export default function TableSelectedLayout(props: {table: Table}) {
             <BestCard preview = {preview} value={value}  />
             </Flex>
             </Center>
-            }
+            } 
+            </>
+          }
+          
           </Grid.Col>
         </Grid>
       </Container>

@@ -1,3 +1,5 @@
+import RestaurantBest from "./BestRestaurant";
+
 const compareByRating = (a: any, b: any) => {
     return b.rating - a.rating;
 };
@@ -17,6 +19,6 @@ export default function BestCard(props : {preview : any,value : any}) {
     if (sortedPreview.length === 0) {
       return (<>Unable to display card</>)
     }
-    const some = sortedPreview[0].name
-    return (<>{some} Hello</>);
+    return (RestaurantBest({data:sortedPreview[0]}))
+
 }
