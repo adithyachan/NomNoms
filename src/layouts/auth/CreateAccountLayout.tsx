@@ -1,6 +1,6 @@
 import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from 'firebase/auth';
 import {  signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { ReadDocument } from '@/lib/firebase/FirestoreOperations'; 
 import {
@@ -28,6 +28,7 @@ import { useRouter } from "next/router";
 import { useState } from 'react';
 import { IUser, User } from '@/types/User';
 import { WriteUser } from '@/lib/firebase/auth/AuthOperations';
+import { error } from 'console';
 
 
 export default function CreateAccount (props: PaperProps) {
@@ -83,7 +84,7 @@ export default function CreateAccount (props: PaperProps) {
       alert("Username should be one word")
       return undefined
     }
-
+    
     createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
     .then((userCredential) => {
       // Signed in 
@@ -100,6 +101,11 @@ export default function CreateAccount (props: PaperProps) {
           color: 'green',
           icon: <IconCheck size={16} />,           
         })
+        setTimeout(() => {
+          router.push("/auth/verification");
+          console.log("auth working")
+        }, 3000)
+        
       }).catch((error) => {
         console.log("email not sent")
         showNotification({
@@ -110,9 +116,6 @@ export default function CreateAccount (props: PaperProps) {
           icon: <IconCheck size={16} />,           
         })
       })
-
-      router.push("/auth/verification");
-      console.log("auth working")
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -131,6 +134,8 @@ export default function CreateAccount (props: PaperProps) {
       console.log("auth working")
     });
 
+    auth.currentUser?.reload() 
+  
   }
 
   const GetValue = () => {

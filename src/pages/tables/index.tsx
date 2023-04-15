@@ -15,6 +15,8 @@ export default function TablePage() {
     }
   }, [user, router])
 
+
+
   return (
     <>
     {

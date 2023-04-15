@@ -5,8 +5,9 @@ import { useUser } from "@/providers/AuthProvider";
 import { useRouter } from "next/router";
 export default function EmailVerificationLayout() {
     
-    const { user } = useUser()
+
     const router = useRouter();
+    const { user } = useUser()
 
     useEffect(() => {
         if (user.verified) {
