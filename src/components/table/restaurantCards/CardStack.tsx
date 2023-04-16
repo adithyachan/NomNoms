@@ -7,10 +7,78 @@ import {List, Group, useMantineTheme } from '@mantine/core';
 import ReviewSort from "./SortReview";
 import SortByPrice from "./PriceSort";
 import SortByLex from "./LexSort";
+import { useRestaurantListEndpoint } from "@/lib/utils/yelpAPI";
+import { Loader } from "@mantine/core";
+import FavoritePicker from "@/components/table/restaurantCards/FavoritePicker";
+import { useRouter } from "next/router";
+import { ReadTable, UpdateTable } from "@/lib/firebase/table/TableOperations";
+import { useUser } from "@/providers/AuthProvider";
+import { Table } from "@/types/Table"
 //import { MenuItem } from "@mantine/core/lib/Menu/MenuItem/MenuItem";
 type ComponentProps = {
   id: string;
 };
+
+
+export function Voting({zip, prefs, votes, setVotes, table}: any) {
+  const [state, setState] = useState('stack'); // can be stack, favorite, done
+  const { user } = useUser()
+  const { data: listData, error: listError, isLoading: listIsLoading } = useRestaurantListEndpoint(10, zip, 3200, prefs);
+  const router = useRouter()
+  useEffect(() => {
+    if (state === 'complete') {
+      const uid = user?.uid;
+      if (uid) {
+        table.users[uid] = votes;
+        table.numDoneVoting++;
+        UpdateTable(table);
+        router.push(`/tables/${router.query.tableid}/results`);
+      }
+    }
+  }, [state]);
+  if (state === 'stack') {
+    if (listError) {
+      return <>Error loading restaurants</>;
+    }
+    if (listIsLoading) {
+      return <Loader color="FF5858" />;
+    } else {
+      const ids = listData.businesses.map((business: any) => business.id);
+      return <CardStack listData = {listData} ids={ids} setState={setState} setUserVotes={setVotes}/>;
+    }
+  } else if (state === 'favorite') {
+
+    let ids: any[] = []
+    if (votes) {
+      ids = Object.keys(votes)
+    } else {
+      ids = []
+    }
+    if (ids.length <= 1) {
+      setState('complete')
+    }
+
+    return <FavoritePicker ids={ids} votes={votes} setVotes={setVotes} setState={setState} listData={listData.businesses}/>
+  }
+  // } else if (state === 'complete') {
+  //   const uid = user.uid
+  //   if (uid != null) {
+  //     table.users[uid] = votes
+  //     let added = false
+  //     if (! added) {
+  //       table.numDoneVoting++
+  //       added = true
+  //     }
+  //   }
+  //   UpdateTable(table)
+  //   // router.push('/voting/results')
+  //   router.push(`/tables/${router.query.tableid}/results`);
+  // }
+    // votes variable should be sent to database somewhere to be aggregated along with others' votes
+    // user should be redirected to waiting page
+  
+  return <></>
+}
 
 type ComponentMap = {
   [key: string]: React.FC<ComponentProps>;
@@ -176,9 +244,6 @@ const [value, setSelectedValue] = useState<string |null>('');
     // TODO: redirect to waiting for other nomsters to finish their votes page
   }
 
-  function handleReshuffleClick() {
-
-  }
 
   const handleSort = (ascending: boolean) => {
     
@@ -331,8 +396,20 @@ const [value, setSelectedValue] = useState<string |null>('');
   }
 
   function Reshuffle() {
+    const router = useRouter()
+    const { tableid } = router.query
+    const[table, setTable] = useState<Table>()
+    const[votes, setVotes] = useState()
+  
+    useEffect(() => {
+      if (tableid !== undefined) {
+        const unsub = ReadTable(tableid as string, setTable)
+        return unsub
+      }
+    }, [tableid])
+
     return (
-      <NavLink onClick={() => handleReshuffleClick()} active={true} variant="subtle" color="red" label="Unhappy with the choices? Reshuffle your restaurants!" rightSection={<IconChevronRight size="0.8rem" stroke={1.5}/>} />
+      <Voting zip={table?.prefs.zip ?? 10019} prefs={'food'} votes={votes} setVotes={setVotes} table={table}/>
     )
   }
 
