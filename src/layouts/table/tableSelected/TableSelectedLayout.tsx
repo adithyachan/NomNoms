@@ -31,7 +31,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const [noRes, setNoRes] = useState(false)
   const [value, setValue] = useState('rated');
   const [sortDir, toggle] = useToggle()
-  const [sortVar, setSortBy] = useState("")
+  const [sortVar, setSortBy] = useState<string>()
 
   const router = useRouter()
   const HandleVoting = () => {
