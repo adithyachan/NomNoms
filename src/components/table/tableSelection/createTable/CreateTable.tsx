@@ -34,7 +34,6 @@ export default function CreateTable() {
       id: "",
       name: value,
       lastAccessed: Timestamp.fromDate(new Date()),
-      // users: [user.uid!],
       users: {},
       leader: user.uid!,
       banned: [],
