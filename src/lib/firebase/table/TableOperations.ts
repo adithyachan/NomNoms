@@ -16,7 +16,7 @@ const tableConverter = {
           leader: table.leader,
           prefs: table.prefs,
           expiration: table.expiration,
-          numDoneVoting: table.numDoneVoting
+          numDoneVoting: table.numDoneVoting,
           date: table.date,
           description: table.description
         };

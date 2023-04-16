@@ -55,9 +55,7 @@ export default function CreateTable() {
         zip: zip,
       },
       expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
-      numDoneVoting: 0,
-      description: desc,
-      date: date,
+      numDoneVoting: 0
     }
     console.log(tableJSON)
     tableJSON.users[user.uid!] = {}
