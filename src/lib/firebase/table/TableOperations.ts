@@ -16,9 +16,7 @@ const tableConverter = {
           leader: table.leader,
           prefs: table.prefs,
           expiration: table.expiration,
-          numDoneVoting: table.numDoneVoting,
-          date: table.date,
-          description: table.description
+          numDoneVoting: table.numDoneVoting
         };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot | DocumentSnapshot) => {
@@ -87,7 +85,6 @@ export const ReadTables =  (setDocs: any) => {
  * @returns id of the object that was written
  */
 export const WriteTable = async (data: ITable) => {
-  console.log(data);
   const firestore = useFirebaseFirestore()
   try {
     const docRef = doc(collection(firestore, collectionName)).withConverter(tableConverter);
