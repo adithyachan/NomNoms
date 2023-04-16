@@ -196,7 +196,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
                           <Menu>
                             <Menu.Target>
                               <Button color="gray">
-                                Sort By
+                                {sortVar ?? "Sort By"}
                               </Button>
                             </Menu.Target>
                             <Menu.Dropdown>
