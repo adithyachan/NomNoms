@@ -9,6 +9,7 @@ export default function FavoritePicker({ ids, votes, setVotes, listData, setStat
   const [favorite, setFavorite] = useState();
   const [localVotes, setLocalVotes] = useState(votes)
 
+
   function handleFavoriteChoice() {
     if (favorite) {
       setLocalVotes((votes: any) => {

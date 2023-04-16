@@ -34,16 +34,28 @@ export default function Voting({zip, prefs, votes, setVotes, table}: any) {
       return <CardStack listData = {listData} ids={ids} setState={setState} setUserVotes={setVotes}/>;
     }
   } else if (state === 'favorite') {
-
+    let nonZeroVotes = 0
+    for (const userid in votes) {
+      if (votes[userid] !== 0) {
+        nonZeroVotes++;
+      }
+    }
+    if (nonZeroVotes <= 1) {
+      setState('complete')
+    } else {
+      Object.keys(votes).forEach(key => {
+        if (votes[key] == 0) {
+          delete votes[key]
+        }
+      })
+    }
     let ids: any[] = []
     if (votes) {
       ids = Object.keys(votes)
     } else {
       ids = []
     }
-    if (ids.length <= 1) {
-      setState('complete')
-    }
+    
 
     return <FavoritePicker ids={ids} votes={votes} setVotes={setVotes} setState={setState} listData={listData.businesses}/>
   }
