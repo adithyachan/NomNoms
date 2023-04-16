@@ -11,6 +11,7 @@ import { IconAbc, IconChevronDown, IconChevronUp, IconCurrencyDollar, IconWorld,
 import LoadingLayout from "@/layouts/LoadingLayout";
 import { useRouter } from "next/router";
 import BestCard from "@/components/table/tableSelected/ShowingBestCard";
+import { useUser } from "@/providers/AuthProvider";
 import { useToggle } from "@mantine/hooks";
 
 const numFetch = 50;
@@ -37,6 +38,35 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const HandleVoting = () => {
     router.push(router.asPath + "/voting")
   }
+
+  const HandleResults = () => {
+    router.push(router.asPath + "/results")
+  }
+
+  const VoteButton = () => {
+    const { user } = useUser()
+    const uid = user.uid
+    // user has completed voting
+    if (Object.keys(props.table.users).includes(uid!) && Object.keys(props.table.users[uid!]).length !== 0) {
+      return (
+        <>
+          <Button fullWidth color="red" onClick={HandleResults}>
+            Results
+          </Button>
+        </>
+      )
+    // user still needs to vote
+    } else {
+      return (
+        <>
+          <Button fullWidth color="red" onClick={HandleVoting}>
+            Vote!
+          </Button>
+        </>
+      )
+    }
+  }
+
   
   let temp: any[] = []
   const getRestaurantFirstTime = async (n: number = 5) => {
@@ -237,11 +267,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
                           </Button>
                         </Button.Group>
                         
-                        <Button color="red"
-                          onClick={HandleVoting}
-                        >
-                          Vote!
-                        </Button>
+                        <VoteButton/>
                         <Button color="red" onClick={() => {
                           setOffset(offset + limit > preview.length ? preview.length : offset + limit)
                         }}>

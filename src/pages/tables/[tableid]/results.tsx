@@ -68,7 +68,8 @@ export default function ResultsPage() {
   } else {
     return (
       <>
-        There was an error loading the results page for table {router.query.tableid}.
+        {/* There was an error loading the results page for table {router.query.tableid}. */}
+        Loading...
       </>
     )
   }

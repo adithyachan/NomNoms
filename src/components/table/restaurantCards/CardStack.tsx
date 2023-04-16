@@ -163,11 +163,11 @@ const [value, setSelectedValue] = useState<string |null>('');
   }
 
   function handleFinishClick() {
-    Object.keys(votes).forEach(key => {
-      if (votes[key] == 0) {
-        delete votes[key]
-      }
-    })
+    // Object.keys(votes).forEach(key => {
+    //   if (votes[key] == 0) {
+    //     delete votes[key]
+    //   }
+    // })
     setUserVotes(votes)
     setState('favorite')
     
