@@ -221,7 +221,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
                   <RestaurantListLayout data={preview.slice(0, offset)} />
                   {offset < preview.length ? 
                     <Flex direction="column" align="center" gap="sm">
-                      <Flex direction="row" align="between" justify="space-around" className="w-full mt-3">
+                      <Flex gap="10px" direction="row" align="between" justify="space-around" className="w-full mt-3">
                         <Button.Group>
                           <Menu>
                             <Menu.Target>
