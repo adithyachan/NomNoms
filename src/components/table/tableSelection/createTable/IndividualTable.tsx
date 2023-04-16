@@ -35,7 +35,7 @@ export default function CreateTable() {
       id: "",
       name: value,
       description: "",
-      date: "",
+      date: Timestamp.fromDate(new Date()),
       lastAccessed: Timestamp.fromDate(new Date()),
       // users: [user.uid!],
       users: {},

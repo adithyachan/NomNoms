@@ -16,7 +16,7 @@ export interface ITable {
   },
   expiration: Timestamp,
   description: string,
-  date: string,
+  date: Timestamp,
 }
 
 export class Table implements ITable {
@@ -35,7 +35,7 @@ export class Table implements ITable {
   };
   expiration: Timestamp;
   description: string;
-  date: string;
+  date: Timestamp;
 
   constructor(json: ITable) {
       this.id = json.id;

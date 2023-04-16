@@ -8,6 +8,8 @@ import { Timestamp } from "firebase/firestore"
 import CodeModal from "./CodeModal";
 import { useUser } from "@/providers/AuthProvider";
 import { DatePicker } from "@mantine/dates";
+import firebase from "firebase/compat";
+
 
 const special_chars = /[ `!@#$%^&*()+_\-=\[\]{};':"\\|,.<>\/?]/
 
@@ -15,7 +17,7 @@ export default function CreateTable() {
   const { user } = useUser()
   const [value, setValue] = useInputState('');
   const [zip, setZip] = useInputState('');
-  const [date, setDate] = useInputState('');
+  const [date, setDate] = useInputState(new Date().toISOString());
   const [desc, setDesc] = useInputState('');
 
   const [error, setError] = useState(null)
@@ -34,6 +36,8 @@ export default function CreateTable() {
   const zip_check = zip.length == 5 && !Number.isNaN(zip)
   const valid = special_chars_check && length_check && zip_check
 
+  
+
   const handleTableCreation = async () => {
     console.log(value)
     console.log(desc)
@@ -42,7 +46,7 @@ export default function CreateTable() {
       id: "",
       name: value,
       description: desc,
-      date: date,
+      date: Timestamp.fromDate(new Date(date)),
       lastAccessed: Timestamp.fromDate(new Date()),
       // users: [user.uid!],
       users: {},
