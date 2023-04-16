@@ -191,16 +191,6 @@ export default function TableSelectedLayout(props: {table: Table}) {
                   <RestaurantListLayout data={preview.slice(0, offset)} />
                   {offset < preview.length ? 
                     <Flex direction="column" align="center" gap="sm">
-                      <Button fullWidth color="red" onClick={() => {
-                        setOffset(offset + limit > preview.length ? preview.length : offset + limit)
-                      }}>
-                        Load More
-                      </Button> 
-                      <Button fullWidth color="red"
-                        onClick={HandleVoting}
-                      >
-                        Vote!
-                      </Button>
                       <Flex direction="row" align="between" justify="space-around" className="w-full mt-3">
                         <Button.Group>
                           <Menu>
