@@ -34,6 +34,7 @@ export default function CreateTable() {
     const tableJSON: ITable = {
       id: "",
       name: value,
+      banned: [],
       lastAccessed: Timestamp.fromDate(new Date()),
       // users: [user.uid!],
       users: {},
