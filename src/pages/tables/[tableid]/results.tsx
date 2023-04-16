@@ -9,25 +9,39 @@ export default function ResultsPage() {
   const router = useRouter()
   const { tableid } = router.query
   const[table, setTable] = useState<Table>()
-  // const[dots, setDots] = useState('.')
+  
+  const images = [
+    '/images/burger.png',
+    '/images/taco.png',
+    '/images/sushi.png',
+    '/images/boba.png',
+    '/images/fries.png',
+    '/images/cake.png',
+  ];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3000); // Change the image every 2 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+  const fadeIn = {
+    animationName: 'fadeIn',
+    animationDuration: '1s',
+  };
+
+  const fadeOut = {
+    animationName: 'fadeOut',
+    animationDuration: '1s',
+  };
 
   const HandleDone = () => {
     router.push(`/tables/${router.query.tableid}`)
   }
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     if (dots === '.') {
-  //       setDots('..');
-  //     } else if (dots === '..') {
-  //       setDots('...');
-  //     } else {
-  //       setDots('.');
-  //     }
-  //   }, 500);
-
-  //   return () => clearInterval(intervalId);
-  // }, [dots]);
 
   useEffect(() => {
     if (tableid !== undefined) {
@@ -98,11 +112,41 @@ export default function ResultsPage() {
       // show waiting page
       return (
         <Center className="flex-col rounded-3xl bg-white shadow-red-100 shadow-xl p-10 m-10">
-          <Text style={{padding: '40px'}} className="mb-10 text-5xl font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>
-            Waiting for your table mates to finish voting {`(${table.numDoneVoting}/${Object.keys(table.users).length})...`}
-          </Text>
-          <Image maw={240} mx="auto" radius="md" src="/images/burger.png" alt="Waiting image" />
-        </Center>
+      <Text style={{ padding: '40px' }} className="mb-10 text-5xl font-black" variant="gradient" gradient={{ from: "red.7", to: "red.4" }}>
+        Waiting for your table mates to finish voting {`(${table.numDoneVoting}/${Object.keys(table.users).length})...`}
+      </Text>
+      <div className="relative h-64 w-64 mx-auto">
+        {images.map((image, index) => (
+          <Image
+            key={image}
+            maw={240}
+            mx="auto"
+            radius="md"
+            src={image}
+            alt="Waiting image"
+            className={`absolute top-0 left-0`}
+            style={{
+              opacity: currentImageIndex === index ? 1 : 0,
+              animationName: currentImageIndex === index ? 'fadeIn' : undefined,
+              animationDuration: '1s',
+              animationTimingFunction: 'ease-in-out',
+              animationIterationCount: 1,
+              animationFillMode: 'forwards',
+            }}
+          />
+        ))}
+      </div>
+      <style jsx global>{`
+        @keyframes fadeIn {
+          0% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+      `}</style>
+    </Center>
           
 
         
