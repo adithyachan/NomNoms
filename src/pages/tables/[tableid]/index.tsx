@@ -56,8 +56,8 @@ export default function TablePage() {
         if (!table) {
           ReadTable(tableid as string, setTable)
         }
-        else if (table.banned.includes(user.uid!)) {
-          router.push("/tables")
+        else if (table.banned && table.banned.includes(user.uid!)) {
+          router.push("/tables/tablenotfound")
         }
         else if (((new Date()).getTime() - table.lastAccessed.toDate().getTime()) / 1000 > 2) {
           updateTable()
