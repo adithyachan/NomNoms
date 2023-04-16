@@ -17,6 +17,8 @@ const tableConverter = {
           prefs: table.prefs,
           expiration: table.expiration,
           numDoneVoting: table.numDoneVoting
+          date: table.date,
+          description: table.description
         };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot | DocumentSnapshot) => {
