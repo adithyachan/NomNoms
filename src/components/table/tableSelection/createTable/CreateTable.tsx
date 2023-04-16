@@ -37,6 +37,7 @@ export default function CreateTable() {
       // users: [user.uid!],
       users: {},
       leader: user.uid!,
+      banned: [],
       prefs: {
         zip: zip,
       },

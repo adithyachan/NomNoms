@@ -49,12 +49,15 @@ export default function TablePage() {
       router.push("/")
     }
     if (!tables) {
-      const unsubTables = ReadTables(setTables)
+      ReadTables(setTables)
     }
     else {
       if (tables.map((table) => table.id).includes(tableid as string)) {
         if (!table) {
-          const unsub = ReadTable(tableid as string, setTable)
+          ReadTable(tableid as string, setTable)
+        }
+        else if (table.banned.includes(user.uid!)) {
+          router.push("/tables")
         }
         else if (((new Date()).getTime() - table.lastAccessed.toDate().getTime()) / 1000 > 2) {
           updateTable()

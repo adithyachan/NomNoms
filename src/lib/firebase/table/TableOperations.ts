@@ -13,6 +13,7 @@ const tableConverter = {
           name: table.name,
           lastAccessed: table.lastAccessed,
           users: table.users,
+          banned: table.banned,
           leader: table.leader,
           prefs: table.prefs,
           expiration: table.expiration,
