@@ -1,4 +1,5 @@
-import { BackgroundImage, Title, Rating, Button } from "@mantine/core"
+import { BackgroundImage, Title, Rating, Button, Text, Flex } from "@mantine/core"
+import { IconPhone } from "@tabler/icons-react"
 import { useRouter } from "next/router"
 
 const defaultImage = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
@@ -17,9 +18,17 @@ export default function RestaurantPreviewCard(props: {data: any}) {
             <Rating defaultValue={restaurant.rating} fractions = {2} readOnly size = "md" className="mt-2"/>
             <small className="text-white">{restaurant.review_count} Reviews</small>
           </div>
-          <Button component="a" radius="lg" color="red" className="mr-5" target="_blank" href={restaurant.url}>
-            Learn More
-          </Button>
+          <div>
+            <Button component="a" radius="lg" color="red" className="mr-5" target="_blank" href={restaurant.url}>
+              Learn More
+            </Button>
+            <Flex className="mt-3" align="center">
+                <IconPhone style = {{paddingRight :'-10px'}} color = 'white' strokeWidth={1} /> 
+                <Text className="text-white -mt-1 text-xs">
+                    {restaurant.display_phone}
+                </Text>
+            </Flex>
+          </div>
         </div>
       </BackgroundImage>
     </div>
