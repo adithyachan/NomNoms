@@ -23,10 +23,14 @@ export default function RestaurantPreviewCard(props: {data: any}) {
               Learn More
             </Button>
             <Flex className="mt-3" align="center">
-                <IconPhone style = {{paddingRight :'-10px'}} color = 'white' strokeWidth={1} /> 
-                <Text className="text-white -mt-1 text-xs">
-                    {restaurant.display_phone}
-                </Text>
+                {restaurant.display_phone ?
+                <>
+                  <IconPhone style = {{paddingRight :'-10px'}} color = 'white' strokeWidth={1} /> 
+                  <Text className="text-white -mt-1 text-xs">
+                      {restaurant.display_phone}
+                  </Text>
+                </>  
+                : null}
             </Flex>
           </div>
         </div>

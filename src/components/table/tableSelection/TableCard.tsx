@@ -88,7 +88,7 @@ export default function TableCard(props: {table: Table, id: string}) {
 
             { copy(process.env.NEXT_PUBLIC_VERCEL_URL + "/tables/" + props.id) }
           </Group>
-          <small>Leader: { users?.find((item) => item.uid == props.table.leader)?.username }</small>
+          <small>Leader: { users?.find((item) => item.uid == props.table.leader)?.username ?? "Anonymous" }</small>
         </Center>
       </Card>
     </>
