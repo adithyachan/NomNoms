@@ -55,7 +55,6 @@ export default function LogInForm (props: PaperProps) {
 
   const HandleGuestSignIn = async (e : any) => {
     const auth = useFirebaseAuth();
-    
     signInAnonymously(auth)
     .then(() => {
         // Signed in..

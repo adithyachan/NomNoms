@@ -1,5 +1,5 @@
 import TableSelectionLayout from "@/layouts/table/tableSelection/TableSelectionLayout";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
 import { useUser } from "@/providers/AuthProvider";
@@ -9,9 +9,18 @@ export default function TablePage() {
   const router = useRouter()
   const auth = useFirebaseAuth()
   const { user } = useUser()
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (!user.uid && !user.loading) {
-      router.push("/");
+    if (auth.currentUser) {
+      if (!auth.currentUser.emailVerified) {
+        console.log("Hi")
+        router.push("/auth/verification")
+      } else {
+        setLoading(false)
+      }
+    } else {
+        router.push("/");
     }
   }, [user, router])
 
@@ -19,7 +28,9 @@ export default function TablePage() {
 
   return (
     <>
-    {
+    {loading ?
+      <></>
+      :
       <NotificationsProvider>
         <TableSelectionLayout/>
       </NotificationsProvider>
