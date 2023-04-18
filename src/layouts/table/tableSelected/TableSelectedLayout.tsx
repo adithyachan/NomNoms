@@ -13,16 +13,10 @@ import { useRouter } from "next/router";
 import BestCard from "@/components/table/tableSelected/ShowingBestCard";
 import { useUser } from "@/providers/AuthProvider";
 import { useToggle } from "@mantine/hooks";
-import { Timestamp } from "firebase/firestore";
+import { UpdateTable } from "@/lib/firebase/table/TableOperations";
 
 const numFetch = 50;
 const limit = 5;
-const priceMap = {
-  "$": 1,
-  "$$": 2,
-  "$$$": 3,
-  "$$$$": 4
-}
 
 export default function TableSelectedLayout(props: {table: Table}) {
   const [offset, setOffset] = useState(5)
@@ -34,10 +28,30 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const [value, setValue] = useState('rated');
   const [sortDir, toggle] = useToggle()
   const [sortVar, setSortBy] = useState<string>()
+  const [vote, setVote] = useState<boolean>()
+  const [cuisine, setCuisine] = useState<string>()
+  const [priceString, setPriceString] = useState<string>()
+  const { user } = useUser()
 
   const router = useRouter()
-  const HandleVoting = () => {
-    router.push(router.asPath + "/voting")
+
+  const HandleVoting = async () => {
+    setVote(true)
+    let tablePriceArray = props.table.prefs.price.split(",")
+    let tableCuisineArray = props.table.prefs.cuisine.split(",")
+    let myPriceArray = priceString?.split(',')
+    let myCuisineArray = cuisine?.split(',')
+    myPriceArray?.forEach(p => {
+      if(!tablePriceArray.includes(p)) tablePriceArray.push(p)
+    })
+    myCuisineArray?.forEach(c => {
+      if(!tableCuisineArray.includes(c)) tableCuisineArray.push(c)
+    })
+    props.table.prefs.price = tablePriceArray.join(",")
+    props.table.prefs.cuisine = tableCuisineArray.join(",")
+    if (!props.table.prefsDone.includes(user.uid!))
+      props.table.prefsDone.push(user.uid!)
+    await UpdateTable(props.table)
   }
 
   const HandleResults = () => {
@@ -60,14 +74,13 @@ export default function TableSelectedLayout(props: {table: Table}) {
     } else {
       return (
         <>
-          <Button fullWidth color="red" onClick={HandleVoting}>
-            Vote!
+          <Button fullWidth color="red" onClick={HandleVoting} disabled={vote}>
+            { vote ? `Waiting for others to finish preferences (${props.table.prefsDone.length}/${Object.keys(props.table.users).length})` : "Vote!" }
           </Button>
         </>
       )
     }
   }
-
   
   let temp: any[] = []
   const getRestaurantFirstTime = async (n: number = 5) => {
@@ -136,6 +149,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
           return cuisine.some(c => categories.includes(c));
         });
       }
+      setCuisine(cuisine.join(','))
     }
 
     console.log("CUISINE: " + cuisine)
@@ -143,10 +157,16 @@ export default function TableSelectedLayout(props: {table: Table}) {
     console.log("TEMP: " + temp)
 
     if (price) {
+      let p = ""
+      for (let i = price.min.length; i < price.max.length; i++) {
+        p += i + " ,"
+      }
+      p = p.substring(0, p.length - 2)
+      setPriceString(p)
       temp = temp.filter((item) => {
-        const itemPrice = priceMap[item.price as "$" | "$$" | "$$$" | "$$$$"]
-        const min = priceMap[price.min as "$" | "$$" | "$$$" | "$$$$"]
-        const max = priceMap[price.max as "$" | "$$" | "$$$" | "$$$$"]
+        const itemPrice = item.price ? item.price.length : 4
+        const min = price.min.length
+        const max = price.max.length
         return itemPrice >= min && itemPrice <= max
       })
     }
@@ -185,7 +205,10 @@ export default function TableSelectedLayout(props: {table: Table}) {
     if (data.length == 0) {
       getRestaurantFirstTime()
     }
-  }, [])
+    if (props.table.prefsDone.length == Object.keys(props.table.users).length) {
+      router.push(router.asPath + "/voting")
+    }
+  }, [props.table])
   
   function addOrdinalSuffix(dateString: string) {
     const dateParts = dateString.split(" ");
@@ -205,8 +228,6 @@ export default function TableSelectedLayout(props: {table: Table}) {
     return day + suffix + " " + month + " " + year;
   }
   
-  
-
   return (
     <>
     <NotificationsProvider>

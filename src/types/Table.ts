@@ -13,11 +13,14 @@ export interface ITable {
   leader: string,
   prefs: {
     zip: string,
+    cuisine: string,
+    price: string,
   },
   expiration: Timestamp,
   description: string,
   date: Date,
-  numDoneVoting: number;
+  numDoneVoting: number,
+  prefsDone: string[],
 }
 
 export class Table implements ITable {
@@ -33,11 +36,14 @@ export class Table implements ITable {
   leader: string;
   prefs: {
     zip: string;
+    cuisine: string;
+    price: string;
   };
   expiration: Timestamp;
   numDoneVoting: number;
   description: string;
   date: Date;
+  prefsDone: string[];
 
   constructor(json: ITable) {
       this.id = json.id;
@@ -51,6 +57,7 @@ export class Table implements ITable {
       this.numDoneVoting = json.numDoneVoting;
       this.description = json.description;
       this.date = json.date;
+      this.prefsDone = json.prefsDone;
   };
 }
 

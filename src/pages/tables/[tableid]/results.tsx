@@ -39,7 +39,7 @@ export default function ResultsPage() {
   };
 
   const HandleDone = () => {
-    router.push(`/tables/${router.query.tableid}`)
+    router.push(`/tables/`)
   }
 
 

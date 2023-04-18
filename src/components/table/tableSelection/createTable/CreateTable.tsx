@@ -47,11 +47,14 @@ export default function CreateTable() {
       banned: [],
       prefs: {
         zip: zip,
+        cuisine: "food",
+        price: ""
       },
       expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
       numDoneVoting: 0,
       description: desc,
-      date: date
+      date: date,
+      prefsDone: [],
     }
     tableJSON.users[user.uid!] = {}
     const table = new Table(tableJSON)

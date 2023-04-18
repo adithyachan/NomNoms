@@ -12,8 +12,7 @@ export default function RestaurantVoting() {
 
   useEffect(() => {
     if (tableid !== undefined) {
-      const unsub = ReadTable(tableid as string, setTable)
-      return unsub
+      ReadTable(tableid as string, setTable)
     }
   }, [tableid])
 
@@ -21,11 +20,12 @@ export default function RestaurantVoting() {
     <>
       {table ? (
         <Voting
-          zip={table.prefs.zip ?? 10019}
-          prefs={"food"}
+          zip={table.prefs.zip}
+          prefs={table.prefs.cuisine}
           votes={votes}
           setVotes={setVotes}
           table={table}
+          price={table.prefs.price}
         />
       ) : (
         <p>Loading...</p>
