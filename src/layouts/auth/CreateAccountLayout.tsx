@@ -1,10 +1,8 @@
 import { useForm } from '@mantine/form';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { signInAnonymously, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { ReadDocument, WriteDocument, WriteDocumentWithConverter } from '@/lib/firebase/FirestoreOperations'; 
-import { getFirestore } from 'firebase/firestore';
-
+import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from 'firebase/auth';
+import {  signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { ReadDocument } from '@/lib/firebase/FirestoreOperations'; 
 import {
   TextInput,
   PasswordInput,
@@ -20,21 +18,17 @@ import {
   Checkbox,
   Anchor,
   Stack,
-  Autocomplete,
   Tooltip,
-  BackgroundImage,
 } from '@mantine/core';
 import { GoogleButton, GithubButton} from "@/components/auth/SocialButtons"
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
 import { IconCheck, IconRefresh, IconX } from '@tabler/icons-react';
-import { formatDiagnostic } from 'typescript';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from "next/router";
 import { useState } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
 import { IUser, User } from '@/types/User';
 import { WriteUser } from '@/lib/firebase/auth/AuthOperations';
+import { error } from 'console';
 
 
 export default function CreateAccount (props: PaperProps) {
@@ -48,13 +42,12 @@ export default function CreateAccount (props: PaperProps) {
       password: '',
       confirmpassword: '',
       username: '',
-      terms: true,
+      terms: false,
     },
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) => (val.length < 6 ? 'Password should include at least 6 characters' : null),
       username: (val) => (!/\S/.test(val) ? null : 'Username should be one word'),
-
       confirmpassword: (val, values) =>
         val !== values.password ? 'Passwords did not match' : null,
     },
@@ -68,7 +61,8 @@ export default function CreateAccount (props: PaperProps) {
     form.values.password = '',
     form.values.username = '',
     form.values.confirmpassword = '',
-    form.values.terms = true
+    form.values.username = '',
+    form.values.terms = false
   }
 
   //route user to login page
@@ -76,12 +70,10 @@ export default function CreateAccount (props: PaperProps) {
     router.push('/auth/login')
   }
 
-
   //HandleCreate 
   const HandleCreate = async (e : any) => {
     const auth = useFirebaseAuth();
     console.log("register");
-
     if (ReadDocument("usernames", username) == undefined) {
         alert("Username exists")
         return undefined
@@ -92,6 +84,7 @@ export default function CreateAccount (props: PaperProps) {
       alert("Username should be one word")
       return undefined
     }
+    
     createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
     .then((userCredential) => {
       // Signed in 
@@ -99,8 +92,31 @@ export default function CreateAccount (props: PaperProps) {
       const UID = user?.uid;
       WriteUser({username: username, email: form.values.email, uid: UID, tables: []} as IUser)
       resetForm();
-      router.push("/tables");
-      console.log("auth working")
+      console.log("VERIFIED (create account): " + auth.currentUser?.emailVerified)
+      sendEmailVerification(user).then(() => {
+        console.log("email sent")
+        showNotification({
+          title: 'Email Verification Sent!',
+          message: 'An email has been sent to verify your email ',
+          autoClose: 3000,
+          color: 'green',
+          icon: <IconCheck size={16} />,           
+        })
+        setTimeout(() => {
+          router.push("/auth/verification");
+          console.log("auth working")
+        }, 3000)
+        
+      }).catch((error) => {
+        console.log("email not sent")
+        showNotification({
+          title: 'Email Verification Error.',
+          message: 'There was an error verifying your email. Please try again later.',
+          autoClose: 3000,
+          color: 'red',
+          icon: <IconCheck size={16} />,           
+        })
+      })
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -115,11 +131,9 @@ export default function CreateAccount (props: PaperProps) {
           icon: <IconX size={16} />,           
         })
       }
-
       resetForm();
       console.log("auth working")
     });
-
   }
 
   const GetValue = () => {
@@ -129,9 +143,7 @@ export default function CreateAccount (props: PaperProps) {
     var random = myarray1[Math.floor(Math.random() * myarray1.length)] + myarray2[Math.floor(Math.random() * myarray2.length)];
     setUsername(random);
   }
-
     const provider = new GoogleAuthProvider();
-
     const HandleGoogle = async (e: any) => {
       const auth = useFirebaseAuth();
           console.log("checking google")
