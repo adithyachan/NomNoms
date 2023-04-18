@@ -220,7 +220,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
             <TablePrefSidebar data={data} setPrefs={getRestaurantWithPrefs}/>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
             <Title className="mb-1 mt-4 ml-2 text-center text-xl font-black" variant="gradient" gradient={{ from: "red.7", to: "red.4" }} order={2}>
-  {"Event Date: " + addOrdinalSuffix(props.table.date)}
+  {"Event Date: "}
 </Title>
 <Title className="mb-3 ml-2 text-center text-xl font-black" variant="gradient" gradient={{ from: "red.7", to: "red.4" }} order={2}>
   {"Event Description: " + props.table.description}

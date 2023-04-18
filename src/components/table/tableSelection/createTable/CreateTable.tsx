@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Button, Center, TextInput, Tooltip, Container } from "@mantine/core"
+import { Button, Center, TextInput, Tooltip, Container, MantineProvider } from "@mantine/core"
 import { useInputState, useDisclosure } from '@mantine/hooks';
 
 import { Table, ITable } from "@/types/Table"
@@ -7,6 +7,8 @@ import { WriteTable } from "@/lib/firebase/table/TableOperations"
 import { Timestamp } from "firebase/firestore"
 import CodeModal from "./CodeModal";
 import { useUser } from "@/providers/AuthProvider";
+import { DatePicker } from "@mantine/dates";
+
 
 const special_chars = /[ `!@#$%^&*()+_\-=\[\]{};':"\\|,.<>\/?]/
 
@@ -14,7 +16,7 @@ export default function CreateTable() {
   const { user } = useUser()
   const [value, setValue] = useInputState('');
   const [zip, setZip] = useInputState('');
-  const [date, setDate] = useInputState('');
+  const [date, setDate] = useInputState(new Date());
   const [desc, setDesc] = useInputState('');
 
   const [error, setError] = useState(null)
@@ -32,6 +34,8 @@ export default function CreateTable() {
   const length_check = value.length >= 4 && value.length <= 16
   const zip_check = zip.length == 5 && !Number.isNaN(zip)
   const valid = special_chars_check && length_check && zip_check
+
+  
 
   const handleTableCreation = async () => {
     const tableJSON: ITable = {
@@ -57,7 +61,7 @@ export default function CreateTable() {
       setValue('')
       setZip('')
       setDesc('')
-      setDate('')
+      setDate(new Date())
       setCode(code!)
       codeHandlers.open()
     }
@@ -71,12 +75,11 @@ export default function CreateTable() {
       {codeOpen ? <CodeModal code={ code } open={ codeOpen } handler={ codeHandlers }/> : null} 
       <Container fluid className="pb-4">
         <Tooltip
-        label={length_check ? special_chars_check ? null : "No special characters" : "Name must be 4-16 characters"}
-        position="left"
-        withArrow
-        opened={openedName && !(length_check && special_chars_check)}
-        color={"red.8"}
-        >
+          label={length_check ? special_chars_check ? null : "No special characters" : "Name must be 4-16 characters"}
+          position="left"
+          withArrow
+          opened={openedName && !(length_check && special_chars_check)}
+          color={"red.8"}>
           <TextInput
             placeholder="Table Name"
             onFocus={() => inputHandlersName.open()}
@@ -86,14 +89,20 @@ export default function CreateTable() {
             onChange={setValue}
           />
         </Tooltip>
-        {error ? <small className="text-red-500">error</small> : null}
+        {error ? 
+          <>
+            Error
+          </>
+          : 
+          <></>
+          
+        }
         <Tooltip
-        label={zip_check ? null : "Invalid Zip Code"}
-        position="left"
-        withArrow
-        opened={openedZip && !zip_check}
-        color={"red.8"}
-        >
+          label={zip_check ? null : "Invalid Zip Code"}
+          position="left"
+          withArrow
+          opened={openedZip && !zip_check}
+          color={"red.8"}>
           <TextInput
             placeholder="Zip Code"
             onFocus={() => inputHandlersZip.open()}
@@ -113,31 +122,31 @@ export default function CreateTable() {
             onChange={setDesc}
           />
 
-<TextInput
+<DatePicker
+        value={date}
+        onChange={setDate}
+        label="Pick a date"
+        placeholder="Pick a date"
+        id="my-date-picker"
+        name="my-date-picker"
+        description="Select a date"
+        variant="filled"
+      />
+  
+
+{/* <TextInput
             placeholder="Pick date"
             onFocus={() => inputHandlersDate.open()}
             onBlur={() => inputHandlersDate.close()}
             mt="md"
             value={date}
             onChange={setDate}
-          />
-
-
-{/* <DatePicker
-      //label="Pick date and time"
-      placeholder="Pick date and time"
-      onFocus={() => inputHandlersDate.open()}
-      onBlur={() => inputHandlersDate.close()}
-      value={date ? new Date(date) : null}
-      onChange={(date) => setDate(date?.toISOString())}
-      maw={400}
-      mx="auto"
-    /> */}
+          /> */}
 
       </Container>
-      <Center>
-        <Button color="red" disabled={!valid} onClick={handleTableCreation}>Create</Button>
-      </Center>
+
+      <Button className="align-center" color="red" disabled={!valid} onClick={handleTableCreation}>Create</Button>
+
     </>
   )
 }
