@@ -6,6 +6,7 @@ export default function SearchBar(props : { setCuisine : any , data : string[]})
 
   const [value, setValue] = useState<string []>([]);
   useEffect(() => {
+    console.log(value)
     const cuisines = value.map(val => val.split(" (")[0]);
     props.setCuisine(cuisines);
   }, [value]);

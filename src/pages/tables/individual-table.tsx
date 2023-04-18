@@ -75,17 +75,19 @@ export default function TablePage(props: any) {
     } else{
       let temp = data
       if (cuisine) {
-        temp = temp.filter((item) => {
-          if (Array.isArray(item.categories)) {
-            return item.categories.some((i: any) => {
-              // Check if any cuisine matches any item in the cuisine array
-              return cuisine.includes(i.title);
-            });
-          } else {
-            // Check if the cuisine array includes the item's category title
-            return cuisine.includes(item.categories.title);
-          }
-        });
+        if (cuisine?.length != 0) {
+          temp = temp.filter((item) => {
+            if (Array.isArray(item.categories)) {
+              return item.categories.some((i: any) => {
+                // Check if any cuisine matches any item in the cuisine array
+                return cuisine.includes(i.title);
+              });
+            } else {
+              // Check if the cuisine array includes the item's category title
+              return cuisine.includes(item.categories.title);
+            }
+          });
+        } 
       }
       /*
       if (cuisine) {
