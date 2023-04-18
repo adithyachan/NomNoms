@@ -61,7 +61,7 @@ export default function LoadingMainLogo(props: {verification?: boolean}) {
       onClick={resendEmailVerification}
       disabled={timeActive}
       >Resend Email {timeActive && time}
-  </Button>
+      </Button>
       </>
       : 
       <></>
