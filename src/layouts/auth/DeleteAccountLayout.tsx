@@ -118,7 +118,7 @@ import { NotificationsProvider } from '@mantine/notifications';
                 Delete Your Account
             </Title>
             <Text color="dimmed" size="sm" align="center">
-              We are sorry to hear you&aposre considering deleting your NomNoms account
+              We are sorry to hear you&apos;re considering deleting your NomNoms account
             </Text>
             <Paper withBorder shadow="md" p={30} radius="md" mt="xl" className='bg-rose-200'>
 

@@ -8,7 +8,8 @@ import {
   Menu,
   Header,
   Image,
-  Button, 
+  Button,
+  MenuDividerProps, 
 } from '@mantine/core';
 import { showNotification } from "@mantine/notifications";
 import { useDisclosure } from '@mantine/hooks';
@@ -19,7 +20,8 @@ import {
   IconChevronDown,
   IconCheck,
   IconX,
-  IconDoorExit
+  IconDoorExit,
+  IconAddressBook
 } from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
@@ -28,6 +30,7 @@ import { useRouter } from "next/router";
 import { deleteUser, signOut } from "firebase/auth";
 import { User } from "@/types/User";
 import { ReadUsers } from "@/lib/firebase/auth/AuthOperations";
+
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -77,7 +80,11 @@ export default function NavBar(props : any) {
 
 
   const HandleChange = () => {
-    router.push('auth/changePass')
+    router.push('/auth/changePass')
+  }
+  
+  const HandleProfilePicture = () => {
+    router.push('/auth/profilePicture')
   }
  
   const HandleSignOut = async (e : any) => {
@@ -170,6 +177,13 @@ export default function NavBar(props : any) {
                   onClick={HandleChange}
                   >
                     Change Password
+                  </Menu.Item>
+                  <Menu.Item
+                  icon={<IconAddressBook size="14"
+                  stroke={1.5}
+                  />}
+                  onClick={HandleProfilePicture}>
+                    Profile Picture
                   </Menu.Item>
                   <Menu.Item 
                   icon={<IconLogout size="14" stroke={1.5} />}
