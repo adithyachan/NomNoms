@@ -144,6 +144,7 @@ export default function TablePrefSidebar(props: {data: any[], setPrefs: (cuisine
     rand={randSearch}
     setRand={setRandSearch}></SearchBar>
     <PriceSlider 
+    data={ac ?? []} 
     setPrice={setPrice} 
     reset={resPrice} 
     setReset={setResPrice}

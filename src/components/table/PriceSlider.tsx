@@ -16,7 +16,7 @@ const MARKS = [
   { value: 99, label: '$$$$' },
 ];
 
-export default function PriceSlider(props : { setPrice : any, reset : any, setReset : any, rand : any, setRand : any} ) {
+export default function PriceSlider(props : { data : string [], setPrice : any, reset : any, setReset : any, rand : any, setRand : any} ) {
   const theme = useMantineTheme();
   const [checked, setChecked] = useState(false);
   const [valueMin, setValueMin] = useState(0);
@@ -24,7 +24,7 @@ export default function PriceSlider(props : { setPrice : any, reset : any, setRe
   const [sliderVal, setSliderVal] = useState(99);
 
   useEffect(() => {
-    if (props.rand) {
+    if (props.rand && props.data.length != 0) {
       console.log("hello")
       if (!checked) {
         const max = 3;

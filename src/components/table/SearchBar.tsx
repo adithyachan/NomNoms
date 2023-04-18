@@ -18,7 +18,7 @@ export default function SearchBar(props : { setCuisine : any ,
       setValue([])  
       props.setReset(false)
     }
-    if (props.rand) {
+    if (props.rand && props.data.length != 0) {
       console.log("hello")
       const max = props.data.length;
       const min= 0

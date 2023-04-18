@@ -1,4 +1,4 @@
-import { Flex, Text, Button, Tooltip, TextInput } from "@mantine/core";
+import { Flex, Text, Button, Tooltip, TextInput, Group } from "@mantine/core";
 import PriceSlider from "../PriceSlider";
 import SearchBar from "../SearchBar";
 import { useState, useEffect } from "react";
@@ -21,6 +21,11 @@ export default function TablePrefSidebarIndiv(props: {data: any[], setPrefs: (zi
     const [zip, setZip] = useInputState('');
     const [openedZip, inputHandlersZip] = useDisclosure();
     const zip_check = zip.length == 5 && !Number.isNaN(zip)
+
+    const [resSearch, setResSearch] = useState(false)
+    const [resPrice, setResPrice] = useState(false)
+    const [randSearch, setRandSearch] = useState(false)
+    const [randPrice, setRandPrice] = useState(false)
 
     const HandleSearch = async (e : any) => {
         e.preventDefault();
@@ -83,6 +88,17 @@ export default function TablePrefSidebarIndiv(props: {data: any[], setPrefs: (zi
         console.log("ERROR: " + error)
     }
 
+
+  const HandleReset = (e : any) => {
+    setResSearch(true)
+    setResPrice(true)
+  }
+
+  const HandleRandomize = (e :any) => {
+    setRandSearch(true)
+    setRandPrice(true)
+  }
+
     useEffect(() => {
         let cuisines: any = {}
         let strings: string[] = []
@@ -136,8 +152,20 @@ return (
                     onChange={setZip}
                 />
                 </Tooltip>
-                <SearchBar setCuisine={setCuisine} data={ac ?? []}></SearchBar>
-                <PriceSlider setPrice={setPrice}></PriceSlider>  
+                <SearchBar     
+    setCuisine={setCuisine} 
+    data={ac ?? []} 
+    reset={resSearch} 
+    setReset={setResSearch} 
+    rand={randSearch}
+    setRand={setRandSearch}></SearchBar>
+                <PriceSlider  
+                data={ac ?? []}    
+    setPrice={setPrice} 
+    reset={resPrice} 
+    setReset={setResPrice}
+    rand={randPrice}
+    setRand={setRandPrice}></PriceSlider>  
                 {error ? <Text color="red"> Invalid Inputs</Text> : null} 
                 <Button 
                     className="mt-20"
@@ -147,6 +175,25 @@ return (
                 >
                 Search!
             </Button>
+            <Group 
+    position="center" 
+    spacing="sm"
+    grow> 
+    <Button 
+      color="red" 
+      radius="md" 
+      onClick={HandleReset}
+    >
+      Reset.
+    </Button>
+    <Button 
+      color="red" 
+      radius="md" 
+      onClick={HandleRandomize}
+    >
+      Randomize.
+    </Button> 
+    </Group>
             </Flex>
         </form>
     </>
