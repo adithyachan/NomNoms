@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import BestCard from "@/components/table/tableSelected/ShowingBestCard";
 import { useUser } from "@/providers/AuthProvider";
 import { useToggle } from "@mantine/hooks";
+import { Timestamp } from "firebase/firestore";
 
 const numFetch = 50;
 const limit = 5;
@@ -185,6 +186,27 @@ export default function TableSelectedLayout(props: {table: Table}) {
       getRestaurantFirstTime()
     }
   }, [])
+  
+  function addOrdinalSuffix(dateString: string) {
+    const dateParts = dateString.split(" ");
+    const day = parseInt(dateParts[0]);
+    const month = dateParts[1];
+    const year = parseInt(dateParts[2]);
+    
+    let suffix = "th";
+    if (day === 1 || day === 21 || day === 31) {
+      suffix = "st";
+    } else if (day === 2 || day === 22) {
+      suffix = "nd";
+    } else if (day === 3 || day === 23) {
+      suffix = "rd";
+    }
+    
+    return day + suffix + " " + month + " " + year;
+  }
+  
+  
+
   return (
     <>
     <NotificationsProvider>
@@ -198,6 +220,16 @@ export default function TableSelectedLayout(props: {table: Table}) {
         <Grid>
           <Grid.Col span="auto">
             <TablePrefSidebar data={data} setPrefs={getRestaurantWithPrefs}/>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+            <Title className="mb-1 mt-4 ml-2 text-center text-xl font-black" variant="gradient" gradient={{ from: "red.7", to: "red.4" }} order={2}>
+  {"Event Date: " + addOrdinalSuffix(props.table.date)}
+</Title>
+<Title className="mb-3 ml-2 text-center text-xl font-black" variant="gradient" gradient={{ from: "red.7", to: "red.4" }} order={2}>
+  {"Event Description: " + props.table.description}
+</Title>
+
+</div>
+
           </Grid.Col>
           <Grid.Col span={5}>
             {loading ? <LoadingLayout /> : 
