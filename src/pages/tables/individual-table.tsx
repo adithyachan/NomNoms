@@ -89,21 +89,7 @@ export default function TablePage(props: any) {
           });
         } 
       }
-      /*
-      if (cuisine) {
-        temp = temp.filter((item) => {
-          if (Array.isArray(item.categories)) {
-            // Use Array.some() instead of findIndex()
-            return item.categories.some((i: any) => {
-              // Return true if title matches cuisine
-              return i.title === cuisine;
-            });
-          } else {
-            return item.categories.title === cuisine;
-          }
-        });
-      }
-      */
+
       if (price) {
         temp = temp.filter((item) => {
           const itemPrice = priceMap[item.price as "$" | "$$" | "$$$" | "$$$$"]

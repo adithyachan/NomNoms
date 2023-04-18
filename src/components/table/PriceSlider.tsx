@@ -1,12 +1,11 @@
 import { Slider, 
          Switch,
-         Group,
          useMantineTheme,
          Grid,
-         TextInput, 
          NumberInput
         } from '@mantine/core';
-import { IconSun, IconMoonStars, IconAdjustmentsHorizontal, IconCursorText } from '@tabler/icons-react';
+import { Marks } from '@mantine/core/lib/Slider/Marks/Marks';
+import { IconAdjustmentsHorizontal, IconCursorText } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 
 // Configure marks to match step
@@ -17,7 +16,7 @@ const MARKS = [
   { value: 99, label: '$$$$' },
 ];
 
-export default function PriceSlider(props : { setPrice : any } ) {
+export default function PriceSlider(props : { data : string [], setPrice : any, reset : any, setReset : any, rand : any, setRand : any} ) {
   const theme = useMantineTheme();
   const [checked, setChecked] = useState(false);
   const [valueMin, setValueMin] = useState(0);
@@ -25,7 +24,39 @@ export default function PriceSlider(props : { setPrice : any } ) {
   const [sliderVal, setSliderVal] = useState(99);
 
   useEffect(() => {
-    console.log("checked: " + checked)
+    if (props.rand && props.data.length != 0) {
+      console.log("hello")
+      if (!checked) {
+        const max = 3;
+        const min= 0
+        const res = Math.floor(Math.random()*(max - min) + min)
+        setSliderVal(MARKS[res].value)
+      } else {
+        const max = 200;
+        const min = 0
+        let minPrice = Math.floor(Math.random()*(max - min) + min)
+        let maxPrice = Math.floor(Math.random()*(max - min) + min)
+        if (maxPrice < minPrice) {
+          let temp = minPrice
+          minPrice = maxPrice
+          maxPrice = temp;
+        }
+        minPrice = Math.trunc((minPrice / 10)) * 10;
+        maxPrice = Math.trunc((maxPrice / 10)) * 10;
+        setValueMin(minPrice)
+        setValueMax(maxPrice)
+      }
+      props.setRand(false)
+    }
+    if (props.reset) {
+      if (!checked) {
+        setSliderVal(99)
+      } else {
+        setValueMin(0)
+        setValueMax(0)
+      }
+      props.setReset(false)
+    }
     if (!checked) {
       console.log("hello" + sliderVal)
       props.setPrice({
@@ -46,7 +77,7 @@ export default function PriceSlider(props : { setPrice : any } ) {
       })
       setSliderVal(99)
     }
-  }, [sliderVal, valueMin, valueMax]);
+  }, [sliderVal, valueMin, valueMax, props.reset, props.rand]);
 
 
   return (
