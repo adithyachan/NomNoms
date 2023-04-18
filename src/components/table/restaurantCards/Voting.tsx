@@ -12,6 +12,12 @@ export default function Voting({zip, prefs, votes, setVotes, table}: any) {
   const { user } = useUser()
   const { data: listData, error: listError, isLoading: listIsLoading } = useRestaurantListEndpoint(10, zip, 3200, prefs);
   const router = useRouter()
+
+  if (user?.uid && table !== undefined) {
+    if (Object.keys(table.users[user.uid]).length !== 0) {
+      router.push(`/tables/${router.query.tableid}/results`);
+    }
+  }
   useEffect(() => {
     if (state === 'complete') {
       const uid = user?.uid;
