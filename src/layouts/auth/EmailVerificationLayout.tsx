@@ -8,6 +8,9 @@ export default function EmailVerificationLayout() {
     const auth = useFirebaseAuth();
 
     useEffect(() => {
+      if (!auth.currentUser) {
+        router.push('/')
+      } else {
         const interval = setInterval(() => {
             auth.currentUser?.reload()
             .then(() => {
@@ -22,12 +25,17 @@ export default function EmailVerificationLayout() {
               alert(err.message)
             })
           }, 1000)
+      }
     }, [auth.currentUser])
 
 
     return (
         <>
+        {auth.currentUser ?
             <LoadingLayout fullscreen = {true} logo = {true} verification={true}/>
+            :
+            <></>
+        }
         </>
     );
 }

@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from 'react';
 import { Text, Image, Flex, Center} from '@mantine/core'
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
+import { applyActionCode } from "firebase/auth";
 
 export default function EmailVerifiedLayout() {
     const oobCode = useRef<null | string>(null);
@@ -11,7 +12,6 @@ export default function EmailVerifiedLayout() {
     const [first, setFirst] = useState(true)
     
     useEffect(() => {
-      /*
       if (first) {
         const queryParams = new URLSearchParams(window.location.search)
         oobCode.current = queryParams.get("oobCode");
@@ -27,7 +27,6 @@ export default function EmailVerifiedLayout() {
         }
         setFirst(false)
       }
-      */
     })
 
 
@@ -36,6 +35,7 @@ export default function EmailVerifiedLayout() {
         {error ?
         <></>
         :
+        <Center className="min-h-screen">
             <Flex 
             justify="center"
               align="center"
@@ -52,7 +52,8 @@ export default function EmailVerifiedLayout() {
         className="mb-10 text-mb tracking-normal leading-normal font-black text-rose-600" >
           You may now sign into your account.
         </Text>
-        </Flex> 
+        </Flex>
+        </Center> 
         }
         </div>
     );
