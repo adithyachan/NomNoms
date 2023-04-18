@@ -13,7 +13,7 @@ export default function TablePage() {
 
   useEffect(() => {
     if (auth.currentUser) {
-      if (!auth.currentUser.emailVerified) {
+      if (!auth.currentUser.emailVerified && !auth.currentUser.isAnonymous) {
         console.log("Hi")
         router.push("/auth/verification")
       } else {
