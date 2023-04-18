@@ -7,10 +7,10 @@ import { useRouter } from "next/router";
 import { ReadTable, UpdateTable } from "@/lib/firebase/table/TableOperations";
 import { useUser } from "@/providers/AuthProvider";
 
-export default function Voting({zip, prefs, votes, setVotes, table}: any) {
+export default function Voting({zip, prefs, votes, setVotes, table, price}: any) {
   const [state, setState] = useState('stack'); // can be stack, favorite, done
   const { user } = useUser()
-  const { data: listData, error: listError, isLoading: listIsLoading } = useRestaurantListEndpoint(10, zip, 3200, prefs);
+  const { data: listData, error: listError, isLoading: listIsLoading } = useRestaurantListEndpoint(10, zip, 3200, prefs, price);
   const router = useRouter()
 
   if (user?.uid && table !== undefined) {
