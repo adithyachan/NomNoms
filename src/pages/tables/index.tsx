@@ -15,6 +15,15 @@ export default function TablePage() {
     if (!user) {
       router.push("/");
     }
+    else if (user.user == "loading") {
+      return
+    }
+    else if (!(user?.isAnonymous) && (user?.providerData[0].providerId == "password") && !user?.emailVerified) {
+      router.push("/auth/verification")
+    }
+    else {
+      setLoading(false)
+    }
   }, [user, router])
 
 

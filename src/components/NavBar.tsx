@@ -160,7 +160,7 @@ export default function NavBar(props : any) {
                     className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
                   >
                     <Group spacing={7}>
-                      <Avatar alt={user?.email!} radius="xl" size={20} />
+                      <Avatar alt={user?.email!} radius="xl" size="md" src={user.photoURL}/>
                       <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
                         {userName!}
                       </Text>

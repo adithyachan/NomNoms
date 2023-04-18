@@ -45,10 +45,16 @@ export default function TablePage() {
   }
 
   useEffect(() => {
-    console.log(user)
-    if (user?.uid != "loading" && !user) {
-      router.push("/")
+    if (!user) {
+      router.push("/");
     }
+    else if (user.user == "loading") {
+      return
+    }
+    else if (!(user?.isAnonymous) && (user?.providerData[0].providerId == "password") && !user?.emailVerified) {
+      router.push("/auth/verification")
+    }
+
     if (!tables) {
       ReadTables(setTables)
     }

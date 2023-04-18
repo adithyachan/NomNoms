@@ -1,8 +1,3 @@
-import { IUser, User } from "@/types/User";
-import Compressor from 'compressorjs';
-
-
-
 /* TODO: Layout for Reset Password Page */
 import {
     createStyles,
@@ -70,9 +65,8 @@ import { useUser } from "@/providers/AuthProvider";
     useEffect(() => {
       if (!avatarURL) {
         setAvatarURL(user?.photoURL!)
-        console.log(user?.photoURL)
       }
-    }, [user?.photoURL])
+    }, [user])
     
     const handleFileInputChange = (file: File | null) => {
         if (file != null) {
@@ -101,11 +95,11 @@ import { useUser } from "@/providers/AuthProvider";
     const handleUploadButtonClick = async () => {
       setOpen(false);
       //setAvatarPicture(<Avatar radius="xl" size="xl" src={imageResult as string} />)
-      await updateProfile(user!, {
+      await updateProfile(user, {
         photoURL: imageResult as string
       })
 
-      setAvatarURL(user?.photoURL!)
+      setAvatarURL(imageResult as string)
     }
 
    const handleRemovePhoto = async () => {
@@ -179,10 +173,10 @@ import { useUser } from "@/providers/AuthProvider";
                 Change Your Profile Picture
             </Title>
 
-            <div>
+            {/* <div>
             
               <img src={user?.photoURL as string} />
-            </div>
+            </div> */}
             
             <Text color="dimmed" size="sm" align="center">
               Want to change your profile picture? Select a preset icon or upload your own photo!
