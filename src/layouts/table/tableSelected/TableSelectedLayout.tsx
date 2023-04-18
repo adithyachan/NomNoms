@@ -129,10 +129,12 @@ export default function TableSelectedLayout(props: {table: Table}) {
     */
 
     if (cuisine) {
-      temp = temp.filter(item => {
-        const categories = item.categories.map((i: any) => i.title);
-        return cuisine.some(c => categories.includes(c));
-      });
+      if (cuisine.length != 0) {
+        temp = temp.filter(item => {
+          const categories = item.categories.map((i: any) => i.title);
+          return cuisine.some(c => categories.includes(c));
+        });
+      }
     }
 
     console.log("CUISINE: " + cuisine)
