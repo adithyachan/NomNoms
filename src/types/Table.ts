@@ -13,6 +13,8 @@ export interface ITable {
   leader: string,
   prefs: {
     zip: string,
+    cuisine: string,
+    price: string,
   },
   expiration: Timestamp,
   description: string,
@@ -33,6 +35,8 @@ export class Table implements ITable {
   leader: string;
   prefs: {
     zip: string;
+    cuisine: string;
+    price: string;
   };
   expiration: Timestamp;
   numDoneVoting: number;
