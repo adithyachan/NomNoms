@@ -60,7 +60,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
 
   const VoteButton = () => {
     const { user } = useUser()
-    const uid = user.uid
+    const uid = user?.uid
     // user has completed voting
     if (Object.keys(props.table.users).includes(uid!) && Object.keys(props.table.users[uid!]).length !== 0) {
       return (

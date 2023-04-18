@@ -12,15 +12,8 @@ export default function TablePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (auth.currentUser) {
-      if (!auth.currentUser.emailVerified && !auth.currentUser.isAnonymous) {
-        console.log("Hi")
-        router.push("/auth/verification")
-      } else {
-        setLoading(false)
-      }
-    } else {
-        router.push("/");
+    if (!user) {
+      router.push("/");
     }
   }, [user, router])
 

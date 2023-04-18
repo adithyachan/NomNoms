@@ -29,7 +29,7 @@ export default function TablePage() {
       table.lastAccessed = Timestamp.fromDate((new Date()))
       table.expiration = Timestamp.fromDate(new Date(table.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
       // if (!table.users.includes(user.uid!)) {
-      if (! Object.keys(table.users).includes(user.uid!)) {
+      if (! Object.keys(table.users).includes(user?.uid!)) {
         showNotification({
           title: `You're in!`,
           message: `Successfully joined table: ${table.name}`,
@@ -38,14 +38,15 @@ export default function TablePage() {
           icon: <IconCheck size={16} />,           
         })
         // table.users.push(user.uid!)
-        table.users[user.uid!] = {};
+        table.users[user?.uid!] = {};
       }
       await UpdateTable(table as ITable)
     } 
   }
 
   useEffect(() => {
-    if (!user.uid && !user.loading) {
+    console.log(user)
+    if (user?.uid != "loading" && !user) {
       router.push("/")
     }
     if (!tables) {
@@ -56,7 +57,7 @@ export default function TablePage() {
         if (!table) {
           ReadTable(tableid as string, setTable)
         }
-        else if (table.banned && table.banned.includes(user.uid!)) {
+        else if (table.banned && table.banned.includes(user?.uid!)) {
           router.push("/tables/tablenotfound")
         }
         else if (((new Date()).getTime() - table.lastAccessed.toDate().getTime()) / 1000 > 2) {

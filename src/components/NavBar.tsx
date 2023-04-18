@@ -76,7 +76,7 @@ export default function NavBar(props : any) {
     return unsub
   }, [])
 
-  const userName = users?.find((item) => item.uid == user.uid)?.username!
+  const userName = users?.find((item) => item.uid == user?.uid)?.username!
 
 
   const HandleChange = () => {
@@ -160,7 +160,7 @@ export default function NavBar(props : any) {
                     className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
                   >
                     <Group spacing={7}>
-                      <Avatar alt={user.email!} radius="xl" size={20} />
+                      <Avatar alt={user?.email!} radius="xl" size={20} />
                       <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
                         {userName!}
                       </Text>
@@ -170,6 +170,11 @@ export default function NavBar(props : any) {
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Settings</Menu.Label>
+                  <Menu.Item
+                  
+                  >
+                    Your Tables
+                  </Menu.Item>
                   <Menu.Item 
                   icon={<IconSwitchHorizontal size="14" 
                   stroke={1.5} 

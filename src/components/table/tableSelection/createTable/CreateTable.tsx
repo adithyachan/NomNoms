@@ -43,7 +43,7 @@ export default function CreateTable() {
       name: value,
       lastAccessed: Timestamp.fromDate(new Date()),
       users: {},
-      leader: user.uid!,
+      leader: user?.uid!,
       banned: [],
       prefs: {
         zip: zip,
@@ -56,7 +56,7 @@ export default function CreateTable() {
       date: date,
       prefsDone: [],
     }
-    tableJSON.users[user.uid!] = {}
+    tableJSON.users[user?.uid!] = {}
     const table = new Table(tableJSON)
     
     try {

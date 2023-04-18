@@ -47,7 +47,7 @@ const copy = (link: string) => (
            : 
            <ScrollArea type="hover" className="h-60" scrollbarSize={0}>
                 <Grid columns={24} className="m-1 w-full">
-                  {tables?.filter((table) => Object.keys(table.users).includes(user.uid!)).map(
+                  {tables?.filter((table) => Object.keys(table.users).includes(user?.uid!)).map(
                     (table) =>
                     <Grid.Col key={table.id} span={12}>
                       <TableCard table={table} id={table.id} />

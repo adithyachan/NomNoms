@@ -90,7 +90,7 @@ export default function CreateAccount (props: PaperProps) {
       // Signed in 
       const user = userCredential.user;
       const UID = user?.uid;
-      WriteUser({username: username, email: form.values.email, uid: UID, tables: []} as IUser)
+      WriteUser({username: username, email: form.values.email, uid: UID, tables: [], profilePicture:""} as IUser)
       resetForm();
       console.log("VERIFIED (create account): " + auth.currentUser?.emailVerified)
       sendEmailVerification(user).then(() => {
