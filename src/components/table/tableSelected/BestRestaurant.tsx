@@ -62,7 +62,7 @@ export default function RestaurantBest(props : {data : any}) {
                         }}>
                         {nameRestaurant+ " "}
                             <span className="text-red-500">
-                                ({pricePoint ?? "?"})
+                                {pricePoint ?? ""}
                             </span> 
                         </Text>
                     </div>

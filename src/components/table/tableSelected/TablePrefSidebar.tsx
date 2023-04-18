@@ -1,6 +1,8 @@
 import { Flex,
          Text, 
-         Button
+         Button,
+         Grid,
+         Group
         } from "@mantine/core";
 import PriceSlider from "../PriceSlider";
 import SearchBar from "../SearchBar";
@@ -21,6 +23,10 @@ export default function TablePrefSidebar(props: {data: any[], setPrefs: (cuisine
   const [ac, setAC] = useState<string[]>()
   const [cuisine, setCuisine] = useState<string []>([]);
   const [error, setError] = useState(false);
+  const [resSearch, setResSearch] = useState(false)
+  const [resPrice, setResPrice] = useState(false)
+  const [randSearch, setRandSearch] = useState(false)
+  const [randPrice, setRandPrice] = useState(false)
 
   const HandleSearch = async (e : any) => {
     e.preventDefault();
@@ -112,6 +118,15 @@ export default function TablePrefSidebar(props: {data: any[], setPrefs: (cuisine
     setAC(strings)
   }, [props.data])
 
+  const HandleReset = (e : any) => {
+    setResSearch(true)
+    setResPrice(true)
+  }
+
+  const HandleRandomize = (e :any) => {
+    setRandSearch(true)
+    setRandPrice(true)
+  }
 
 
   return (
@@ -121,8 +136,19 @@ export default function TablePrefSidebar(props: {data: any[], setPrefs: (cuisine
     gap="xl"
     className="bg-white p-10 rounded-3xl shadow-lg shadow-rose-100 flex-col justify-center">
     <Text className="mb-10 text-5xl text-center font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Your Preferences</Text>
-    <SearchBar setCuisine={setCuisine} data={ac ?? []}></SearchBar>
-    <PriceSlider setPrice={setPrice}></PriceSlider>  
+    <SearchBar 
+    setCuisine={setCuisine} 
+    data={ac ?? []} 
+    reset={resSearch} 
+    setReset={setResSearch} 
+    rand={randSearch}
+    setRand={setRandSearch}></SearchBar>
+    <PriceSlider 
+    setPrice={setPrice} 
+    reset={resPrice} 
+    setReset={setResPrice}
+    rand={randPrice}
+    setRand={setRandPrice}></PriceSlider>  
      {error ? <Text color="red"> Invalid Inputs</Text> : null} 
     <Button 
       className="mt-20"
@@ -132,6 +158,26 @@ export default function TablePrefSidebar(props: {data: any[], setPrefs: (cuisine
     >
       Search!
     </Button>
+
+    <Group 
+    position="center" 
+    spacing="sm"
+    grow> 
+    <Button 
+      color="red" 
+      radius="md" 
+      onClick={HandleReset}
+    >
+      Reset.
+    </Button>
+    <Button 
+      color="red" 
+      radius="md" 
+      onClick={HandleRandomize}
+    >
+      Randomize.
+    </Button> 
+    </Group>
     </Flex>
     </form>
     </>
