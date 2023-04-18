@@ -15,6 +15,8 @@ export interface ITable {
     zip: string,
   },
   expiration: Timestamp,
+  description: string,
+  date: Date,
   numDoneVoting: number;
 }
 
@@ -34,6 +36,8 @@ export class Table implements ITable {
   };
   expiration: Timestamp;
   numDoneVoting: number;
+  description: string;
+  date: Date;
 
   constructor(json: ITable) {
       this.id = json.id;
@@ -45,6 +49,8 @@ export class Table implements ITable {
       this.prefs = json.prefs;
       this.expiration = (new Timestamp(json.expiration.seconds, json.expiration.nanoseconds));
       this.numDoneVoting = json.numDoneVoting;
+      this.description = json.description;
+      this.date = json.date;
   };
 }
 
