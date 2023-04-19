@@ -310,8 +310,9 @@ const [value, setSelectedValue] = useState<string |null>('');
  
   function VetoSkip() {
     return (
-      <NavLink onClick={() => handleVetoClick()} active={true} variant="subtle" color="red" label="Set as Favorite and skip voting" rightSection={<IconChevronRight size="0.8rem" stroke={1.5}/>} />
-    ) 
+   //   <NavLink onClick={() => handleVetoClick()} active={true} variant="subtle" color="red" label="Set as Favorite and skip voting" rightSection={<IconChevronRight size="0.8rem" stroke={1.5}/>} />
+   <Button size="md" onClick={handleVetoClick} variant='light' radius='xl' color="pink" > Set as Favorite and skip voting!</Button>
+   ) 
   }
 
   function Skip() {

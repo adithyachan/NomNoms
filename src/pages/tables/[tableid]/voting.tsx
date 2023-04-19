@@ -3,6 +3,8 @@ import { useRouter } from "next/router"
 import { useState, useEffect } from "react"
 import { ReadTable } from "@/lib/firebase/table/TableOperations"
 import Voting from "@/components/table/restaurantCards/Voting"
+import NavBar from "@/components/NavBar"
+import { Container, Grid } from "@mantine/core"
 
 export default function RestaurantVoting() {
   const router = useRouter()
@@ -18,6 +20,10 @@ export default function RestaurantVoting() {
 
   return (
     <>
+    <NavBar>
+      
+    </NavBar>
+ 
       {table ? (
         <Voting
           zip={table.prefs.zip}

@@ -142,6 +142,8 @@ export default function NavBar(props : any) {
             width={200} 
             src="/images/full_logo.png" 
             alt="Main NomNoms Logo" 
+            onClick={HandleYourTables}
+            style={{ cursor: 'pointer' }}
             className="w-fit"
             />
             <Group className='space-x-3'>
@@ -192,10 +194,6 @@ export default function NavBar(props : any) {
                     Profile Picture
                   </Menu.Item>
                   <Menu.Item 
-                  icon={<IconLogout size="14" stroke={1.5} />}
-                  onClick={HandleSignOut}
-                  >Logout</Menu.Item>
-                    <Menu.Item 
                   icon={<IconSwitchHorizontal size="14" 
                   stroke={1.5} 
                   />}
@@ -203,6 +201,11 @@ export default function NavBar(props : any) {
                   >
                     Change Password
                   </Menu.Item>
+                  <Menu.Item 
+                  icon={<IconLogout size="14" stroke={1.5} />}
+                  onClick={HandleSignOut}
+                  >Logout</Menu.Item>
+                 
                   <Menu.Divider />
                   <Menu.Label>Danger zone</Menu.Label>
                   <Menu.Item 

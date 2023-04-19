@@ -3,6 +3,7 @@ import CreateJoinTableLayout from "./CreateJoinTableLayout";
 import UserTablesLayout from "./UserTablesLayout";
 import NavBar from "@/components/NavBar";
 import { NotificationsProvider } from "@mantine/notifications";
+import ProfilePictureLayout from "@/layouts/auth/ProfilePictureLayout";
 
 export default function TableSelectionLayout() {
   return (

@@ -10,6 +10,7 @@ import { useUser } from "@/providers/AuthProvider";
 import { DatePicker } from "@mantine/dates";
 
 
+
 const special_chars = /[ `!@#$%^&*()+_\-=\[\]{};':"\\|,.<>\/?]/
 
 export default function CreateTable() {
@@ -148,8 +149,10 @@ export default function CreateTable() {
 
       </Container>
 
-      <Button className="align-center" color="red" disabled={!valid} onClick={handleTableCreation}>Create</Button>
 
+      <Center>
+      <Button className="align-center" color="red" disabled={!valid} onClick={handleTableCreation}>Create</Button>
+      </Center>
     </>
   )
 }
