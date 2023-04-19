@@ -68,7 +68,7 @@ import { useUser } from "@/providers/AuthProvider";
       }
     }, [user])
     
-    const handleFileInputChange = (file: File | null) => {
+    const handleFileInputChange = async (file: File | null) => {
         if (file != null) {
           const reader = new FileReader();
           reader.onloadend = async () => {
@@ -82,10 +82,13 @@ import { useUser } from "@/providers/AuthProvider";
               if (user == undefined) {
                return
               }
+
+              console.log("Ive gotten here")
               const storage = getStorage();
               const storageRef = ref(storage, `profilePictures/${user.uid}`);
               await uploadString(storageRef, result as string, "data_url");
               setImageResult(await getDownloadURL(storageRef))
+              console.log("setting image result")
             }
           };
           reader.readAsDataURL(file);
@@ -98,19 +101,19 @@ import { useUser } from "@/providers/AuthProvider";
       await updateProfile(user, {
         photoURL: imageResult as string
       })
-
+      console.log("upload picture")
       setAvatarURL(imageResult as string)
     }
 
    const handleRemovePhoto = async () => {
     setOpen(false)
     setAvatarURL("")
-    // const storage = getStorage();
-    // if (user == undefined) {
-    //   return
-    //  }
-    // const pictureRef = ref(storage,  `profilePictures/${user.uid}`);
-    // await deleteObject(pictureRef);
+    const storage = getStorage();
+    if (user == undefined) {
+      return
+     }
+    const pictureRef = ref(storage,  `profilePictures/${user.uid}`);
+    await deleteObject(pictureRef);
    }
 
    return (
@@ -139,23 +142,23 @@ import { useUser } from "@/providers/AuthProvider";
         <Text color="red">Please select an image file</Text>
       )}
       
-      {selectedFile && isImage && (< Group style ={{padding:'xl'}}>
-
+      < Group style ={{padding:'xl'}}>
+      {selectedFile && isImage && (
         <Button
           variant="outline"
           onClick={handleUploadButtonClick}
         >
           Upload
-        </Button> 
-        
-         <Button
+        </Button>) }
+      {
+        avatarURL!= "" &&
+      <Button
          variant="outline" 
          onClick={handleRemovePhoto}
        >
          Remove Photo
-       </Button>
-       </Group>
-      )}
+       </Button> }
+      </Group>
 
       
      
