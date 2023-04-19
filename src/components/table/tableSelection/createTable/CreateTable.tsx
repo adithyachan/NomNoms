@@ -218,27 +218,6 @@ export default function CreateTable() {
           icon={<IconClock size={16} />}
         />
 
-<DatePicker
-        mt="md"
-        value={date}
-        onChange={setDate}
-        //label="Pick a date"
-        placeholder="Pick a date"
-        id="my-date-picker"
-        name="my-date-picker"
-        //description="Select a date"
-        //variant="filled"
-      />
-
-<TimeInput 
-        //label="Pick time" 
-        mt="md"
-        format="12" 
-        defaultValue={new Date()} 
-        value={time}
-        onChange={setTime}
-        />
-
 
       </Container>
 <Center>
