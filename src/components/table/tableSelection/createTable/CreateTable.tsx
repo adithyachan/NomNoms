@@ -8,6 +8,7 @@ import { Timestamp } from "firebase/firestore"
 import CodeModal from "./CodeModal";
 import { useUser } from "@/providers/AuthProvider";
 import { DatePicker, TimeInput } from "@mantine/dates";
+import { IconCalendar, IconClock } from "@tabler/icons-react";
 
 import { getRestaurantList } from "@/lib/utils/yelpAPI";
 import { showNotification, NotificationsProvider } from "@mantine/notifications";
@@ -185,36 +186,38 @@ export default function CreateTable() {
             onChange={setZip}
           />
         </Tooltip>
-
+        
         <TextInput
-            placeholder="Table Description"
-            onFocus={() => inputHandlersDesc.open()}
-            onBlur={() => inputHandlersDesc.close()}
-            mt="md"
-            value={desc}
-            onChange={setDesc}
-          />
-
-<DatePicker
-        mt="md"
-        value={date}
-        onChange={setDate}
-        //label="Pick a date"
-        placeholder="Pick a date"
-        id="my-date-picker"
-        name="my-date-picker"
-        //description="Select a date"
-        //variant="filled"
-      />
-
-<TimeInput 
-        //label="Pick time" 
-        mt="md"
-        format="12" 
-        defaultValue={new Date()} 
-        value={time}
-        onChange={setTime}
+          placeholder="Event Description"
+          onFocus={() => inputHandlersDesc.open()}
+          onBlur={() => inputHandlersDesc.close()}
+          mt="md"
+          value={desc}
+          onChange={setDesc}
+          
         />
+       
+        <DatePicker
+          mt="md"
+          value={date}
+          onChange={setDate}
+          placeholder="Pick a date"
+          id="my-date-picker"
+          name="my-date-picker"
+          minDate={new Date()}
+          icon={<IconCalendar size={16} />}
+          clearable={false}
+        />
+
+        <TimeInput 
+          mt="md"
+          format="12" 
+          defaultValue={new Date()} 
+          value={time}
+          onChange={setTime}
+          icon={<IconClock size={16} />}
+        />
+
 
 
       </Container>

@@ -120,6 +120,27 @@ const [value, setSelectedValue] = useState<string |null>('');
   //     setCanFinish(true);
   // }, [index])
 
+  function handleRandomFinishClick() {
+
+  //   const keys = Object.keys(votes);
+  // const randomKey = keys[Math.floor(Math.random() * keys.length)];
+
+  Object.keys(votes).forEach(key => {
+    if (votes[key] == 0 || votes[key] == 1) {
+      delete votes[key]
+    }
+  })
+  let votes2 = votes
+  votes2[ids1[Math.floor(Math.random()*ids1.length)]] = 1
+  setVotes(votes2)
+  // console.log(votes)
+  setUserVotes(votes)
+  setState('favorite')
+    
+
+    // setUserVotes(votes)
+    // TODO: redirect to waiting for other nomsters to finish their votes page
+  }
   
   function handleYesClick() {
     if (index < cards.length - 1) {
@@ -326,6 +347,18 @@ const [value, setSelectedValue] = useState<string |null>('');
     }
   }
 
+  function Random() {
+    if (canSkip) {
+      return (
+        <NavLink onClick={() => handleRandomFinishClick()} active={true} variant="subtle" color="red" label="Choose a random option" rightSection={<IconChevronRight size="0.8rem" stroke={1.5}/>} />
+      )
+    } else {
+      return (
+        <></>
+      )
+    }
+  }
+
   if (ids1 == undefined || ids1.length == 0) return (<Text size="md" color="dimmed">Card stack is empty!</Text> )
 
   else{
@@ -349,6 +382,7 @@ const [value, setSelectedValue] = useState<string |null>('');
               </div>
             <VetoSkip />
             <Skip />
+            <Random/>
           </div>
         </div>
       </>

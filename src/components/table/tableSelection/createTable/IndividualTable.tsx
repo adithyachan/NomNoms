@@ -46,7 +46,7 @@ export default function CreateTable() {
       },
       expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
       numDoneVoting: 0,
-      date: new Date(),
+      date: Timestamp.fromDate(new Date()),
       description: "",
       prefsDone: [],
       restaurantList: []
