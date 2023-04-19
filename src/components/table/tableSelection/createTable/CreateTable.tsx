@@ -7,7 +7,7 @@ import { WriteTable } from "@/lib/firebase/table/TableOperations"
 import { Timestamp } from "firebase/firestore"
 import CodeModal from "./CodeModal";
 import { useUser } from "@/providers/AuthProvider";
-import { DatePicker } from "@mantine/dates";
+import { DatePicker, TimeInput } from "@mantine/dates";
 
 
 const special_chars = /[ `!@#$%^&*()+_\-=\[\]{};':"\\|,.<>\/?]/
@@ -18,6 +18,7 @@ export default function CreateTable() {
   const [zip, setZip] = useInputState('');
   const [date, setDate] = useInputState(new Date());
   const [desc, setDesc] = useInputState('');
+  const [time, setTime] = useInputState(new Date());
 
   const [error, setError] = useState(null)
   const [openedName, inputHandlersName] = useDisclosure();
@@ -38,6 +39,8 @@ export default function CreateTable() {
   
 
   const handleTableCreation = async () => {
+    const dateTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes());
+    const timestamp = Timestamp.fromDate(dateTime);
     const tableJSON: ITable = {
       id: "",
       name: value,
@@ -53,7 +56,7 @@ export default function CreateTable() {
       expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
       numDoneVoting: 0,
       description: desc,
-      date: date,
+      date: timestamp,
       prefsDone: [],
     }
     tableJSON.users[user.uid!] = {}
@@ -126,29 +129,32 @@ export default function CreateTable() {
           />
 
 <DatePicker
+        mt="md"
         value={date}
         onChange={setDate}
-        label="Pick a date"
+        //label="Pick a date"
         placeholder="Pick a date"
         id="my-date-picker"
         name="my-date-picker"
-        description="Select a date"
-        variant="filled"
+        //description="Select a date"
+        //variant="filled"
       />
-  
 
-{/* <TextInput
-            placeholder="Pick date"
-            onFocus={() => inputHandlersDate.open()}
-            onBlur={() => inputHandlersDate.close()}
-            mt="md"
-            value={date}
-            onChange={setDate}
-          /> */}
+<TimeInput 
+        //label="Pick time" 
+        mt="md"
+        format="12" 
+        defaultValue={new Date()} 
+        value={time}
+        onChange={setTime}
+        />
+
 
       </Container>
-
-      <Button className="align-center" color="red" disabled={!valid} onClick={handleTableCreation}>Create</Button>
+<Center>
+  <Button  color="red" disabled={!valid} onClick={handleTableCreation}>Create</Button>
+</Center>
+      
 
     </>
   )
