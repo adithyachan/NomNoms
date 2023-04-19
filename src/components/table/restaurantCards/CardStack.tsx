@@ -7,6 +7,7 @@ import {List, Group, useMantineTheme } from '@mantine/core';
 import ReviewSort from "./SortReview";
 import SortByPrice from "./PriceSort";
 import SortByLex from "./LexSort";
+import SortByDist from "./DistSort";
 //import { MenuItem } from "@mantine/core/lib/Menu/MenuItem/MenuItem";
 type ComponentProps = {
   id: string;
@@ -22,10 +23,12 @@ const DynamicComponent = componentMap["myComponent"];
 export default function CardStack({listData,ids, setState, setUserVotes, user} : any) {
   var names = new Map()
   var prices = new Map()
+  var distances = new Map()
   var revinfo = new Map()
   var rating = 0
   var neededBusiness :any
   var price = ""
+  var dist = ""
   var name = ""
   const cards3  = new Map
   var review_count = 0
@@ -33,6 +36,7 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
     neededBusiness = listData.businesses[i]
     rating = neededBusiness.rating
     price = neededBusiness.price
+    dist = neededBusiness.distance
     name = neededBusiness.name
     review_count = neededBusiness.review_count
     if (review_count == undefined) {
@@ -44,8 +48,12 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
     if (rating == undefined) {
       rating = 0
     }
+    if (dist == undefined) {
+      rating = 0
+    }
     names.set(ids[i], name)
     prices.set(ids[i], price)
+    distances.set(ids[i], dist)
     revinfo.set(ids[i], [rating, review_count])
 
    cards3.set(ids[i], <DynamicComponent id = {ids[i]} />)
@@ -216,6 +224,11 @@ const [value, setSelectedValue] = useState<string |null>('');
       const f = SortByLex({hashm : names, ascending: ascending})
       setIds(f)
     }
+    else if (value == 'Dist') {
+      setFlag (true)
+      const f = SortByDist({hashm : distances, ascending: ascending})
+      setIds(f)
+    }
   }
 
   function SettingValue(value : string|null) {
@@ -233,6 +246,7 @@ const [value, setSelectedValue] = useState<string |null>('');
           { value: "Price", label: "Price" },
       { value: "Review Info", label: "Review Info" },
       { value: "Lex", label: "Lexicographically" },
+      { value: "Dist", label: "Distance" }
         ]}
       />
   
