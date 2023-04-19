@@ -21,7 +21,8 @@ import {
   IconCheck,
   IconX,
   IconDoorExit,
-  IconAddressBook
+  IconAddressBook,
+  IconTableShortcut
 } from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
@@ -130,6 +131,10 @@ export default function NavBar(props : any) {
     router.push('/auth/deleteAccount')
   }
 
+  const HandleYourTables = async (e: any) => {
+    router.push("/tables")
+  }
+
   return (
     <Header height={50} sx={{ borderBottom: 0 }} mb={10}>
       <Container className={`${classes.inner}`}  fluid>
@@ -171,18 +176,14 @@ export default function NavBar(props : any) {
                 <Menu.Dropdown>
                   <Menu.Label>Settings</Menu.Label>
                   <Menu.Item
-                  
+                  icon={<IconTableShortcut size="14"
+                  stroke={1.5}
+                  />}
+                  onClick={HandleYourTables}
                   >
                     Your Tables
                   </Menu.Item>
-                  <Menu.Item 
-                  icon={<IconSwitchHorizontal size="14" 
-                  stroke={1.5} 
-                  />}
-                  onClick={HandleChange}
-                  >
-                    Change Password
-                  </Menu.Item>
+                
                   <Menu.Item
                   icon={<IconAddressBook size="14"
                   stroke={1.5}
@@ -194,6 +195,14 @@ export default function NavBar(props : any) {
                   icon={<IconLogout size="14" stroke={1.5} />}
                   onClick={HandleSignOut}
                   >Logout</Menu.Item>
+                    <Menu.Item 
+                  icon={<IconSwitchHorizontal size="14" 
+                  stroke={1.5} 
+                  />}
+                  onClick={HandleChange}
+                  >
+                    Change Password
+                  </Menu.Item>
                   <Menu.Divider />
                   <Menu.Label>Danger zone</Menu.Label>
                   <Menu.Item 
