@@ -27,13 +27,14 @@ export default function Voting({ votes, setVotes, table, data }: any) {
         router.push(`/tables/${router.query.tableid}/results`);
       }
     }
-  }, [state]);
+  }, [state, data]);
+
   if (state === 'stack') {
     if (!data) {
       return <Loader color="FF5858" />;
     } else {
       const ids = data.map((business: any) => business.id);
-      return <CardStack listData = {data} ids={ids} setState={setState} setUserVotes={setVotes}/>;
+      return <CardStack listData={{ businesses: data }} ids={ids} setState={setState} setUserVotes={setVotes}/>;
     }
   } else if (state === 'favorite') {
     let nonZeroVotes = 0

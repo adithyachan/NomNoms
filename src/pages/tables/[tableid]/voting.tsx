@@ -18,7 +18,7 @@ export default function RestaurantVoting() {
     else if (table) {
       let temp = table.restaurantList
       let cuisine = table.prefs.cuisine.split(",")
-      let price = table.prefs.price.split(",").map(i => parseInt(i)).sort()
+      let price = table.prefs.price.replace(",", "").split(",").map(i => parseInt(i))
 
       if (cuisine) {
         if (cuisine.length != 0) {
@@ -29,9 +29,10 @@ export default function RestaurantVoting() {
         }
       }
 
+
       if (price) {
         const min = price[0]
-        const max = price[-1]
+        const max = price[price.length - 1]
 
         temp = temp.filter((item) => {
           const itemPrice = item.price ? item.price.length : 4
@@ -39,8 +40,8 @@ export default function RestaurantVoting() {
         })
       }
 
+      console.log(temp)
       setData(temp)
-
     }
   }, [tableid, table])
 
@@ -54,6 +55,7 @@ export default function RestaurantVoting() {
           setVotes={setVotes}
           table={table}
           price={table.prefs.price}
+          data={data?.slice(0, 10)}
         />
       ) : (
         <p>Loading...</p>
