@@ -21,6 +21,7 @@ export interface ITable {
   date: Date,
   numDoneVoting: number,
   prefsDone: string[],
+  restaurantList: any[];
 }
 
 export class Table implements ITable {
@@ -44,6 +45,7 @@ export class Table implements ITable {
   description: string;
   date: Date;
   prefsDone: string[];
+  restaurantList: any[];
 
   constructor(json: ITable) {
       this.id = json.id;
@@ -58,6 +60,7 @@ export class Table implements ITable {
       this.description = json.description;
       this.date = json.date;
       this.prefsDone = json.prefsDone;
+      this.restaurantList = json.restaurantList;
   };
 }
 

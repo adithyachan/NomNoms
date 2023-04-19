@@ -49,6 +49,7 @@ export default function CreateTable() {
       date: new Date(),
       description: "",
       prefsDone: [],
+      restaurantList: []
     }
     tableJSON.users[user?.uid!] = {}
     const table = new Table(tableJSON)

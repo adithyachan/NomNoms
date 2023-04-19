@@ -15,13 +15,12 @@ import { useUser } from "@/providers/AuthProvider";
 import { useToggle } from "@mantine/hooks";
 import { UpdateTable } from "@/lib/firebase/table/TableOperations";
 
-const numFetch = 50;
 const limit = 5;
 
 export default function TableSelectedLayout(props: {table: Table}) {
   const [offset, setOffset] = useState(5)
-  const [data, setData] = useState<any[]>([])
-  const [preview, setPreview] = useState<any[]>([])
+  const data = props.table.restaurantList
+  const [preview, setPreview] = useState<any[]>(props.table.restaurantList)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [noRes, setNoRes] = useState(false)
@@ -81,66 +80,10 @@ export default function TableSelectedLayout(props: {table: Table}) {
       )
     }
   }
-  
-  let temp: any[] = []
-  const getRestaurantFirstTime = async (n: number = 5) => {
-    setError(false)
-    setLoading(true)
-
-    for (let i = 0; i < n; i++) {
-      try {
-        const res = await getRestaurantList(numFetch, props.table.prefs.zip, 10000, "food", i * numFetch)
-        const resJSON = await res.json()
-        if (res.status >= 400) {
-          showNotification({
-            title: "Yikes",
-            message: resJSON.error,
-            icon: <IconX />,
-            color: "red"
-          })
-          setError(true)
-        }
-        else if(res.ok) {
-          temp = temp.concat(resJSON.businesses)
-        }
-      }
-      catch (err) {
-        showNotification({
-          title: "Yikes",
-          message: "Failed to fetch data",
-          icon: <IconX />,
-          color: "red"
-        })
-        setError(true)
-        console.log(err)
-      }
-    }
-
-    console.log(temp)
-
-    setData(temp)
-    setPreview(temp)
-    setLoading(false);
-  }
 
   const getRestaurantWithPrefs = (cuisine?: string[], price?: {min: string, max: string}) => {
 
-
     let temp = data
-    // console.log("before filters: " + temp)
-    // console.log(" TABLE: cuisine: " + cuisine)
-    // console.log(" TABLE: min: " + price?.min)
-    // console.log(" TABLE: max: " + price?.max)
-    /*
-    if (cuisine) {
-      temp.forEach(item => 
-        console.log(item.categories.map((i: any) => i.title))
-      )
-      temp = temp.filter(item => 
-        item.categories.map((i: any) => i.title).includes(cuisine) 
-      );
-    }
-    */
 
     if (cuisine) {
       if (cuisine.length != 0) {
@@ -151,10 +94,6 @@ export default function TableSelectedLayout(props: {table: Table}) {
       }
       setCuisine(cuisine.join(','))
     }
-
-    console.log("CUISINE: " + cuisine)
-
-    console.log("TEMP: " + temp)
 
     if (price) {
       let p = ""
@@ -203,8 +142,12 @@ export default function TableSelectedLayout(props: {table: Table}) {
 
   useEffect(() => {
     if (data.length == 0) {
-      getRestaurantFirstTime()
+      setLoading(true)
     }
+    else {
+      setLoading(false)
+    }
+
     if (props.table.prefsDone.length == Object.keys(props.table.users).length) {
       router.push(router.asPath + "/voting")
     }
