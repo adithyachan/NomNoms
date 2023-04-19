@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import InputResetPassLayout from '@/layouts/auth/InputResetPassLayout';
 import EmailVerifiedLayout from '@/layouts/auth/EmailVerifiedLayout';
 
-export default function RouteFire() {
+export default function Redirecting () {
 
     const modeCode = useRef<null | string>(null);
     const oobCode = useRef<null | string>(null);
