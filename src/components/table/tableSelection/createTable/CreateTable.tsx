@@ -7,7 +7,8 @@ import { WriteTable } from "@/lib/firebase/table/TableOperations"
 import { Timestamp } from "firebase/firestore"
 import CodeModal from "./CodeModal";
 import { useUser } from "@/providers/AuthProvider";
-import { DatePicker } from "@mantine/dates";
+import { DatePicker, TimeInput } from "@mantine/dates";
+import { IconCalendar, IconClock } from "@tabler/icons-react";
 
 import { getRestaurantList } from "@/lib/utils/yelpAPI";
 import { showNotification, NotificationsProvider } from "@mantine/notifications";
@@ -23,6 +24,7 @@ export default function CreateTable() {
   const [zip, setZip] = useInputState('');
   const [date, setDate] = useInputState(new Date());
   const [desc, setDesc] = useInputState('');
+  const [time, setTime] = useInputState(new Date());
 
   const [loadingState, setLoadingState] = useState<string>("idle");
   const [loadPer, setLoadPer] = useState<number>(0);
@@ -90,6 +92,8 @@ export default function CreateTable() {
       return
     }
 
+    const dateTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes());
+    const timestamp = Timestamp.fromDate(dateTime);
     const tableJSON: ITable = {
       id: "",
       name: value,
@@ -105,7 +109,7 @@ export default function CreateTable() {
       expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
       numDoneVoting: 0,
       description: desc,
-      date: date,
+      date: timestamp,
       prefsDone: [],
       restaurantList: restaurantData
     }
@@ -182,40 +186,44 @@ export default function CreateTable() {
             onChange={setZip}
           />
         </Tooltip>
-
+        
         <TextInput
-            placeholder="Table Description"
-            onFocus={() => inputHandlersDesc.open()}
-            onBlur={() => inputHandlersDesc.close()}
-            mt="md"
-            value={desc}
-            onChange={setDesc}
-          />
+          placeholder="Event Description"
+          onFocus={() => inputHandlersDesc.open()}
+          onBlur={() => inputHandlersDesc.close()}
+          mt="md"
+          value={desc}
+          onChange={setDesc}
+          
+        />
+       
+        <DatePicker
+          mt="md"
+          value={date}
+          onChange={setDate}
+          placeholder="Pick a date"
+          id="my-date-picker"
+          name="my-date-picker"
+          minDate={new Date()}
+          icon={<IconCalendar size={16} />}
+          clearable={false}
+        />
 
-<DatePicker
-        value={date}
-        onChange={setDate}
-        label="Pick a date"
-        placeholder="Pick a date"
-        id="my-date-picker"
-        name="my-date-picker"
-        description="Select a date"
-        variant="filled"
-      />
-  
+        <TimeInput 
+          mt="md"
+          format="12" 
+          defaultValue={new Date()} 
+          value={time}
+          onChange={setTime}
+          icon={<IconClock size={16} />}
+        />
 
-{/* <TextInput
-            placeholder="Pick date"
-            onFocus={() => inputHandlersDate.open()}
-            onBlur={() => inputHandlersDate.close()}
-            mt="md"
-            value={date}
-            onChange={setDate}
-          /> */}
 
       </Container>
-
-      <Button className="align-center" color="red" disabled={!valid} onClick={handleTableCreation}>Create</Button>
+<Center>
+  <Button  color="red" disabled={!valid} onClick={handleTableCreation}>Create</Button>
+</Center>
+      
 
     </>
   )
