@@ -12,15 +12,17 @@ export default function TablePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (auth.currentUser) {
-      if (!auth.currentUser.emailVerified && !auth.currentUser.isAnonymous) {
-        console.log("Hi")
-        router.push("/auth/verification")
-      } else {
-        setLoading(false)
-      }
-    } else {
-        router.push("/");
+    if (!user) {
+      router.push("/");
+    }
+    else if (user.user == "loading") {
+      return
+    }
+    else if (!(user?.isAnonymous) && (user?.providerData[0].providerId == "password") && !user?.emailVerified) {
+      router.push("/auth/verification")
+    }
+    else {
+      setLoading(false)
     }
   }, [user, router])
 

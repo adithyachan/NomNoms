@@ -13,7 +13,8 @@ const userConverter = {
           uid: user.uid,
           username: user.username,
           email: user.email,
-          tables: user.tables
+          tables: user.tables,
+          profilePicture: user.profilePicture
         };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot | DocumentSnapshot) => {

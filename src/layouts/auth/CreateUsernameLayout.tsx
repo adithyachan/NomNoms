@@ -46,7 +46,7 @@ export default function AuthenticationForm(props: PaperProps) {
 
       const UID = user?.uid;
       if (user?.email) {
-        WriteUser({username: username, email: user.email, uid: UID!, tables: []} as IUser)
+        WriteUser({username: username, email: user.email, uid: UID!, tables: [], profilePicture:""} as IUser)
       }
       var temp = 0  
       !/\s/.test(username) ? null : temp = 1

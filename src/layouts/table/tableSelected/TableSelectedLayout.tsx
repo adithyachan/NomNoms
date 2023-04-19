@@ -49,8 +49,8 @@ export default function TableSelectedLayout(props: {table: Table}) {
     })
     props.table.prefs.price = tablePriceArray.join(",")
     props.table.prefs.cuisine = tableCuisineArray.join(",")
-    if (!props.table.prefsDone.includes(user.uid!))
-      props.table.prefsDone.push(user.uid!)
+    if (!props.table.prefsDone.includes(user?.uid!))
+      props.table.prefsDone.push(user?.uid!)
     await UpdateTable(props.table)
   }
 
@@ -60,7 +60,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
 
   const VoteButton = () => {
     const { user } = useUser()
-    const uid = user.uid
+    const uid = user?.uid
     // user has completed voting
     if (Object.keys(props.table.users).includes(uid!) && Object.keys(props.table.users[uid!]).length !== 0) {
       return (
