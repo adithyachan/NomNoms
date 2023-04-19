@@ -242,9 +242,11 @@ export default function TableSelectedLayout(props: {table: Table}) {
 
 }
 </Title>
+{props.table.description && 
 <Title className="mb-3 ml-2 text-center text-xl font-black" variant="gradient" gradient={{ from: "red.7", to: "red.4" }} order={2}>
   {"Event Description: " + props.table.description}
 </Title>
+}
 
 </div>
 
