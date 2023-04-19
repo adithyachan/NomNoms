@@ -94,10 +94,9 @@ export default function ResultsPage() {
                 />
                 )))
               :
-              <ShowCard
-                key={table.restaurantList[0].id}
-                id={table.restaurantList[0].id}
-              />
+              (<>
+                {'No one voted for anything :('}
+              </>)
 
             }
           </div>
