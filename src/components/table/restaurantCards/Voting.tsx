@@ -7,10 +7,9 @@ import { useRouter } from "next/router";
 import { ReadTable, UpdateTable } from "@/lib/firebase/table/TableOperations";
 import { useUser } from "@/providers/AuthProvider";
 
-export default function Voting({zip, prefs, votes, setVotes, table, price}: any) {
+export default function Voting({ votes, setVotes, table, data }: any) {
   const [state, setState] = useState('stack'); // can be stack, favorite, done
   const { user } = useUser()
-  const { data: listData, error: listError, isLoading: listIsLoading } = useRestaurantListEndpoint(10, zip, 3200, prefs, price);
   const router = useRouter()
 
   if (user?.uid && table !== undefined) {
@@ -30,14 +29,11 @@ export default function Voting({zip, prefs, votes, setVotes, table, price}: any)
     }
   }, [state]);
   if (state === 'stack') {
-    if (listError) {
-      return <>Error loading restaurants</>;
-    }
-    if (listIsLoading) {
+    if (!data) {
       return <Loader color="FF5858" />;
     } else {
-      const ids = listData.businesses.map((business: any) => business.id);
-      return <CardStack listData = {listData} ids={ids} setState={setState} setUserVotes={setVotes}/>;
+      const ids = data.map((business: any) => business.id);
+      return <CardStack listData = {data} ids={ids} setState={setState} setUserVotes={setVotes}/>;
     }
   } else if (state === 'favorite') {
     let nonZeroVotes = 0
@@ -63,7 +59,7 @@ export default function Voting({zip, prefs, votes, setVotes, table, price}: any)
     }
     
 
-    return <FavoritePicker ids={ids} votes={votes} setVotes={setVotes} setState={setState} listData={listData.businesses}/>
+    return <FavoritePicker ids={ids} votes={votes} setVotes={setVotes} setState={setState} listData={data}/>
   }
   // } else if (state === 'complete') {
   //   const uid = user.uid

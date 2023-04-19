@@ -8,7 +8,8 @@ import {
   Menu,
   Header,
   Image,
-  Button, 
+  Button,
+  MenuDividerProps, 
 } from '@mantine/core';
 import { showNotification } from "@mantine/notifications";
 import { useDisclosure } from '@mantine/hooks';
@@ -19,7 +20,9 @@ import {
   IconChevronDown,
   IconCheck,
   IconX,
-  IconDoorExit
+  IconDoorExit,
+  IconAddressBook,
+  IconTableShortcut
 } from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
@@ -28,6 +31,7 @@ import { useRouter } from "next/router";
 import { deleteUser, signOut } from "firebase/auth";
 import { User } from "@/types/User";
 import { ReadUsers } from "@/lib/firebase/auth/AuthOperations";
+
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -73,11 +77,15 @@ export default function NavBar(props : any) {
     return unsub
   }, [])
 
-  const userName = users?.find((item) => item.uid == user.uid)?.username!
+  const userName = users?.find((item) => item.uid == user?.uid)?.username!
 
 
   const HandleChange = () => {
-    router.push('auth/changePass')
+    router.push('/auth/changePass')
+  }
+  
+  const HandleProfilePicture = () => {
+    router.push('/auth/profilePicture')
   }
  
   const HandleSignOut = async (e : any) => {
@@ -123,6 +131,10 @@ export default function NavBar(props : any) {
     router.push('/auth/deleteAccount')
   }
 
+  const HandleYourTables = async (e: any) => {
+    router.push("/tables")
+  }
+
   return (
     <Header height={50} sx={{ borderBottom: 0 }} mb={10}>
       <Container className={`${classes.inner}`}  fluid>
@@ -153,7 +165,7 @@ export default function NavBar(props : any) {
                     className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
                   >
                     <Group spacing={7}>
-                      <Avatar alt={user.email!} radius="xl" size={20} />
+                      <Avatar alt={user?.email!} radius="xl" size="md" src={user.photoURL}/>
                       <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
                         {userName!}
                       </Text>
@@ -163,7 +175,27 @@ export default function NavBar(props : any) {
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Settings</Menu.Label>
+                  <Menu.Item
+                  icon={<IconTableShortcut size="14"
+                  stroke={1.5}
+                  />}
+                  onClick={HandleYourTables}
+                  >
+                    Your Tables
+                  </Menu.Item>
+                
+                  <Menu.Item
+                  icon={<IconAddressBook size="14"
+                  stroke={1.5}
+                  />}
+                  onClick={HandleProfilePicture}>
+                    Profile Picture
+                  </Menu.Item>
                   <Menu.Item 
+                  icon={<IconLogout size="14" stroke={1.5} />}
+                  onClick={HandleSignOut}
+                  >Logout</Menu.Item>
+                    <Menu.Item 
                   icon={<IconSwitchHorizontal size="14" 
                   stroke={1.5} 
                   />}
@@ -171,10 +203,6 @@ export default function NavBar(props : any) {
                   >
                     Change Password
                   </Menu.Item>
-                  <Menu.Item 
-                  icon={<IconLogout size="14" stroke={1.5} />}
-                  onClick={HandleSignOut}
-                  >Logout</Menu.Item>
                   <Menu.Divider />
                   <Menu.Label>Danger zone</Menu.Label>
                   <Menu.Item 

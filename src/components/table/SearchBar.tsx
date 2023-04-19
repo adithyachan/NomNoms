@@ -11,22 +11,25 @@ export default function SearchBar(props : { setCuisine : any ,
 
   const [value, setValue] = useState<string []>([]);
   useEffect(() => {
-    console.log(value)
-    const cuisines = value.map(val => val.split(" (")[0]);
-    props.setCuisine(cuisines);
     if (props.reset) {
       setValue([])  
       props.setReset(false)
-    }
-    if (props.rand && props.data.length != 0) {
-      console.log("hello")
+    } else if (props.rand && props.data.length != 0) {
       const max = props.data.length;
-      const min= 0
-      const result1 = Math.floor(Math.random()*(max - min) + min)
-      const result2 = Math.floor(Math.random()*(max - min) + min)
-      const result3 = Math.floor(Math.random()*(max - min) + min)
-      setValue([props.data[result1], props.data[result2], props.data[result3]])
+      const min = 0
+      const newNumbers = [] as any
+      while (newNumbers.length < 3) {
+        const randomNum = Math.floor(Math.random()*(max - min) + min); // generate a random number between 1 and 10
+        if (!newNumbers.includes(randomNum)) {
+          newNumbers.push(randomNum);
+        }
+      }
+      setValue([props.data[newNumbers[0]], props.data[newNumbers[1]], props.data[newNumbers[2]]])
       props.setRand(false)
+    } else {
+      console.log(value)
+      const cuisines = value.map(val => val.split(" (")[0]);
+      props.setCuisine(cuisines);
     }
   }, [value, props.reset, props.rand]);
 

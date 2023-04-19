@@ -9,12 +9,40 @@ export default function RestaurantVoting() {
   const { tableid } = router.query
   const [table, setTable] = useState<Table>()
   const [votes, setVotes] = useState()
+  const [data, setData] = useState<any[]>()
 
   useEffect(() => {
-    if (tableid !== undefined) {
+    if (tableid !== undefined && !table) {
       ReadTable(tableid as string, setTable)
     }
-  }, [tableid])
+    else if (table) {
+      let temp = table.restaurantList
+      let cuisine = table.prefs.cuisine.split(",")
+      let price = table.prefs.price.split(",").map(i => parseInt(i)).sort()
+
+      if (cuisine) {
+        if (cuisine.length != 0) {
+          temp = temp.filter(item => {
+            const categories = item.categories.map((i: any) => i.title);
+            return cuisine.some(c => categories.includes(c));
+          });
+        }
+      }
+
+      if (price) {
+        const min = price[0]
+        const max = price[-1]
+
+        temp = temp.filter((item) => {
+          const itemPrice = item.price ? item.price.length : 4
+          return itemPrice >= min && itemPrice <= max
+        })
+      }
+
+      setData(temp)
+
+    }
+  }, [tableid, table])
 
   return (
     <>

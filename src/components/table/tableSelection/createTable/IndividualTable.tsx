@@ -38,7 +38,7 @@ export default function CreateTable() {
       lastAccessed: Timestamp.fromDate(new Date()),
       // users: [user.uid!],
       users: {},
-      leader: user.uid!,
+      leader: user?.uid!,
       prefs: {
         zip: zip,
         cuisine: "food",
@@ -49,8 +49,9 @@ export default function CreateTable() {
       date: Timestamp.fromDate(new Date()),
       description: "",
       prefsDone: [],
+      restaurantList: []
     }
-    tableJSON.users[user.uid!] = {}
+    tableJSON.users[user?.uid!] = {}
     const table = new Table(tableJSON)
     
     try {

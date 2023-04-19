@@ -4,7 +4,7 @@ import { Text, Image, Flex, Center} from '@mantine/core'
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
 import { applyActionCode } from "firebase/auth";
 
-export default function EmailVerifiedLayout() {
+export default function EmailVerifiedLayout(props : {oobCode : any}) {
     const oobCode = useRef<null | string>(null);
     const router = useRouter();
     const [error, setError] = useState(false);
@@ -13,14 +13,11 @@ export default function EmailVerifiedLayout() {
     
     useEffect(() => {
       if (first) {
-        const queryParams = new URLSearchParams(window.location.search)
-        oobCode.current = queryParams.get("oobCode");
-        console.log(oobCode.current)
-        if (!oobCode.current) {
+        if (!oobCode) {
           setError(true)
           router.push('/')
         } else {
-          applyActionCode(auth, oobCode.current.toString()).then(() => {
+          applyActionCode(auth, props.oobCode).then(() => {
           }).catch((error) => {
 
           })  
