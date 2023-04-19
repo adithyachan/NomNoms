@@ -66,7 +66,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function ResetPassword() {
+export default function InputResetPassLayout(props : {oobCode : any}) {
     const { classes } =  useStyles();
     const [value, setValue] = useInputState('');
     const strength = getStrength(value);
@@ -87,26 +87,14 @@ export default function ResetPassword() {
           size={4}
         />
       ));
-      
-      const oobCode = useRef<null | string>(null);
+
       const router = useRouter();
-      const [isLoading, setIsLoading] = useState(true);
-      
-      useEffect(() => {
-        const queryParams = new URLSearchParams(window.location.search)
-        oobCode.current = queryParams.get("oobCode");
-        if (!oobCode.current) {
-          router.push("/auth/login")
-        }
-      })
 
       const HandleReset = async (e : any) => {
         e.preventDefault();
         const auth = useFirebaseAuth();
-        const queryParams = new URLSearchParams(window.location.search)
-        oobCode.current = queryParams.get("oobCode");
-        if (oobCode.current) {
-          confirmPasswordReset(auth, oobCode.current, value).then(() => {
+        if (!props.oobCode) {
+          confirmPasswordReset(auth, props.oobCode, value).then(() => {
             showNotification({
               title: 'Password Successfully Changed!',
               message: 'Redirecting to login page',
@@ -114,15 +102,6 @@ export default function ResetPassword() {
               color: 'teal',
               icon: <IconCheck size={16} />,
               styles: () => ({
-                /*
-                root: {
-                  backgroundColor: '#FFE4E6',
-                  borderColor: '#FFE4E6',
-                  '&::before': { backgroundColor: '#FFFFFF' },
-                },
-                */
-                //title: { color: '#F43F5E' },
-                //description: { color: '#F43F5E'},
                 closeButton: {
                   color: '#F43F5E',
                   '&:hover': { backgroundColor: '#F43F5E' },
@@ -142,7 +121,6 @@ export default function ResetPassword() {
       }
     return (
       <>
-      {oobCode.current && 
         <form onSubmit={HandleReset}>
         <NotificationsProvider>
         <Container size={460} my={30} 
@@ -183,7 +161,6 @@ export default function ResetPassword() {
         </Container>
         </NotificationsProvider>
         </form>
-      }
     </>
     );
 }
