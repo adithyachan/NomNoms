@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Button, Center, TextInput, Tooltip, Container, MantineProvider } from "@mantine/core"
+import { Button, Center, TextInput, Tooltip, Container, MantineProvider, Modal, Progress, Text } from "@mantine/core"
 import { useInputState, useDisclosure } from '@mantine/hooks';
 
 import { Table, ITable } from "@/types/Table"
@@ -9,8 +9,13 @@ import CodeModal from "./CodeModal";
 import { useUser } from "@/providers/AuthProvider";
 import { DatePicker } from "@mantine/dates";
 
+import { getRestaurantList } from "@/lib/utils/yelpAPI";
+import { showNotification, NotificationsProvider } from "@mantine/notifications";
+import { IconX } from "@tabler/icons-react";
+
 
 const special_chars = /[ `!@#$%^&*()+_\-=\[\]{};':"\\|,.<>\/?]/
+const numFetch = 50;
 
 export default function CreateTable() {
   const { user } = useUser()
@@ -19,7 +24,9 @@ export default function CreateTable() {
   const [date, setDate] = useInputState(new Date());
   const [desc, setDesc] = useInputState('');
 
-  const [error, setError] = useState(null)
+  const [loadingState, setLoadingState] = useState<string>("idle");
+  const [loadPer, setLoadPer] = useState<number>(0);
+  const [error, setError] = useState<any>(null)
   const [openedName, inputHandlersName] = useDisclosure();
   const [openedZip, inputHandlersZip] = useDisclosure();
   const [openedDesc, inputHandlersDesc] = useDisclosure();
@@ -35,9 +42,54 @@ export default function CreateTable() {
   const zip_check = zip.length == 5 && !Number.isNaN(zip)
   const valid = special_chars_check && length_check && zip_check
 
-  
+  const getRestaurantFirstTime = async (n: number = 5) => {
+    let data: any[] = []
+    let per = 0
+    for (let i = 0; i < n; i++) {
+      try {
+        const res = await getRestaurantList(numFetch, zip, 10000, "food", i * numFetch)
+        const resJSON = await res.json()
+        per += 100 / n
+        setLoadPer(per);
+        if (res.status >= 400) {
+          showNotification({
+            title: "Yikes",
+            message: resJSON.error,
+            icon: <IconX />,
+            color: "red"
+          })
+        }
+        else if(res.ok) {
+          data = data.concat(resJSON.businesses)
+        }
+      }
+      catch (err) {
+        showNotification({
+          title: "Yikes",
+          message: "Failed to fetch data",
+          icon: <IconX />,
+          color: "red"
+        })
+        setError(err)
+        console.log(err)
+        return undefined
+      }
+    }
+
+    return data
+  }
 
   const handleTableCreation = async () => {
+    setLoadingState("Fetching Restaurant Data...")
+    setLoadPer(0)
+
+    const restaurantData = await getRestaurantFirstTime()
+
+    if (!restaurantData) {
+      setLoadingState(error)
+      return
+    }
+
     const tableJSON: ITable = {
       id: "",
       name: value,
@@ -55,10 +107,12 @@ export default function CreateTable() {
       description: desc,
       date: date,
       prefsDone: [],
+      restaurantList: restaurantData
     }
     tableJSON.users[user?.uid!] = {}
+
+    setLoadingState("Writing to Database...")
     const table = new Table(tableJSON)
-    
     try {
       const code = await WriteTable(table)
       setValue('')
@@ -69,12 +123,25 @@ export default function CreateTable() {
       codeHandlers.open()
     }
     catch (e: any) {
+      showNotification({
+        title: "Yikes",
+        message: "Failed to write to database",
+        icon: <IconX />,
+        color: "red"
+      })
       setError(e)
+      setLoadingState("Failed to write to database")
     }
+    setLoadingState("Done")
   }
 
   return (
     <>
+      <NotificationsProvider />
+      <Modal opened={ loadingState == "Fetching Restaurant Data..." || loadingState == "Writing to Database..." } withCloseButton={ false } centered onClose={ () => {} }>
+        <Text className="text-center">{ loadingState }</Text>
+        <Progress animate value={ loadPer } color="red" radius="xl" size="xl"/>
+      </Modal>
       {codeOpen ? <CodeModal code={ code } open={ codeOpen } handler={ codeHandlers }/> : null} 
       <Container fluid className="pb-4">
         <Tooltip
