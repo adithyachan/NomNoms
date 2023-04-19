@@ -110,23 +110,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
   }
 
   const getRestaurantWithPrefs = (cuisine?: string[], price?: {min: string, max: string}) => {
-
-
     let temp = data
-    // console.log("before filters: " + temp)
-    // console.log(" TABLE: cuisine: " + cuisine)
-    // console.log(" TABLE: min: " + price?.min)
-    // console.log(" TABLE: max: " + price?.max)
-    /*
-    if (cuisine) {
-      temp.forEach(item => 
-        console.log(item.categories.map((i: any) => i.title))
-      )
-      temp = temp.filter(item => 
-        item.categories.map((i: any) => i.title).includes(cuisine) 
-      );
-    }
-    */
 
     if (cuisine) {
       if (cuisine.length != 0) {
@@ -135,6 +119,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
           return cuisine.some(c => categories.includes(c));
         });
       }
+
     }
 
     console.log("CUISINE: " + cuisine)
