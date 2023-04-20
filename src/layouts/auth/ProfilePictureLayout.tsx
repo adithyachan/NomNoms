@@ -69,11 +69,12 @@ import NavBar from '@/components/NavBar';
     //const [url,setUrl] = useState("")
     const { user } = useUser();
     const auth = useFirebaseAuth()
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
     
     
     useEffect(() => {
-      //console.log(user?.photoURL!)
-      if (!avatarURL) {
+    if (!avatarURL) {
         setAvatarURL(user?.photoURL!)
       } 
       else {
@@ -83,6 +84,7 @@ import NavBar from '@/components/NavBar';
     }, [user])
     
     const handleFileInputChange = async (file: File | null) => {
+        setLoading(true)
         if (file != null) {
           const reader = new FileReader();
           reader.onloadend = async () => {
@@ -93,16 +95,16 @@ import NavBar from '@/components/NavBar';
             setIsImage(isImage);
             if (isImage) {
               setSelectedFile(file);
+              setSelectedImage(null)
               if (user == undefined) {
                return
               }
 
-              console.log("Ive gotten here")
               const storage = getStorage();
               const storageRef = ref(storage, `profilePictures/${user.uid}`);
               await uploadString(storageRef, result as string, "data_url");
               setImageResult(await getDownloadURL(storageRef))
-              console.log("setting image result")
+              setLoading(false)
             }
           };
           reader.readAsDataURL(file);
@@ -111,6 +113,7 @@ import NavBar from '@/components/NavBar';
     };
 
     const handleUploadButtonClick = async () => {
+      setLoading(true)
       setOpen(false);
       //setAvatarPicture(<Avatar radius="xl" size="xl" src={imageResult as string} />)
       await updateProfile(user, {
@@ -119,10 +122,11 @@ import NavBar from '@/components/NavBar';
       setAvatarURL(imageResult as string)
       setSelectedFile(null)
       setFile(false)
+      setSelectedImage(null)
     }
 
     const handleImageClick = async(picSrc: string) => {
-      console.log("Ive gotten here")
+      setSelectedFile(null)
       const storage = getStorage();
               const storageRef = ref(storage, `profilePictures/${user.uid}`);
               const response = await fetch(picSrc);
@@ -134,13 +138,16 @@ import NavBar from '@/components/NavBar';
               });
               await uploadString(storageRef, dataUrl as string , "data_url");
               setImageResult(await getDownloadURL(storageRef))
-              console.log("setting image result")
+              setLoading(false)
               setFile(true)
               setIsImage(true)
+              setSelectedImage(picSrc);
+
     } 
     
 
    const handleRemovePhoto = async () => {
+    setSelectedImage(null)
     setOpen(false)
     const storage = getStorage();
     await updateProfile(user, {
@@ -173,30 +180,31 @@ import NavBar from '@/components/NavBar';
              withCloseButton={false} 
              size="auto"
              opened={opened}
-             onClose={() => ((setOpen(false)),setSelectedFile(null),setFile(false))}
+             onClose={() => ((setOpen(false)),setSelectedFile(null),setFile(false),setSelectedImage(null),setLoading(true))}
              overlayOpacity={0.55}
              overlayBlur={3} 
              overflow="inside" 
              style = {{ position : "absolute", top:'7%'
              } } >
               
-              <ScrollArea type="always" w={300} style={{ display: 'flex', flexDirection: 'row',overflowX: "auto" }}>
+              <ScrollArea type="always" h = {130} w={300} style={{ display: 'flex', flexDirection: 'row',overflowX: "auto" }}>
                 <Flex   justify="center"
       align="center"
       direction="row">
-              <Image src="/images/boba.png" style={{width: '110px', height: '110px', display: 'inline-block'}}  onClick = {() => handleImageClick("/images/boba.png")}/> 
-              <Image src="/images/cake.png" style={{width: '110px', height: '110px', display: 'inline-block'}}  onClick = {() => handleImageClick("/images/cake.png")}/>  
-              <Image src="/images/burger.png" style={{width: '110px', height: '110px', display: 'inline-block'}} onClick = {() => handleImageClick("/images/burger.png")}/>  
+              <Image src="/images/boba.png" style={{border: selectedImage === '/images/boba.png' ? '4px solid pink' : 'none' , width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/boba.png")}/> 
+              <Image src="/images/cake.png" style={{border: selectedImage === '/images/cake.png' ? '4px solid pink' : 'none',width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/cake.png")}/>  
+              <Image src="/images/burger.png" style={{border: selectedImage === '/images/burger.png' ? '4px solid pink' : 'none', width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}} onClick = {() => handleImageClick("/images/burger.png")}/>  
 
-              <Image src="/images/fries.png" style={{width: '110px', height: '110px', display: 'inline-block'}}  onClick = {() => handleImageClick("/images/fries.png")}/> 
-              <Image src="/images/sushi.png" style={{width: '110px', height: '110px', display: 'inline-block'}}  onClick = {() => handleImageClick("/images/sushi.png")}/> 
-              <Image src="/images/taco.png" style={{width: '110px', height: '110px', display: 'inline-block'}}   onClick = {() => handleImageClick("/images/taco.png")}/>  
+              <Image src="/images/fries.png" style={{border: selectedImage === '/images/fries.png' ? '4px solid pink' : 'none',width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/fries.png")}/> 
+              <Image src="/images/sushi.png" style={{border: selectedImage === '/images/sushi.png' ? '4px solid pink' : 'none', width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/sushi.png")}/> 
+              <Image src="/images/taco.png" style={{border: selectedImage === '/images/taco.png' ? '4px solid pink' : 'none', width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}   onClick = {() => handleImageClick("/images/taco.png")}/>  
               </Flex>
               </ScrollArea>
               <FileInput
+              
         accept="image/*"
         label="Select a profile picture"
-        onChange={handleFileInputChange}
+        onChange={ handleFileInputChange}
         value={selectedFile}
         styles={{ root: { marginBottom: "16px" } }}
       />
@@ -205,7 +213,7 @@ import NavBar from '@/components/NavBar';
       )}
       
       < Group style ={{padding:'xl'}}>
-      {((selectedFile && isImage) || (isImage && thereIsFile)) && (
+      { !loading &&((selectedFile && isImage) || (isImage && thereIsFile)) && (
         <Button
           variant="outline"
           onClick={handleUploadButtonClick}
