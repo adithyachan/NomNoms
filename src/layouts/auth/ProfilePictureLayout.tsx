@@ -14,7 +14,12 @@ import {
     Modal,
     FileInput,
     Avatar,
+    Grid,
+    Flex,
+    ScrollArea,
+    Box,
   } from '@mantine/core';
+
 import React, {useEffect, useState } from 'react';
 import { NotificationsProvider } from '@mantine/notifications';
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
@@ -24,6 +29,7 @@ import firebase from "firebase/compat";
 import ReadPic from "@/components/ReadProfilePic";
 import { updateProfile } from "firebase/auth";
 import { useUser } from "@/providers/AuthProvider";
+import NavBar from '@/components/NavBar';
 
   const useStyles = createStyles((theme) => ({
     title: {
@@ -57,14 +63,22 @@ import { useUser } from "@/providers/AuthProvider";
     const { classes } = useStyles();
     const [imageResult,setImageResult] =useState<string | ArrayBuffer | null>()
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [thereIsFile,setFile] = useState(false) 
     const [isImage, setIsImage] = useState(false);
     const [avatarURL, setAvatarURL] =  useState<string>("");
     //const [url,setUrl] = useState("")
     const { user } = useUser();
+    const auth = useFirebaseAuth()
+    
     
     useEffect(() => {
+      //console.log(user?.photoURL!)
       if (!avatarURL) {
         setAvatarURL(user?.photoURL!)
+      } 
+      else {
+        setAvatarURL("")
+        
       }
     }, [user])
     
@@ -92,6 +106,7 @@ import { useUser } from "@/providers/AuthProvider";
             }
           };
           reader.readAsDataURL(file);
+          
         }
     };
 
@@ -101,23 +116,56 @@ import { useUser } from "@/providers/AuthProvider";
       await updateProfile(user, {
         photoURL: imageResult as string
       })
-      console.log("upload picture")
       setAvatarURL(imageResult as string)
+      setSelectedFile(null)
+      setFile(false)
     }
+
+    const handleImageClick = async(picSrc: string) => {
+      console.log("Ive gotten here")
+      const storage = getStorage();
+              const storageRef = ref(storage, `profilePictures/${user.uid}`);
+              const response = await fetch(picSrc);
+              const blob = await response.blob();
+              const dataUrl = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result as string);
+                reader.readAsDataURL(blob);
+              });
+              await uploadString(storageRef, dataUrl as string , "data_url");
+              setImageResult(await getDownloadURL(storageRef))
+              console.log("setting image result")
+              setFile(true)
+              setIsImage(true)
+    } 
+    
 
    const handleRemovePhoto = async () => {
     setOpen(false)
-    setAvatarURL("")
     const storage = getStorage();
+    await updateProfile(user, {
+      photoURL: ""
+    })
+    setAvatarURL("")
     if (user == undefined) {
       return
      }
     const pictureRef = ref(storage,  `profilePictures/${user.uid}`);
     await deleteObject(pictureRef);
+    
+
+    
    }
 
    return (
-   
+    <>
+    <NavBar>
+    </NavBar>
+<Container fluid className="bg-gradient-to-b from-rose-100 to-white">
+
+<Grid>
+    <Grid.Col span={12} md={12}>
+
     <NotificationsProvider>
       <Modal
              radius = "lg"
@@ -125,13 +173,27 @@ import { useUser } from "@/providers/AuthProvider";
              withCloseButton={false} 
              size="auto"
              opened={opened}
-             onClose={() => setOpen(false)}
+             onClose={() => ((setOpen(false)),setSelectedFile(null),setFile(false))}
              overlayOpacity={0.55}
              overlayBlur={3} 
              overflow="inside" 
              style = {{ position : "absolute", top:'7%'
              } } >
-             <FileInput
+              
+              <ScrollArea type="always" w={300} style={{ display: 'flex', flexDirection: 'row',overflowX: "auto" }}>
+                <Flex   justify="center"
+      align="center"
+      direction="row">
+              <Image src="/images/boba.png" style={{width: '110px', height: '110px', display: 'inline-block'}}  onClick = {() => handleImageClick("/images/boba.png")}/> 
+              <Image src="/images/cake.png" style={{width: '110px', height: '110px', display: 'inline-block'}}  onClick = {() => handleImageClick("/images/cake.png")}/>  
+              <Image src="/images/burger.png" style={{width: '110px', height: '110px', display: 'inline-block'}} onClick = {() => handleImageClick("/images/burger.png")}/>  
+
+              <Image src="/images/fries.png" style={{width: '110px', height: '110px', display: 'inline-block'}}  onClick = {() => handleImageClick("/images/fries.png")}/> 
+              <Image src="/images/sushi.png" style={{width: '110px', height: '110px', display: 'inline-block'}}  onClick = {() => handleImageClick("/images/sushi.png")}/> 
+              <Image src="/images/taco.png" style={{width: '110px', height: '110px', display: 'inline-block'}}   onClick = {() => handleImageClick("/images/taco.png")}/>  
+              </Flex>
+              </ScrollArea>
+              <FileInput
         accept="image/*"
         label="Select a profile picture"
         onChange={handleFileInputChange}
@@ -143,7 +205,7 @@ import { useUser } from "@/providers/AuthProvider";
       )}
       
       < Group style ={{padding:'xl'}}>
-      {selectedFile && isImage && (
+      {((selectedFile && isImage) || (isImage && thereIsFile)) && (
         <Button
           variant="outline"
           onClick={handleUploadButtonClick}
@@ -151,7 +213,7 @@ import { useUser } from "@/providers/AuthProvider";
           Upload
         </Button>) }
       {
-        avatarURL!= "" &&
+        avatarURL!= "" && avatarURL!=undefined &&
       <Button
          variant="outline" 
          onClick={handleRemovePhoto}
@@ -210,5 +272,9 @@ import { useUser } from "@/providers/AuthProvider";
           </Center>
         </Container>     
       </NotificationsProvider>
+    </Grid.Col>
+</Grid>   
+</Container>
+</>
     )
   }
