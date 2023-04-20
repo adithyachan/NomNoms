@@ -92,6 +92,10 @@ export default function NavBar(props : any) {
     e.preventDefault();
     console.log("checking google")
     signOut(auth).then(() => {
+      if (!router.pathname.toString().includes('tables'))  {
+        router.push('/')
+      }
+      /*
     // Sign-out successful
     console.log("user was successfully signed out");
     showNotification({
@@ -107,8 +111,10 @@ export default function NavBar(props : any) {
         },
       }),            
     })
+    */
 
   }).catch((error) => {
+    /*
     // An error happened.
     console.log("error occurred, user was not signed out successfully")
     showNotification({
@@ -124,6 +130,7 @@ export default function NavBar(props : any) {
         },
       }),            
     })
+    */
   });  
   }
 
