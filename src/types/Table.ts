@@ -3,7 +3,7 @@ import { Timestamp } from "firebase/firestore";
 export interface ITable {
   id: string,
   name: string,
-  lastAccessed: Timestamp,
+  lastAccessed: any,
   banned: string[],
   users: {
     [key: string]: {
@@ -16,9 +16,9 @@ export interface ITable {
     cuisine: string,
     price: string,
   },
-  expiration: Timestamp,
+  expiration: any,
   description: string,
-  date: Timestamp,
+  date: any,
   numDoneVoting: number,
   prefsDone: string[],
   restaurantList: any[];
@@ -27,7 +27,7 @@ export interface ITable {
 export class Table implements ITable {
   id: string;
   name: string;
-  lastAccessed: Timestamp;
+  lastAccessed: any;
   banned: string[];
   users: {
     [key: string]: {
@@ -40,10 +40,10 @@ export class Table implements ITable {
     cuisine: string;
     price: string;
   };
-  expiration: Timestamp;
+  expiration: any;
   numDoneVoting: number;
   description: string;
-  date: Timestamp;
+  date: any;
   prefsDone: string[];
   restaurantList: any[];
 
