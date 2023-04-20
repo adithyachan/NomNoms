@@ -30,7 +30,7 @@ import { useUser } from '@/providers/AuthProvider';
 import { useRouter } from "next/router";
 import { deleteUser, signOut } from "firebase/auth";
 import { User } from "@/types/User";
-import { ReadUsers } from "@/lib/firebase/auth/AuthOperations";
+import { ReadUser, ReadUsers } from "@/lib/firebase/auth/AuthOperations";
 
 
 const useStyles = createStyles((theme) => ({
@@ -71,13 +71,13 @@ export default function NavBar(props : any) {
   const { user } = useUser();
   const auth = useFirebaseAuth();
   const router = useRouter();
+  const [avatarURL, setAvatarURL] =  useState<string>(user?.photoURL!);
 
   useEffect(() => {
-    const unsub = ReadUsers(setUsers)
-    return unsub
-  }, [])
+    setAvatarURL(user?.photoURL)
+  }, [user?.photoURL])
 
-  const userName = users?.find((item) => item.uid == user?.uid)?.username!
+   const userName = users?.find((item) => item.uid == user?.uid)?.username!
 
 
   const HandleChange = () => {
@@ -165,7 +165,7 @@ export default function NavBar(props : any) {
                     className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
                   >
                     <Group spacing={7}>
-                      <Avatar alt={user?.email!} radius="xl" size="md" src={user.photoURL}/>
+                      <Avatar alt={user?.email!} radius="xl" size="md" src={avatarURL}/>
                       <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
                         {userName!}
                       </Text>
