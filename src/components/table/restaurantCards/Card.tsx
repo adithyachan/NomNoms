@@ -4,7 +4,7 @@ import { Loader } from '@mantine/core';
 import GetHours from './HoursOfOperation';
 import { Table } from '@mantine/core';
 import { useState } from 'react';
-import { IconCheck, IconX } from '@tabler/icons-react';
+import { IconCheck, IconInfoCircle, IconInfoCircleFilled, IconInfoSquareRoundedFilled, IconX } from '@tabler/icons-react';
 import RestImages from './Photos';
 
 
@@ -27,8 +27,8 @@ export default function ShowCard(props : {id : string }) {
     if (businessError) {
         if (businessError.code == ("BUSINESS_NOT_FOUND")) {
           return (
-            <div style={{ height: '450px', 
-              width: '450px',
+            <div style={{ height: '750px', 
+              width: '500px',
               alignItems: 'center' }} >
               <Text size="md" 
                 color="dimmed" >
@@ -38,8 +38,8 @@ export default function ShowCard(props : {id : string }) {
           )
         } else {
           return (
-            <div style={{ height: '450px', 
-              width: '450px', 
+            <div style={{ height: '750px', 
+              width: '500px', 
               alignItems: 'center' }} >
               <Text size="md" 
                 color="dimmed">
@@ -50,8 +50,8 @@ export default function ShowCard(props : {id : string }) {
         }
       } else if (isLoadingBusiness) {
         return (
-          <div  style={{ height: '450px', 
-            width: '450px'}} >
+          <div  style={{ height: '750px', 
+            width: '500px'}} >
             <Card className='bg-gradient-to-r from-pink-100 via-white to-pink-100 ' 
               shadow="sm" 
                 radius="md" 
@@ -189,8 +189,8 @@ export default function ShowCard(props : {id : string }) {
           </tr>
         ));
         return (
-          <div style={{ height: '450px',
-            width: '450px'}}>
+          <div style={{ height: '700px',
+            width: '500px'}}>
             <Card shadow="sm" 
             radius="lg" 
             style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -202,7 +202,7 @@ export default function ShowCard(props : {id : string }) {
            position : 'relative'
              }}>
         <Overlay
-        gradient={`linear-gradient(105deg, ${theme.black} 20%, #312f2f 50%, ${theme.colors.gray[4]} 100%)`} zIndex={0} opacity = '0.5'
+        gradient={`linear-gradient(105deg, ${theme.black} 20%, #312f2f 50%, ${theme.colors.gray[4]} 100%)`} zIndex={0} opacity = '0.20'
       />
 
       <div 
@@ -216,36 +216,65 @@ export default function ShowCard(props : {id : string }) {
               </Badge>
     }
       </div>
+
+     <div style={{ display: 'flex', alignItems: 'center' }}>
+
       <div
+
+
         style={{
           position: 'absolute',
-          
+          paddingLeft:'15px',
           top: '15%',
           left: 11,
-          transform: 'translateY(-50%)'
+          transform: 'translateY(1675%)', 
         }}>
-        <Text className="text-5xl p-4 font-bold from-pink-300 via-pink-50 to-pink-300 bg-gradient-to-r bg-clip-text text-transparent" style={{  borderColor : "purple", //borderSpacing : '10px', borderInlineColor : "purple", 
-         fontSize: '24px',
+        <Text className="text-8xl font-bold text-white"  style={{  borderColor : "purple", overflowWrap: "break-word",
+//borderSpacing : '10px', borderInlineColor : "purple", 
+         fontSize: '30px',
           fontWeight: 700
  }}>{nameRestaurant}</Text>
-      </div>
+    </div>
+
+
+    <div style={{ zIndex:1, transform: 'translateX(285%)' , 
+      position: 'absolute',
+       bottom: 10,
+       left : '50%',
+       transform: 'translateX(660%)',
+       paddingBottom: '10px' }}>
+        
+
+          { {urlExists} &&
+      // <Button component = "a"  target = '_blank' color='pink' opacity={0.8} variant="light"  mt="md" radius="md" href = {url} size = "md" >
+        //</Button>
+        <a href={url} target='_blank'>
+        <IconInfoCircleFilled   size="30px" style={{color : 'white'}}> </IconInfoCircleFilled> 
+        </a>       
+        }
+      
+      </div> 
+      </div> 
+
+
       <div
       
         style={{
           
           position: 'absolute',
           top: '25%',
+          paddingLeft:'1px',
           left: 11,
-          transform: 'translateY(-50%)'
+          transform: 'translateY(780%)'
         }}>
           {cuisineExists && 
         <Text 
         //className='text-5xl p-4 text-center font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent'
-        className='p-4 text-pink-200' 
+        className='p-4 text-white-200' 
         style={{ 
-        
-      fontSize: '12px',
-      fontWeight: 800 }}>
+        color:'white',
+      fontSize: '17px',
+      fontWeight: 440 }}>
         {cuisineList.join(', ')}
         </Text>
         }
@@ -374,19 +403,7 @@ export default function ShowCard(props : {id : string }) {
      
     </div>
 
-      <div style={{ zIndex:1, transform: 'translateX(-50%)' , 
-      position: 'absolute',
-       bottom: 10,
-       left : '50%',
-        padding: '12px' }}>
-        
 
-          {urlExists &&
-        <Button component = "a"  target = '_blank' color='pink' opacity={0.8} variant="light"  mt="md" radius="md" href = {url} size = "md" >
-          Go to site
-        </Button>
-      }
-      </div>
     </Card> 
 </div>
         )}
