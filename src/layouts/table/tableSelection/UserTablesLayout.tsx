@@ -17,9 +17,8 @@ export default function UserTablesLayout() {
 
   useEffect(() => {
     setLoading(true)
-    const unsub = ReadTables(setTables)
+    const unsub = ReadTables(setTables, undefined, `users.${user.uid}`)
     setLoading(false)
-
     return unsub
   }, [])
 
@@ -46,44 +45,32 @@ const copy = (link: string) => (
            <LoadingLayout /> 
            : 
            <ScrollArea type="hover" className="h-60" scrollbarSize={0}>
-                <Grid columns={24} className="m-1 w-full">
-                  {tables?.filter((table) => Object.keys(table.users).includes(user?.uid!)).map(
-                    (table) =>
-                    <Grid.Col key={table.id} span={12}>
-                      <TableCard table={table} id={table.id} />
-                    </Grid.Col>
-                  )}
-                </Grid>
-          </ScrollArea> }
-          <Text className="mb-8"></Text>
-          <Text className="mb-3 text-5xl text-center font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Individual </Text>
+            <Grid columns={24} className="m-1 w-full">
+              {tables?.filter((table) => Object.keys(table.users).includes(user?.uid!)).map(
+                (table) =>
+                <Grid.Col key={table.id} span={12}>
+                  <TableCard table={table} id={table.id} />
+                </Grid.Col>
+              )}
+            </Grid>
+            </ScrollArea> 
+          }
+          <Text className="mb-3 text-5xl text-center font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Individual</Text>
           <Text className=" text-3 mb-4 text-center font-light" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Feel like going on a solo date? Use your personal table below! </Text>
-
           <Center className="flex-col space-y-2">
           <div  style=
           {{ height: '100%', 
             width: '300px',
           }} > 
-             <Card  style={{
-                justifyContent: 'center' }} 
-             className="shadow-lg bg-rose-100 shadow-rose-200 transition ease-in-out hover:shadow-xl delay-100 duration-500 hover:shadow-rose-300 rounded-lg">
-              <Text className= "mb-3 text-5 font-black text-center " >Personal Table</Text>
-        <Center className="flex-col space-y-2">
-          <IndividualSelectionLayout>
-
-          </IndividualSelectionLayout>
+             <Card className="justify-center shadow-lg bg-rose-100 shadow-rose-200 transition ease-in-out hover:shadow-xl delay-100 duration-500 hover:shadow-rose-300 rounded-lg">
+                <Text className= "mb-3 text-5 font-black text-center">Personal Table</Text>
+                <Center className="flex-col space-y-2">
+                  <IndividualSelectionLayout />
+                </Center>
+              </Card>
+          </div>
         </Center>
-
-      </Card>
-      </div>
-      </Center>
-
-    
-
-          
-
       </Flex>
-      
     </>
   );
 }

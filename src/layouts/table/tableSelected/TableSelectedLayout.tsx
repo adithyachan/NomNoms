@@ -29,8 +29,8 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const [sortDir, toggle] = useToggle()
   const [sortVar, setSortBy] = useState<string>()
   const [vote, setVote] = useState<boolean>()
-  const [cuisine, setCuisine] = useState<string>()
-  const [priceString, setPriceString] = useState<string>()
+  const [cuisine, setCuisine] = useState<string>("food")
+  const [priceString, setPriceString] = useState<string>("1,2,3,4")
   const { user } = useUser()
 
   const router = useRouter()
@@ -147,6 +147,10 @@ export default function TableSelectedLayout(props: {table: Table}) {
     }
     else {
       setLoading(false)
+    }
+
+    if (props.table.banned.includes(user.uid)) {
+      router.push("/tables/tablenotfound")
     }
 
     if (props.table.prefsDone.length == Object.keys(props.table.users).length) {
