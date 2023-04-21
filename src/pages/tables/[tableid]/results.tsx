@@ -51,7 +51,8 @@ export default function ResultsPage() {
   }, [tableid])
 
   if (table !== undefined) {
-    if (table.numDoneVoting >= Object.keys(table.users).length) {
+    // if (table.numDoneVoting >= Object.keys(table.users).length) {
+    if (table.usersDoneVoting.length >= Object.keys(table.users).length) {
       // show results
       let totalVotes: { [key: string]: number } = {}
 
@@ -113,7 +114,7 @@ export default function ResultsPage() {
       return (
         <Center className="flex-col rounded-3xl bg-white shadow-red-100 shadow-xl p-10 m-10">
       <Text style={{ padding: '40px' }} className="mb-10 text-5xl font-black" variant="gradient" gradient={{ from: "red.7", to: "red.4" }}>
-        Waiting for your table mates to finish voting {`(${table.numDoneVoting}/${Object.keys(table.users).length})...`}
+        Waiting for your table mates to finish voting {`(${table.usersDoneVoting.length}/${Object.keys(table.users).length})...`}
       </Text>
       <div className="relative h-64 w-64 mx-auto">
         {images.map((image, index) => (
