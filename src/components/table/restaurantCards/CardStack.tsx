@@ -237,7 +237,7 @@ const [value, setSelectedValue] = useState<string |null>('');
     function TypeSortButton() {
       return (
         <Select
-  
+        className="sort-by-select"
         value={value}
         onChange={(value) => SettingValue(value)}//setSelectedValue(value)}
         placeholder="Sort by"
@@ -282,7 +282,7 @@ const [value, setSelectedValue] = useState<string |null>('');
       )
     } else {
       return (
-        <Button size="lg" onClick={handleYesClick} variant='light' radius='xl' color="green">
+        <Button size="lg" className="yes" onClick={handleYesClick} variant='light' radius='xl' color="green">
           <IconThumbUp color='green' size={20} stroke={1.5} />
         </Button>
       )
@@ -308,7 +308,7 @@ const [value, setSelectedValue] = useState<string |null>('');
     
     return (<Tooltip label="Ascending">
     <span>
-    <Button size="lg" onClick={() => handleSort(true)} variant='light' radius='xl' color="yellow">
+    <Button className="sort-ascending-btn" size="lg" onClick={() => handleSort(true)} variant='light' radius='xl' color="yellow">
     <IconSortAscending color='orange' size={20} stroke={1.5} />
   </Button>
     </span>
@@ -319,7 +319,7 @@ const [value, setSelectedValue] = useState<string |null>('');
     
     return (<Tooltip label="Descending">
     <span>
-    <Button size="lg" onClick={() => handleSort(false)} variant='light' radius='xl' color="yellow">
+    <Button className="sort-descending-btn" size="lg" onClick={() => handleSort(false)} variant='light' radius='xl' color="yellow">
     <IconSortDescending color='orange' size={20} stroke={1.5} />
   </Button>
     </span>

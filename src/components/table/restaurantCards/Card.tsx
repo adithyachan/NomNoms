@@ -211,7 +211,7 @@ export default function ShowCard(props : {id : string }) {
          right: 0, 
          padding: '12px' }}>
           {priceExists && 
-      <Badge  color='green'   variant="light" size = "lg">
+      <Badge  className="PriceStr" color='green'   variant="light" size = "lg">
               {pricePoint}
               </Badge>
     }
