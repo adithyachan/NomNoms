@@ -18,7 +18,8 @@ export default function RestaurantVoting() {
     else if (table) {
       let temp = table.restaurantList
       let cuisine = table.prefs.cuisine.split(",")
-      let price = table.prefs.price.replace(",", "").split(",").map(i => parseInt(i))
+      if (cuisine.includes('food')) cuisine.splice(cuisine.indexOf('food'))
+      let price = table.prefs.price.replace(" ", "").split(",").map(i => parseInt(i)).filter(i => !Number.isNaN(i))
 
       if (cuisine) {
         if (cuisine.length != 0) {
@@ -39,8 +40,6 @@ export default function RestaurantVoting() {
           return itemPrice >= min && itemPrice <= max
         })
       }
-
-      console.log(temp)
       setData(temp)
     }
   }, [tableid, table])
