@@ -332,7 +332,7 @@ export default function ShowCard(props : {id : string }) {
       //transform : 'translateY(-50%)',
       }}
       >
-       {ratingExists && <Rating value={rating} fractions = {2} readOnly size = "md"/>}
+       {ratingExists && <Rating className="rating" value={rating} fractions = {2} readOnly size = "md"/>}
       </div>
 
       <div
