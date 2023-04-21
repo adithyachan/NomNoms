@@ -120,7 +120,8 @@ export default function CreateTable() {
       description: desc,
       date: timestamp,
       prefsDone: [],
-      restaurantList: restaurantData
+      restaurantList: restaurantData,
+      recommendation: ""
     }
     tableJSON.users[user?.uid!] = {}
 
