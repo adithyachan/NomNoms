@@ -1,3 +1,4 @@
+export{}
 describe('Preferences Page Prices Select', () => {
   it('Sorting by Price Select', () => {
     // visit app homepage
