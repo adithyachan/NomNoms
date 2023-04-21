@@ -211,7 +211,7 @@ export default function ShowCard(props : {id : string }) {
          right: 0, 
          padding: '12px' }}>
           {priceExists && 
-      <Badge  color='green'   variant="light" size = "lg">
+      <Badge  className="PriceStr" color='green'   variant="light" size = "lg">
               {pricePoint}
               </Badge>
     }
@@ -332,7 +332,7 @@ export default function ShowCard(props : {id : string }) {
       //transform : 'translateY(-50%)',
       }}
       >
-       {ratingExists && <Rating value={rating} fractions = {2} readOnly size = "md"/>}
+       {ratingExists && <Rating className="rating" value={rating} fractions = {2} readOnly size = "md"/>}
       </div>
 
       <div
