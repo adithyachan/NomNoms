@@ -149,7 +149,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
       setLoading(false)
     }
 
-    if (props.table.banned.includes(user.uid)) {
+    if (user && props.table.banned.includes(user.uid)) {
       router.push("/tables/tablenotfound")
     }
 
