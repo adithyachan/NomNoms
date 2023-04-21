@@ -22,7 +22,8 @@ const tableConverter = {
           description: table.description,
           date: table.date,
           prefsDone: table.prefsDone,
-          restaurantList: table.restaurantList
+          restaurantList: table.restaurantList,
+          recommendation: table.recommendation
         };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot | DocumentSnapshot) => {

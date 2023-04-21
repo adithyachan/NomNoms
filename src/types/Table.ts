@@ -22,7 +22,8 @@ export interface ITable {
   // numDoneVoting: number,
   usersDoneVoting: string[]
   prefsDone: string[],
-  restaurantList: any[];
+  restaurantList: any[],
+  recommendation: string,
 }
 
 export class Table implements ITable {
@@ -48,6 +49,7 @@ export class Table implements ITable {
   date: any;
   prefsDone: string[];
   restaurantList: any[];
+  recommendation: string;
 
   constructor(json: ITable | undefined) {
       if (!json) {
@@ -67,6 +69,7 @@ export class Table implements ITable {
       this.description = json.description;
       this.prefsDone = json.prefsDone;
       this.restaurantList = json.restaurantList;
+      this.recommendation = json.recommendation;
   };
 }
 

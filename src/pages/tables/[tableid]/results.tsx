@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { ReadTable } from "@/lib/firebase/table/TableOperations";
+import { ReadTable, UpdateTable } from "@/lib/firebase/table/TableOperations";
 import { Table } from "@/types/Table";
 import { useState, useEffect } from "react";
 import ShowCard from "@/components/table/restaurantCards/Card";
@@ -24,8 +24,6 @@ export default function ResultsPage() {
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const [rec, setRec] = useState<string>()
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -77,9 +75,11 @@ export default function ResultsPage() {
           return b[1] - a[1]; // sort based on value
         })
         .map(pair => pair[0]);
+
         const randomize = async () => {
           const recommendation = topRestaurantIDs[Math.floor(Math.random() * topRestaurantIDs.length)]
-          setRec(recommendation)
+          table.recommendation = recommendation
+          await UpdateTable(table)
         }
       return (
         <Flex direction="column" justify="center" align="center" className="m-5 w-full">
@@ -92,8 +92,8 @@ export default function ResultsPage() {
                 <Container mah={500} className="mb-5">
                   { topRestaurantIDs.length > 0 ? 
                     <Flex direction="column" justify="center" align="center">
-                      { rec ? 
-                        <ShowCard id={rec} /> : 
+                      { table.recommendation ? 
+                        <ShowCard id={ table.recommendation } /> : 
                         user.uid == table.leader ?
                         null :
                         <Text className="text-center">Wait for your leader to generate a recommendation</Text>
