@@ -220,7 +220,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
                 :
                 <>        
                   <RestaurantListLayout data={preview.slice(0, offset)} />
-                  {offset < preview.length ? 
+                  
                     <Flex direction="column" align="center" gap="sm">
                       <Flex gap="10px" direction="row" align="between" justify="space-around" className="w-full mt-3">
                         <Button.Group>
@@ -269,14 +269,16 @@ export default function TableSelectedLayout(props: {table: Table}) {
                         </Button.Group>
                         
                         <VoteButton/>
+                        {offset < preview.length ? 
                         <Button color="red" onClick={() => {
                           setOffset(offset + limit > preview.length ? preview.length : offset + limit)
                         }}>
                           Load More
-                        </Button>
+                        </Button> : 
+                        <Button disabled>Load More</Button>}
                       </Flex>
                     </Flex>
-                  : null}
+                  
                 </>}
               </>}
           </Grid.Col>
