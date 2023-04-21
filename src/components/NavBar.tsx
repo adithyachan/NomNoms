@@ -74,11 +74,15 @@ export default function NavBar(props : any) {
   const [avatarURL, setAvatarURL] =  useState<string>(user?.photoURL!);
 
   useEffect(() => {
+    if (users?.length == 0 || users == undefined) {
+      const unsub = ReadUsers(setUsers)
+      return unsub
+    }
     setAvatarURL(user?.photoURL)
   }, [user?.photoURL])
 
    const userName = users?.find((item) => item.uid == user?.uid)?.username!
-
+  console.log(userName)
 
   const HandleChange = () => {
     router.push('/auth/changePass')

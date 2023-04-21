@@ -1,7 +1,11 @@
 import RestaurantBest from "./BestRestaurant";
 
 const compareByRating = (a: any, b: any) => {
-    return b.rating - a.rating;
+  if (b.rating !== a.rating) {
+    return b.rating - a.rating
+  } else {
+    return b.review_count - a.review_count
+  }
 };
 
 const compareByReview = (a: any, b: any) => {
