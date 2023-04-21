@@ -26,7 +26,6 @@ export function GoogleButton(props: ButtonProps) {
     const auth = useFirebaseAuth();
     signInWithPopup(auth, provider).then((result) => {
     const username = users?.find((item) => item.uid == auth.currentUser?.uid)?.username!
-    
     if (!username) {
       console.log("USERNAME" + username)
       setTimeout(() => {
@@ -54,7 +53,6 @@ export function GoogleButtonLogin(props: ButtonProps) {
       return unsub;
     }
   })
-
   const HandleGoogleLogin = async (e: any) => {
     console.log("checking google")
     const auth = useFirebaseAuth();
@@ -79,7 +77,6 @@ export function GoogleButtonLogin(props: ButtonProps) {
 
 export function GoogleButtonLink(props: ButtonProps) {
   const router = useRouter();
-  
 
   const HandleGoogleLink = async (e: any) => {
     console.log("checking google")
@@ -104,30 +101,31 @@ export function GoogleButtonLink(props: ButtonProps) {
 
 
 export function GithubButton(props: ButtonProps) {
+  const [users, setUsers] =  useState<User[]>();
   const router = useRouter();
+  useEffect(() => {
+    if (users?.length == 0 || users == undefined) {
+      const unsub = ReadUsers(setUsers)
+      return unsub;
+    }
+  })
   const HandleGithub = async (e: any) => {
 	const auth = useFirebaseAuth();
- signInWithPopup(auth, Gprovider)
-  .then((result) => {
-    // This gives you a GitHub Access Token. You can use it to access the GitHub API.
-    const credential = GithubAuthProvider.credentialFromResult(result);
-    const token = credential?.accessToken;
-    setTimeout(() => {
-      router.push('/auth/createUsername');
-    }, 10)
-    // The signed-in user info.
-    const user = result.user;
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
+  signInWithPopup(auth, Gprovider).then((result) => {
+    const username = users?.find((item) => item.uid == auth.currentUser?.uid)?.username!
+    if (!username) {
+      console.log("USERNAME" + username)
+      setTimeout(() => {
+        router.push('/auth/createUsername');
+      }, 10)
+    } else {
+      console.log("USERNAME" + username)
+      setTimeout(() => {
+        router.push('/tables');
+      }, 10)
+    }
   }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GithubAuthProvider.credentialFromError(error);
-    // ...
+    console.log(error)
   });
   }
   return (
@@ -147,30 +145,30 @@ export function GithubButton(props: ButtonProps) {
 }
 
 export function GithubButtonLogin(props: ButtonProps) {
+  const [users, setUsers] =  useState<User[]>();
   const router = useRouter();
+  useEffect(() => {
+    if (users?.length == 0 || users == undefined) {
+      const unsub = ReadUsers(setUsers)
+      return unsub;
+    }
+  })
   const HandleGithubLogin = async (e: any) => {
 	const auth = useFirebaseAuth();
- signInWithPopup(auth, Gprovider)
-  .then((result) => {
-    // This gives you a GitHub Access Token. You can use it to access the GitHub API.
-    const credential = GithubAuthProvider.credentialFromResult(result);
-    const token = credential?.accessToken;
-    setTimeout(() => {
-      router.push('/tables');
-    }, 10)
-    // The signed-in user info.
-    const user = result.user;
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
+  signInWithPopup(auth, Gprovider).then((result) => {
+    const username = users?.find((item) => item.uid == auth.currentUser?.uid)?.username!
+    console.log("USERNAME" + username)
+    if (!username) {
+      setTimeout(() => {
+        router.push('/auth/createUsername');
+      }, 10)
+    } else {
+      setTimeout(() => {
+        router.push('/tables');
+      }, 10)
+    }
   }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GithubAuthProvider.credentialFromError(error);
-    // ...
+    console.log(error)
   });
   }
   return (
