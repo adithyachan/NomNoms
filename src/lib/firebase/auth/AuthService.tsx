@@ -1,5 +1,6 @@
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase"
 import {signInWithPopup, createUserWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signOut, GithubAuthProvider } from "firebase/auth";
+import { signInAnonymously } from "firebase/auth";
 
 
 export async function CreateAccountEmailandPassword(email:string, password:string) {
