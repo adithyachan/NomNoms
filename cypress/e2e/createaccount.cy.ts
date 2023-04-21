@@ -8,7 +8,7 @@ describe('Create an Account test', () => {
 
     //attempt to create an account
    cy.contains('Sign Up').click()
-   cy.get('input[placeholder="nomnoms@gmail.com"]').type('ruchi_purdue@gmail.com')
+   cy.get('input[placeholder="nomnoms@gmail.com"]').type('jagana@gmail.com')
    cy.get('input[placeholder="SpicyBurrito"]').type('DeliciousTostada')
    cy.get('input[placeholder="Your password"]').type('thisismypassword')
    cy.get('input[placeholder="Confirm your password"]').type('thisismypassword')
