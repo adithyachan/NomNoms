@@ -1,3 +1,4 @@
+export{}
 describe ('Sign in with existing account test', () => {
   it('Sign in with google', () => {
     //visit the app's homepage

@@ -1,3 +1,4 @@
+export{}
 describe('Login Test', () => {
   it('Logs in as guest', () => {
     // visit app homepage

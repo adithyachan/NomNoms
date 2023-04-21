@@ -1,6 +1,7 @@
 //This test case will only function on the first time purposefully because
 //after the first time, the email would have already existed and won't be able
 //to create an account
+export{}
 describe('Create an Account test', () => {
   it('Create an account', () => {
     //visit the app's homepage
