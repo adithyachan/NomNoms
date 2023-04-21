@@ -227,7 +227,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
                         <Button.Group>
                           <Menu>
                             <Menu.Target>
-                              <Button color="gray">
+                              <Button color="gray" className="sort-button">
                                 {sortVar ? sortVar?.substring(0, 1).toUpperCase()! + sortVar?.substring(1) : "Sort By"}
                               </Button>
                             </Menu.Target>
@@ -271,10 +271,8 @@ export default function TableSelectedLayout(props: {table: Table}) {
                             </Menu.Dropdown>
                           </Menu>
                           <Button color="gray" onClick={() => {
-                            if (sortVar) {
-                              toggle()
-                              sortBy(sortVar ?? "price", !sortDir)
-                            }
+                            toggle()
+                            sortBy(sortVar ?? "price", !sortDir)
                           }}>
                             {sortDir ? <IconChevronDown /> : <IconChevronUp />}
                           </Button>
