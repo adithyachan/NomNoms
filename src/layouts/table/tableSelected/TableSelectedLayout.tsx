@@ -4,17 +4,15 @@ import { Table } from "@/types/Table";
 import { Container, Grid, Title, Center, Button, Flex, Image, Text, SegmentedControl, Menu } from "@mantine/core";
 import RestaurantListLayout from "./RestaurantListLayout";
 import NavBar from "@/components/NavBar";
-import { NotificationsProvider, showNotification } from "@mantine/notifications";
+import { NotificationsProvider } from "@mantine/notifications";
 import { useState, useEffect } from "react";
-import { getRestaurantList } from "@/lib/utils/yelpAPI";
-import { IconAbc, IconChevronDown, IconChevronUp, IconCurrencyDollar, IconWorld, IconX } from "@tabler/icons-react";
+import { IconAbc, IconChevronDown, IconChevronUp, IconCurrencyDollar, IconRefresh, IconWorld, IconX, IconZoomReset } from "@tabler/icons-react";
 import LoadingLayout from "@/layouts/LoadingLayout";
 import { useRouter } from "next/router";
 import BestCard from "@/components/table/tableSelected/ShowingBestCard";
 import { useUser } from "@/providers/AuthProvider";
 import { useToggle } from "@mantine/hooks";
 import { UpdateTable } from "@/lib/firebase/table/TableOperations";
-import { Timestamp } from "firebase/firestore";
 
 const limit = 5;
 
@@ -23,6 +21,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const data = props.table.restaurantList
   const [preview, setPreview] = useState<any[]>(props.table.restaurantList)
   const [loading, setLoading] = useState(false)
+  const [sorted, setSorted] = useState<any[]>()
   const [error, setError] = useState(false)
   const [noRes, setNoRes] = useState(false)
   const [value, setValue] = useState('rated');
@@ -138,7 +137,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
         return 0
     }
     const sorted = [...preview].sort(comp)
-    setPreview(sorted)
+    setSorted(sorted)
   }
 
   useEffect(() => {
@@ -221,7 +220,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
                   </>
                 :
                 <>        
-                  <RestaurantListLayout data={preview.slice(0, offset)} />
+                  <RestaurantListLayout data={(sorted ?? preview).slice(0, offset)} />
                   
                     <Flex direction="column" align="center" gap="sm">
                       <Flex gap="10px" direction="row" align="between" justify="space-around" className="w-full mt-3">
@@ -229,7 +228,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
                           <Menu>
                             <Menu.Target>
                               <Button color="gray">
-                                {sortVar ?? "Sort By"}
+                                {sortVar ? sortVar?.substring(0, 1).toUpperCase()! + sortVar?.substring(1) : "Sort By"}
                               </Button>
                             </Menu.Target>
                             <Menu.Dropdown>
@@ -260,11 +259,22 @@ export default function TableSelectedLayout(props: {table: Table}) {
                               >
                                 Distance
                               </Menu.Item>
+                              <Menu.Item 
+                                onClick={() => {
+                                  setSorted(undefined)
+                                  setSortBy("")
+                                }} 
+                                rightSection={<IconRefresh className="ml-5 h-5 w-5"/>}
+                              >
+                                Reset
+                              </Menu.Item>
                             </Menu.Dropdown>
                           </Menu>
                           <Button color="gray" onClick={() => {
-                            toggle()
-                            sortBy(sortVar ?? "price", !sortDir)
+                            if (sortVar) {
+                              toggle()
+                              sortBy(sortVar ?? "price", !sortDir)
+                            }
                           }}>
                             {sortDir ? <IconChevronDown /> : <IconChevronUp />}
                           </Button>
