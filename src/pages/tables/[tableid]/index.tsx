@@ -42,7 +42,7 @@ export default function TablePage(props: { table: ITable | undefined }) {
   const [table, setTable] = useState<Table>()
 
   const updateTable = async () => {
-    if (props.table) {
+    if (props.table && !props.table.banned.includes(user.uid)) {
       const temp = new Table(props.table)
       temp.lastAccessed = Timestamp.fromDate((new Date()))
       temp.expiration = Timestamp.fromDate(new Date(temp.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
