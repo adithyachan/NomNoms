@@ -23,13 +23,14 @@ import {
 import React, {useEffect, useState } from 'react';
 import { NotificationsProvider } from '@mantine/notifications';
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
-import { ReadUser, WriteUser } from "@/lib/firebase/auth/AuthOperations";
+import { ReadUser, UpdateUser, WriteUser } from "@/lib/firebase/auth/AuthOperations";
 import { getStorage, ref, uploadString, getDownloadURL, deleteObject  } from "firebase/storage";
 import firebase from "firebase/compat";
 import ReadPic from "@/components/ReadProfilePic";
 import { updateProfile } from "firebase/auth";
 import { useUser } from "@/providers/AuthProvider";
 import NavBar from '@/components/NavBar';
+import { User } from '@/types/User';
 
   const useStyles = createStyles((theme) => ({
     title: {
@@ -68,19 +69,21 @@ import NavBar from '@/components/NavBar';
     const [avatarURL, setAvatarURL] =  useState<string>("");
     //const [url,setUrl] = useState("")
     const { user } = useUser();
+    const [userRecord, setUserRecord] = useState<User>()
     const auth = useFirebaseAuth()
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     
     
     useEffect(() => {
-    if (!avatarURL) {
+      if (!avatarURL) {
         setAvatarURL(user?.photoURL!)
       } 
       else {
         setAvatarURL("")
-        
       }
+      const unsub = ReadUser(user.uid, setUserRecord)
+      return unsub
     }, [user])
     
     const handleFileInputChange = async (file: File | null) => {
@@ -119,6 +122,8 @@ import NavBar from '@/components/NavBar';
       await updateProfile(user, {
         photoURL: imageResult as string
       })
+      userRecord!.profilePicture = imageResult as string
+      await UpdateUser(userRecord!)
       setAvatarURL(imageResult as string)
       setSelectedFile(null)
       setFile(false)
@@ -191,13 +196,12 @@ import NavBar from '@/components/NavBar';
                 <Flex   justify="center"
       align="center"
       direction="row">
-              <Image src="/images/boba.png" style={{border: selectedImage === '/images/boba.png' ? '4px solid pink' : 'none' , width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/boba.png")}/> 
-              <Image src="/images/cake.png" style={{border: selectedImage === '/images/cake.png' ? '4px solid pink' : 'none',width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/cake.png")}/>  
-              <Image src="/images/burger.png" style={{border: selectedImage === '/images/burger.png' ? '4px solid pink' : 'none', width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}} onClick = {() => handleImageClick("/images/burger.png")}/>  
-
-              <Image src="/images/fries.png" style={{border: selectedImage === '/images/fries.png' ? '4px solid pink' : 'none',width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/fries.png")}/> 
-              <Image src="/images/sushi.png" style={{border: selectedImage === '/images/sushi.png' ? '4px solid pink' : 'none', width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/sushi.png")}/> 
-              <Image src="/images/taco.png" style={{border: selectedImage === '/images/taco.png' ? '4px solid pink' : 'none', width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}   onClick = {() => handleImageClick("/images/taco.png")}/>  
+              <Image src="/images/boba.png" style={{border: selectedImage === '/images/boba.png' ? '4px solid pink' : 'none' , width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/boba.png")} alt='boba'/> 
+              <Image src="/images/cake.png" style={{border: selectedImage === '/images/cake.png' ? '4px solid pink' : 'none',width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/cake.png")} alt='cake'/>  
+              <Image src="/images/burger.png" style={{border: selectedImage === '/images/burger.png' ? '4px solid pink' : 'none', width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}} onClick = {() => handleImageClick("/images/burger.png")} alt='fries'/>  
+              <Image src="/images/fries.png" style={{border: selectedImage === '/images/fries.png' ? '4px solid pink' : 'none',width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/fries.png")} alt='fries'/> 
+              <Image src="/images/sushi.png" style={{border: selectedImage === '/images/sushi.png' ? '4px solid pink' : 'none', width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/sushi.png")} alt='sushi'/> 
+              <Image src="/images/taco.png" style={{border: selectedImage === '/images/taco.png' ? '4px solid pink' : 'none', width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}   onClick = {() => handleImageClick("/images/taco.png")} alt='taco'/>  
               </Flex>
               </ScrollArea>
               <FileInput

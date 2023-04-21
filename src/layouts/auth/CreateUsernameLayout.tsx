@@ -56,7 +56,7 @@ export default function AuthenticationForm(props: PaperProps) {
 
       const UID = user?.uid;
       if (user?.email) {
-        WriteUser({username: username, email: user.email, uid: UID!, tables: [], profilePicture:""} as IUser)
+        WriteUser({username: username, email: user.email, uid: UID!, tables: [], profilePicture: user.photoURL} as IUser)
       }
       var temp = 0  
       !/\s/.test(username) ? null : temp = 1
@@ -64,9 +64,6 @@ export default function AuthenticationForm(props: PaperProps) {
         alert("Username should be one word")
         return undefined
       }
-      console.log("working")
-      console.log("working")
-      console.log(username)
       setTimeout(() => {
         router.push('/tables');
       }, 10)

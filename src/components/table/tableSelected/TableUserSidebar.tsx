@@ -6,13 +6,11 @@ import UserCard from "./CardUser";
 import { useEffect, useState } from "react";
 import { ReadUsers } from "@/lib/firebase/auth/AuthOperations";
 import { User } from "@/types/User";
-import { getAuth } from "firebase/auth";
 
 
 export default function TableUserSidebar(props: {table: Table}) {
   const { user } = useUser();
   const [users, setUsers] = useState<User[]>();
-  const userr = getAuth().currentUser
   useEffect(() => {
     const unsub = ReadUsers(setUsers)
     return unsub
@@ -23,10 +21,10 @@ export default function TableUserSidebar(props: {table: Table}) {
       <Title className="text-center text-5xl font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Users</Title>
       <div className="space-y-5">
         <UserCard
-          image=  {userr?.photoURL}
+          image={ users?.find((item) => item.uid == props.table.leader)?.profilePicture! }
           name={ users?.find((item) => item.uid == props.table.leader)?.username! } 
           email={ users?.find((item) => item.uid == props.table.leader)?.email! } 
-          uid={ user?.uid! }
+          uid={ props.table.leader }
           icon={ <IconCrown className="h-5 w-5 fill-amber-500" /> } 
           leaderView={ props.table.leader == user?.uid } 
           table={ props.table }
@@ -34,7 +32,7 @@ export default function TableUserSidebar(props: {table: Table}) {
         {Object.keys(props.table.users).filter((item) => item != props.table.leader).map((uid) => 
           <>
             <UserCard 
-              image =  {userr?.photoURL}
+              image={ users?.find((item) => item.uid == uid)?.profilePicture }
               name={ users?.find((item) => item.uid == uid)?.username! } 
               email={ users?.find((item) => item.uid == uid)?.email! }
               uid={ uid }

@@ -1,8 +1,5 @@
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase"
 import {signInWithPopup, createUserWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signOut, GithubAuthProvider } from "firebase/auth";
-import { StringLiteral } from "typescript";
-import { sendEmailVerification, signInAnonymously } from "firebase/auth";
-import { isAdmin } from "@firebase/util";
 
 
 export async function CreateAccountEmailandPassword(email:string, password:string) {
@@ -81,7 +78,7 @@ export async function CreateAccountWithFacebook() {
 export async function CreateAccountWithGitHub() {
 	const provider = new GithubAuthProvider();
 	const auth = useFirebaseAuth();
- signInWithPopup(auth, provider)
+  signInWithPopup(auth, provider)
   .then((result) => {
     // This gives you a GitHub Access Token. You can use it to access the GitHub API.
     const credential = GithubAuthProvider.credentialFromResult(result);
