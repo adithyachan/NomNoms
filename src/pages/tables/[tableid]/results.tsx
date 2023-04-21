@@ -3,9 +3,10 @@ import { ReadTable } from "@/lib/firebase/table/TableOperations";
 import { Table } from "@/types/Table";
 import { useState, useEffect } from "react";
 import ShowCard from "@/components/table/restaurantCards/Card";
-import { Text, Center, Container, Flex, Title } from "@mantine/core";
+import { Text, Center, Container, Flex, Title, Grid } from "@mantine/core";
 import { Button, Image } from "@mantine/core";
 import RestaurantPreviewCard from "@/components/table/tableSelected/RestaurantPreviewCard";
+import { IconDoorExit } from "@tabler/icons-react";
 export default function ResultsPage() {
   const router = useRouter()
   const { tableid } = router.query
@@ -74,36 +75,93 @@ export default function ResultsPage() {
         .map(pair => pair[0]);
       console.log(totalVotes)
       return (
-        <Center>
-          <Center className="flex-col rounded-3xl bg-rose-50 shadow-red-100 shadow-xl w-1/2 m-20 py-10">
-            <Text ta="center" className="mb-10 text-5xl font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Results</Text>
-            <Container mah={500} className="overflow-y-scroll space-y-3 mb-5">
-              {topRestaurantIDs.length > 0 ?
-                (topRestaurantIDs.map((id: string, idx) => (
-                  <Flex key={idx} className="space-x-5 items-center">
-                    <Flex direction="column">
-                      <Title color="red">#{ idx + 1 }</Title>
-                      <small className="text-center text-xs">Votes:{ Math.floor(totalVotes[id]) }</small>
-                    </Flex>
-                    <RestaurantPreviewCard 
-                      key={ id } 
-                      data={ table.restaurantList.find(i => i.id == id) }
-                    />
-                  </Flex>
-                )))
-                :
-                (<>
-                  {'No one voted for anything :('}
-                </>)
+        <Flex direction="column" justify="center" align="center" className="m-5 w-full">
+          <Image width={400} src="/images/full_logo.png" alt="Main NomNoms Logo" className="self-center mr-10"/>
+          <Text ta="center" className="text-4xl font-black -mt-5" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Results</Text>
+          <Grid className="w-full">
+            <Grid.Col span={4}>
+              <Center className="flex-col rounded-3xl bg-rose-50 shadow-red-100 shadow-xl py-10 my-10">
+                <Text ta="center" className="mb-10 text-5xl font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Ranking</Text>
+                <Container mah={500} className="overflow-y-scroll space-y-3 mb-5">
+                  {topRestaurantIDs.length > 0 ?
+                    (topRestaurantIDs.map((id: string, idx) => (
+                      <Flex key={idx} className="space-x-5 items-center">
+                        <Flex direction="column">
+                          <Title color="red">#{ idx + 1 }</Title>
+                          <small className="text-center text-xs">Votes:{ Math.floor(totalVotes[id]) }</small>
+                        </Flex>
+                        <RestaurantPreviewCard 
+                          key={ id } 
+                          data={ table.restaurantList.find(i => i.id == id) }
+                        />
+                      </Flex>
+                    )))
+                    :
+                    (<>
+                      {'No one voted for anything :('}
+                    </>)
 
-              }
-            </Container>
-            <Button color="red" onClick={HandleDone}>
-              Finish
-            </Button>
-          </Center>
-        </Center>
-      
+                  }
+                </Container>
+              </Center>
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <Center className="flex-col rounded-3xl bg-rose-50 shadow-red-100 shadow-xl my-10 py-10">
+                <Text ta="center" className="mb-10 text-5xl font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Crowd Favs</Text>
+                <Container mah={500} className="overflow-y-scroll space-y-3 mb-5">
+                  {topRestaurantIDs.length > 0 ?
+                    (topRestaurantIDs.filter(i => totalVotes[i] >= 2).map((id: string, idx) => (
+                      <Flex key={idx} className="space-x-5 items-center">
+                        <Flex direction="column">
+                          <Title color="red">#{ idx + 1 }</Title>
+                          <small className="text-center text-xs">Votes:{ Math.floor(totalVotes[id]) }</small>
+                        </Flex>
+                        <RestaurantPreviewCard 
+                          key={ id } 
+                          data={ table.restaurantList.find(i => i.id == id) }
+                        />
+                      </Flex>
+                    )))
+                    :
+                    (<>
+                      {'No one voted for the same restaurant :('}
+                    </>)
+
+                  }
+                </Container>
+              </Center>
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <Center className="flex-col rounded-3xl bg-rose-50 shadow-red-100 shadow-xl my-10 py-10">
+                <Text ta="center" className="mb-10 text-5xl font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Crowd Favs</Text>
+                <Container mah={500} className="overflow-y-scroll space-y-3 mb-5">
+                  {topRestaurantIDs.length > 0 ?
+                    (topRestaurantIDs.filter(i => totalVotes[i] >= 2).map((id: string, idx) => (
+                      <Flex key={idx} className="space-x-5 items-center">
+                        <Flex direction="column">
+                          <Title color="red">#{ idx + 1 }</Title>
+                          <small className="text-center text-xs">Votes:{ Math.floor(totalVotes[id]) }</small>
+                        </Flex>
+                        <RestaurantPreviewCard 
+                          key={ id } 
+                          data={ table.restaurantList.find(i => i.id == id) }
+                        />
+                      </Flex>
+                    )))
+                    :
+                    (<>
+                      {'No one voted for the same restaurant :('}
+                    </>)
+
+                  }
+                </Container>
+              </Center>
+            </Grid.Col>
+          </Grid>
+          <Button color="red" onClick={HandleDone} rightIcon={<IconDoorExit />}>
+            Back to Home
+          </Button>
+        </Flex>
       )
       
     } else {
