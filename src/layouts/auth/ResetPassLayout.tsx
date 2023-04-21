@@ -1,4 +1,3 @@
-/* TODO: Layout for Reset Password Page */
 import {
     createStyles,
     Paper,
@@ -72,22 +71,12 @@ import { NotificationsProvider } from '@mantine/notifications';
           icon: <IconCheck size={16} />,
           
           styles: () => ({
-            /*
-            root: {
-              backgroundColor: '#FFE4E6',
-              borderColor: '#FFE4E6',
-              '&::before': { backgroundColor: '#FFFFFF' },
-            },
-            */
-            //title: { color: '#F43F5E' },
-            //description: { color: '#F43F5E'},
             closeButton: {
               color: '#F43F5E',
               '&:hover': { backgroundColor: '#F43F5E' },
             },
           }),            
         })
-        //router.push('/auth/inputresetpass')
       }).catch(error => {
         setError(true)
         console.clear();
@@ -99,15 +88,6 @@ import { NotificationsProvider } from '@mantine/notifications';
           icon: <IconX size={16} />,
           
           styles: () => ({
-            /*
-            root: {
-              backgroundColor: '#FFE4E6',
-              borderColor: '#FFE4E6',
-              '&::before': { backgroundColor: '#FFFFFF' },
-            },
-            */
-            //title: { color: '#F43F5E' },
-            //description: { color: '#F43F5E'},
             closeButton: {
               color: '#F43F5E',
               '&:hover': { backgroundColor: '#F43F5E' },

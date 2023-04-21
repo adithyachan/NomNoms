@@ -3,7 +3,7 @@ import { Timestamp } from "firebase/firestore";
 export interface ITable {
   id: string,
   name: string,
-  lastAccessed: Timestamp,
+  lastAccessed: any,
   banned: string[],
   users: {
     [key: string]: {
@@ -16,17 +16,20 @@ export interface ITable {
     cuisine: string,
     price: string,
   },
-  expiration: Timestamp,
+  expiration: any,
   description: string,
-  date: Date,
-  numDoneVoting: number,
+  date: any,
+  // numDoneVoting: number,
+  usersDoneVoting: string[]
   prefsDone: string[],
+  restaurantList: any[],
+  recommendation: string,
 }
 
 export class Table implements ITable {
   id: string;
   name: string;
-  lastAccessed: Timestamp;
+  lastAccessed: any;
   banned: string[];
   users: {
     [key: string]: {
@@ -39,13 +42,19 @@ export class Table implements ITable {
     cuisine: string;
     price: string;
   };
-  expiration: Timestamp;
-  numDoneVoting: number;
+  expiration: any;
+  // numDoneVoting: number;
+  usersDoneVoting: string[];
   description: string;
-  date: Date;
+  date: any;
   prefsDone: string[];
+  restaurantList: any[];
+  recommendation: string;
 
-  constructor(json: ITable) {
+  constructor(json: ITable | undefined) {
+      if (!json) {
+        throw undefined
+      }
       this.id = json.id;
       this.name = json.name;
       this.lastAccessed = (new Timestamp(json.lastAccessed.seconds, json.lastAccessed.nanoseconds));
@@ -54,10 +63,13 @@ export class Table implements ITable {
       this.leader = json.leader;
       this.prefs = json.prefs;
       this.expiration = (new Timestamp(json.expiration.seconds, json.expiration.nanoseconds));
-      this.numDoneVoting = json.numDoneVoting;
-      this.description = json.description;
+      // this.numDoneVoting = json.numDoneVoting;
+      this.usersDoneVoting = json.usersDoneVoting;
       this.date = json.date;
+      this.description = json.description;
       this.prefsDone = json.prefsDone;
+      this.restaurantList = json.restaurantList;
+      this.recommendation = json.recommendation;
   };
 }
 

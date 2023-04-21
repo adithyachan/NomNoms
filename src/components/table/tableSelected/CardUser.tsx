@@ -16,7 +16,7 @@ import { UpdateTable } from '@/lib/firebase/table/TableOperations';
 import { useDisclosure } from '@mantine/hooks';
 
 interface UserCardProps extends React.ComponentPropsWithoutRef<'button'> {
-  image?: string;
+  image?: string|undefined|null;
   name: string;
   email: string;
   uid: string;
@@ -27,7 +27,6 @@ interface UserCardProps extends React.ComponentPropsWithoutRef<'button'> {
 
 export default function UserCard({ image, name, email, uid, leaderView, icon, table }: UserCardProps) {
   const [opened, { open, close }] = useDisclosure()
-
   const transferLeadership = async () => {
     table.leader = uid
     await UpdateTable(table)

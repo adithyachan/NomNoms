@@ -9,11 +9,11 @@ export default function RestaurantPreviewCard(props: {data: any}) {
   const router = useRouter()
   
   return (
-    <div className="shadow-lg shadow-rose 200 rounded-2xl transition ease-in-out hover:shadow-xl hover:shadow-rose-300 duration-300 delay-75">
+    <div className="shadow-lg shadow-rose 200 rounded-2xl transition ease-in-out hover:shadow-xl hover:shadow-rose-300 duration-300 delay-75 w-full">
       <BackgroundImage src={restaurant.image_url ?? defaultImage} className="w-full h-32 rounded-2xl">
         <div className="h-full w-full bg-gray-800/60 rounded-2xl flex justify-end items-center">
           <div className="w-full ml-5 mt-3">
-            <Title color="white" order={3}>{restaurant.name.length > 15 ? restaurant.name.substring(0, 15) + "..." : restaurant.name} <span className="text-red-500">{restaurant.price ?? ""}</span></Title>
+            <Title className="ResTitle" color="white" order={3}>{restaurant.name.length > 15 ? restaurant.name.substring(0, 15) + "..." : restaurant.name} <span className="text-red-500">{restaurant.price ?? ""}</span></Title>
             <small className="text-white -mt-1">{restaurant.location ? restaurant.location.address1 : null}</small>
             <Rating defaultValue={restaurant.rating} fractions = {2} readOnly size = "md" className="mt-2"/>
             <small className="text-white">{restaurant.review_count} Reviews</small>

@@ -21,7 +21,8 @@ import {
   IconCheck,
   IconX,
   IconDoorExit,
-  IconAddressBook
+  IconAddressBook,
+  IconTableShortcut
 } from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
 import { useFirebaseAuth } from '@/lib/firebase/hooks/useFirebase';
@@ -29,7 +30,7 @@ import { useUser } from '@/providers/AuthProvider';
 import { useRouter } from "next/router";
 import { deleteUser, signOut } from "firebase/auth";
 import { User } from "@/types/User";
-import { ReadUsers } from "@/lib/firebase/auth/AuthOperations";
+import { ReadUser, ReadUsers } from "@/lib/firebase/auth/AuthOperations";
 
 
 const useStyles = createStyles((theme) => ({
@@ -70,14 +71,18 @@ export default function NavBar(props : any) {
   const { user } = useUser();
   const auth = useFirebaseAuth();
   const router = useRouter();
+  const [avatarURL, setAvatarURL] =  useState<string>(user?.photoURL!);
 
   useEffect(() => {
-    const unsub = ReadUsers(setUsers)
-    return unsub
-  }, [])
+    if (users?.length == 0 || users == undefined) {
+      const unsub = ReadUsers(setUsers)
+      return unsub
+    }
+    setAvatarURL(user?.photoURL)
+  }, [user?.photoURL])
 
-  const userName = users?.find((item) => item.uid == user?.uid)?.username!
-
+   const userName = users?.find((item) => item.uid == user?.uid)?.username!
+  console.log(userName)
 
   const HandleChange = () => {
     router.push('/auth/changePass')
@@ -91,6 +96,10 @@ export default function NavBar(props : any) {
     e.preventDefault();
     console.log("checking google")
     signOut(auth).then(() => {
+      if (!router.pathname.toString().includes('tables'))  {
+        router.push('/')
+      }
+      /*
     // Sign-out successful
     console.log("user was successfully signed out");
     showNotification({
@@ -106,8 +115,10 @@ export default function NavBar(props : any) {
         },
       }),            
     })
+    */
 
   }).catch((error) => {
+    /*
     // An error happened.
     console.log("error occurred, user was not signed out successfully")
     showNotification({
@@ -123,11 +134,16 @@ export default function NavBar(props : any) {
         },
       }),            
     })
+    */
   });  
   }
 
   const HandleDelete = async (e : any) => {
     router.push('/auth/deleteAccount')
+  }
+
+  const HandleYourTables = async (e: any) => {
+    router.push("/tables")
   }
 
   return (
@@ -160,7 +176,7 @@ export default function NavBar(props : any) {
                     className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
                   >
                     <Group spacing={7}>
-                      <Avatar alt={user?.email!} radius="xl" size="md" src={user.photoURL}/>
+                      <Avatar alt={user?.email!} radius="xl" size="md" src={avatarURL}/>
                       <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
                         {userName!}
                       </Text>
@@ -171,18 +187,14 @@ export default function NavBar(props : any) {
                 <Menu.Dropdown>
                   <Menu.Label>Settings</Menu.Label>
                   <Menu.Item
-                  
+                  icon={<IconTableShortcut size="14"
+                  stroke={1.5}
+                  />}
+                  onClick={HandleYourTables}
                   >
                     Your Tables
                   </Menu.Item>
-                  <Menu.Item 
-                  icon={<IconSwitchHorizontal size="14" 
-                  stroke={1.5} 
-                  />}
-                  onClick={HandleChange}
-                  >
-                    Change Password
-                  </Menu.Item>
+                
                   <Menu.Item
                   icon={<IconAddressBook size="14"
                   stroke={1.5}
@@ -194,6 +206,14 @@ export default function NavBar(props : any) {
                   icon={<IconLogout size="14" stroke={1.5} />}
                   onClick={HandleSignOut}
                   >Logout</Menu.Item>
+                    <Menu.Item 
+                  icon={<IconSwitchHorizontal size="14" 
+                  stroke={1.5} 
+                  />}
+                  onClick={HandleChange}
+                  >
+                    Change Password
+                  </Menu.Item>
                   <Menu.Divider />
                   <Menu.Label>Danger zone</Menu.Label>
                   <Menu.Item 

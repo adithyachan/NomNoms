@@ -17,9 +17,7 @@ export default function TableCard(props: {table: Table, id: string}) {
 
   const removeTable = async () => {
     // props.table.users = props.table.users.filter(item => item !== user.uid)
-    if (user?.uid) {
-      delete props.table.users[user?.uid]
-    }
+    delete props.table.users[user.uid]
     await UpdateTable(props.table)
     close()
   }

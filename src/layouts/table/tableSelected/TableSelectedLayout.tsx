@@ -4,10 +4,9 @@ import { Table } from "@/types/Table";
 import { Container, Grid, Title, Center, Button, Flex, Image, Text, SegmentedControl, Menu } from "@mantine/core";
 import RestaurantListLayout from "./RestaurantListLayout";
 import NavBar from "@/components/NavBar";
-import { NotificationsProvider, showNotification } from "@mantine/notifications";
+import { NotificationsProvider } from "@mantine/notifications";
 import { useState, useEffect } from "react";
-import { getRestaurantList } from "@/lib/utils/yelpAPI";
-import { IconAbc, IconChevronDown, IconChevronUp, IconCurrencyDollar, IconWorld, IconX } from "@tabler/icons-react";
+import { IconAbc, IconChevronDown, IconChevronUp, IconCurrencyDollar, IconRefresh, IconWorld, IconX, IconZoomReset } from "@tabler/icons-react";
 import LoadingLayout from "@/layouts/LoadingLayout";
 import { useRouter } from "next/router";
 import BestCard from "@/components/table/tableSelected/ShowingBestCard";
@@ -15,14 +14,14 @@ import { useUser } from "@/providers/AuthProvider";
 import { useToggle } from "@mantine/hooks";
 import { UpdateTable } from "@/lib/firebase/table/TableOperations";
 
-const numFetch = 50;
 const limit = 5;
 
 export default function TableSelectedLayout(props: {table: Table}) {
   const [offset, setOffset] = useState(5)
-  const [data, setData] = useState<any[]>([])
-  const [preview, setPreview] = useState<any[]>([])
+  const data = props.table.restaurantList
+  const [preview, setPreview] = useState<any[]>(props.table.restaurantList)
   const [loading, setLoading] = useState(false)
+  const [sorted, setSorted] = useState<any[]>()
   const [error, setError] = useState(false)
   const [noRes, setNoRes] = useState(false)
   const [value, setValue] = useState('rated');
@@ -30,7 +29,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const [sortVar, setSortBy] = useState<string>()
   const [vote, setVote] = useState<boolean>()
   const [cuisine, setCuisine] = useState<string>()
-  const [priceString, setPriceString] = useState<string>()
+  const [priceString, setPriceString] = useState<string>("1,2,3,4")
   const { user } = useUser()
 
   const router = useRouter()
@@ -81,66 +80,10 @@ export default function TableSelectedLayout(props: {table: Table}) {
       )
     }
   }
-  
-  let temp: any[] = []
-  const getRestaurantFirstTime = async (n: number = 5) => {
-    setError(false)
-    setLoading(true)
-
-    for (let i = 0; i < n; i++) {
-      try {
-        const res = await getRestaurantList(numFetch, props.table.prefs.zip, 10000, "food", i * numFetch)
-        const resJSON = await res.json()
-        if (res.status >= 400) {
-          showNotification({
-            title: "Yikes",
-            message: resJSON.error,
-            icon: <IconX />,
-            color: "red"
-          })
-          setError(true)
-        }
-        else if(res.ok) {
-          temp = temp.concat(resJSON.businesses)
-        }
-      }
-      catch (err) {
-        showNotification({
-          title: "Yikes",
-          message: "Failed to fetch data",
-          icon: <IconX />,
-          color: "red"
-        })
-        setError(true)
-        console.log(err)
-      }
-    }
-
-    console.log(temp)
-
-    setData(temp)
-    setPreview(temp)
-    setLoading(false);
-  }
 
   const getRestaurantWithPrefs = (cuisine?: string[], price?: {min: string, max: string}) => {
 
-
     let temp = data
-    // console.log("before filters: " + temp)
-    // console.log(" TABLE: cuisine: " + cuisine)
-    // console.log(" TABLE: min: " + price?.min)
-    // console.log(" TABLE: max: " + price?.max)
-    /*
-    if (cuisine) {
-      temp.forEach(item => 
-        console.log(item.categories.map((i: any) => i.title))
-      )
-      temp = temp.filter(item => 
-        item.categories.map((i: any) => i.title).includes(cuisine) 
-      );
-    }
-    */
 
     if (cuisine) {
       if (cuisine.length != 0) {
@@ -151,10 +94,6 @@ export default function TableSelectedLayout(props: {table: Table}) {
       }
       setCuisine(cuisine.join(','))
     }
-
-    console.log("CUISINE: " + cuisine)
-
-    console.log("TEMP: " + temp)
 
     if (price) {
       let p = ""
@@ -198,36 +137,39 @@ export default function TableSelectedLayout(props: {table: Table}) {
         return 0
     }
     const sorted = [...preview].sort(comp)
-    setPreview(sorted)
+    setSorted(sorted)
   }
 
   useEffect(() => {
     if (data.length == 0) {
-      getRestaurantFirstTime()
+      setLoading(true)
     }
-    if (props.table.prefsDone.length == Object.keys(props.table.users).length) {
-      router.push(router.asPath + "/voting")
+    else {
+      setLoading(false)
+    }
+
+    if (user && props.table.banned.includes(user.uid)) {
+      router.push("/tables/tablenotfound")
+    }
+
+    if (props.table.prefsDone.length == Object.keys(props.table.users).length &&
+        !(Object.keys(props.table.users).includes(user.uid!) && 
+        Object.keys(props.table.users[user.uid!]).length !== 0)) {
+        router.push(router.asPath + "/voting")
     }
   }, [props.table])
   
   function addOrdinalSuffix(dateString: string) {
-    const dateParts = dateString.split(" ");
-    const day = parseInt(dateParts[0]);
-    const month = dateParts[1];
-    const year = parseInt(dateParts[2]);
-    
-    let suffix = "th";
-    if (day === 1 || day === 21 || day === 31) {
-      suffix = "st";
-    } else if (day === 2 || day === 22) {
-      suffix = "nd";
-    } else if (day === 3 || day === 23) {
-      suffix = "rd";
-    }
-    
-    return day + suffix + " " + month + " " + year;
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const suffix = (day % 10 === 1 && day !== 11) ? "st" :
+                   (day % 10 === 2 && day !== 12) ? "nd" :
+                   (day % 10 === 3 && day !== 13) ? "rd" :
+                   "th";
+    return `${day}${suffix} ${date.toLocaleString('en-US', {month: 'long', year: 'numeric'})}`;
   }
   
+
   return (
     <>
     <NotificationsProvider>
@@ -242,12 +184,17 @@ export default function TableSelectedLayout(props: {table: Table}) {
           <Grid.Col span="auto">
             <TablePrefSidebar data={data} setPrefs={getRestaurantWithPrefs}/>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+            
             <Title className="mb-1 mt-4 ml-2 text-center text-xl font-black" variant="gradient" gradient={{ from: "red.7", to: "red.4" }} order={2}>
-  {"Event Date: "}
+  {"Event Date: " + new Date(props.table.date.seconds * 1000).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })
+
+}
 </Title>
+{props.table.description && 
 <Title className="mb-3 ml-2 text-center text-xl font-black" variant="gradient" gradient={{ from: "red.7", to: "red.4" }} order={2}>
   {"Event Description: " + props.table.description}
 </Title>
+}
 
 </div>
 
@@ -273,15 +220,15 @@ export default function TableSelectedLayout(props: {table: Table}) {
                   </>
                 :
                 <>        
-                  <RestaurantListLayout data={preview.slice(0, offset)} />
-                  {offset < preview.length ? 
+                  <RestaurantListLayout data={(sorted ?? preview).slice(0, offset)} />
+                  
                     <Flex direction="column" align="center" gap="sm">
                       <Flex gap="10px" direction="row" align="between" justify="space-around" className="w-full mt-3">
                         <Button.Group>
                           <Menu>
                             <Menu.Target>
-                              <Button color="gray">
-                                {sortVar ?? "Sort By"}
+                              <Button color="gray" className="sort-button">
+                                {sortVar ? sortVar?.substring(0, 1).toUpperCase()! + sortVar?.substring(1) : "Sort By"}
                               </Button>
                             </Menu.Target>
                             <Menu.Dropdown>
@@ -312,6 +259,15 @@ export default function TableSelectedLayout(props: {table: Table}) {
                               >
                                 Distance
                               </Menu.Item>
+                              <Menu.Item 
+                                onClick={() => {
+                                  setSorted(undefined)
+                                  setSortBy("")
+                                }} 
+                                rightSection={<IconRefresh className="ml-5 h-5 w-5"/>}
+                              >
+                                Reset
+                              </Menu.Item>
                             </Menu.Dropdown>
                           </Menu>
                           <Button color="gray" onClick={() => {
@@ -323,14 +279,16 @@ export default function TableSelectedLayout(props: {table: Table}) {
                         </Button.Group>
                         
                         <VoteButton/>
+                        {offset < preview.length ? 
                         <Button color="red" onClick={() => {
                           setOffset(offset + limit > preview.length ? preview.length : offset + limit)
                         }}>
                           Load More
-                        </Button>
+                        </Button> : 
+                        <Button disabled>Load More</Button>}
                       </Flex>
                     </Flex>
-                  : null}
+                  
                 </>}
               </>}
           </Grid.Col>

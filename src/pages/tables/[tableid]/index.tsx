@@ -2,7 +2,8 @@
 import { useRouter } from "next/router";
 
 // Firestore Imports
-import { ReadTable, ReadTables, UpdateTable } from "@/lib/firebase/table/TableOperations";
+import { ReadTable, UpdateTable } from "@/lib/firebase/table/TableOperations";
+import { ReadDocument } from "@/lib/firebase/FirestoreOperations";
 
 
 // Layouts
@@ -16,31 +17,46 @@ import { Timestamp } from "firebase/firestore";
 import { NotificationsProvider, showNotification } from "@mantine/notifications";
 
 import { IconCheck } from "@tabler/icons-react";
+import { GetServerSideProps } from "next";
 
-export default function TablePage() {
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const tableid = context.params?.tableid
+  const res = (await ReadDocument("tables", tableid as string))
+  
+  if (res) {
+    const table: ITable = res as ITable
+    table.lastAccessed = { seconds: table.lastAccessed.seconds, nanoseconds: table.lastAccessed.nanoseconds }
+    table.expiration = { seconds: table.expiration.seconds, nanoseconds: table.expiration.nanoseconds }
+    table.date = { seconds: table.date.seconds, nanoseconds: table.date.nanoseconds }
+    return { props: { table: table } }
+  }
+  
+  return { props: { table: undefined } }
+}
+
+export default function TablePage(props: { table: ITable | undefined }) {
   const router = useRouter()
   const { tableid } = router.query
   const { user } = useUser()
   const [table, setTable] = useState<Table>()
-  const [tables, setTables] = useState<Table[]>()
 
   const updateTable = async () => {
-    if (table) {
-      table.lastAccessed = Timestamp.fromDate((new Date()))
-      table.expiration = Timestamp.fromDate(new Date(table.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
-      // if (!table.users.includes(user.uid!)) {
-      if (! Object.keys(table.users).includes(user?.uid!)) {
+    if (props.table && !props.table.banned.includes(user.uid)) {
+      const temp = new Table(props.table)
+      temp.lastAccessed = Timestamp.fromDate((new Date()))
+      temp.expiration = Timestamp.fromDate(new Date(temp.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
+      if (! Object.keys(temp.users).includes(user?.uid!)) {
         showNotification({
           title: `You're in!`,
-          message: `Successfully joined table: ${table.name}`,
+          message: `Successfully joined table: ${temp.name}`,
           autoClose: 3000,
           color: 'teal',
           icon: <IconCheck size={16} />,           
         })
-        // table.users.push(user.uid!)
-        table.users[user?.uid!] = {};
+        temp.users[user?.uid!] = {};
       }
-      await UpdateTable(table as ITable)
+      await UpdateTable(temp as ITable)
     } 
   }
 
@@ -55,26 +71,12 @@ export default function TablePage() {
       router.push("/auth/verification")
     }
 
-    if (!tables) {
-      ReadTables(setTables)
+    if (props.table) {
+      updateTable()
+      const unsub = ReadTable(tableid as string, setTable)
+      return unsub
     }
-    else {
-      if (tables.map((table) => table.id).includes(tableid as string)) {
-        if (!table) {
-          ReadTable(tableid as string, setTable)
-        }
-        else if (table.banned && table.banned.includes(user?.uid!)) {
-          router.push("/tables/tablenotfound")
-        }
-        else if (((new Date()).getTime() - table.lastAccessed.toDate().getTime()) / 1000 > 2) {
-          updateTable()
-        }
-      }
-      else {
-        router.push("/tables/tablenotfound")
-      }
-    }
-  }, [tables, table, user, tableid])
+  }, [user])
 
   // Check if page is loaded yet
   if (!table) {
@@ -84,7 +86,7 @@ export default function TablePage() {
   return (
     <>
       <NotificationsProvider>
-        <TableSelectedLayout table={ table }/>
+        <TableSelectedLayout table={ table } />
       </NotificationsProvider>
     </>
   )

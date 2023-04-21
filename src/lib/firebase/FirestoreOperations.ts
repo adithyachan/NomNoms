@@ -26,12 +26,10 @@ export const ReadDocument = async (collectionName: string, docName: string) => {
 
   // Check if document exists
   if (query.exists()) {
-    console.log("Document: " + query)
-    return query
+    return query.data()
   }
 
   // document does not exist
-  console.error("Document, " + docName + ", in collection, " + collectionName + ", does not exist!")
   return undefined
 }
 

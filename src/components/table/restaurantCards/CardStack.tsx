@@ -7,6 +7,7 @@ import {List, Group, useMantineTheme } from '@mantine/core';
 import ReviewSort from "./SortReview";
 import SortByPrice from "./PriceSort";
 import SortByLex from "./LexSort";
+import SortByDist from "./DistSort";
 //import { MenuItem } from "@mantine/core/lib/Menu/MenuItem/MenuItem";
 type ComponentProps = {
   id: string;
@@ -22,10 +23,12 @@ const DynamicComponent = componentMap["myComponent"];
 export default function CardStack({listData,ids, setState, setUserVotes, user} : any) {
   var names = new Map()
   var prices = new Map()
+  var distances = new Map()
   var revinfo = new Map()
   var rating = 0
   var neededBusiness :any
   var price = ""
+  var dist = ""
   var name = ""
   const cards3  = new Map
   var review_count = 0
@@ -33,6 +36,7 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
     neededBusiness = listData.businesses[i]
     rating = neededBusiness.rating
     price = neededBusiness.price
+    dist = neededBusiness.distance
     name = neededBusiness.name
     review_count = neededBusiness.review_count
     if (review_count == undefined) {
@@ -44,8 +48,12 @@ export default function CardStack({listData,ids, setState, setUserVotes, user} :
     if (rating == undefined) {
       rating = 0
     }
+    if (dist == undefined) {
+      rating = 0
+    }
     names.set(ids[i], name)
     prices.set(ids[i], price)
+    distances.set(ids[i], dist)
     revinfo.set(ids[i], [rating, review_count])
 
    cards3.set(ids[i], <DynamicComponent id = {ids[i]} />)
@@ -120,6 +128,27 @@ const [value, setSelectedValue] = useState<string |null>('');
   //     setCanFinish(true);
   // }, [index])
 
+  function handleRandomFinishClick() {
+
+  //   const keys = Object.keys(votes);
+  // const randomKey = keys[Math.floor(Math.random() * keys.length)];
+
+  Object.keys(votes).forEach(key => {
+    if (votes[key] == 0 || votes[key] == 1) {
+      delete votes[key]
+    }
+  })
+  let votes2 = votes
+  votes2[ids1[Math.floor(Math.random()*ids1.length)]] = 1
+  setVotes(votes2)
+  // console.log(votes)
+  setUserVotes(votes)
+  setState('favorite')
+    
+
+    // setUserVotes(votes)
+    // TODO: redirect to waiting for other nomsters to finish their votes page
+  }
   
   function handleYesClick() {
     if (index < cards.length - 1) {
@@ -195,6 +224,11 @@ const [value, setSelectedValue] = useState<string |null>('');
       const f = SortByLex({hashm : names, ascending: ascending})
       setIds(f)
     }
+    else if (value == 'Dist') {
+      setFlag (true)
+      const f = SortByDist({hashm : distances, ascending: ascending})
+      setIds(f)
+    }
   }
 
   function SettingValue(value : string|null) {
@@ -203,7 +237,7 @@ const [value, setSelectedValue] = useState<string |null>('');
     function TypeSortButton() {
       return (
         <Select
-  
+        className="sort-by-select"
         value={value}
         onChange={(value) => SettingValue(value)}//setSelectedValue(value)}
         placeholder="Sort by"
@@ -212,6 +246,7 @@ const [value, setSelectedValue] = useState<string |null>('');
           { value: "Price", label: "Price" },
       { value: "Review Info", label: "Review Info" },
       { value: "Lex", label: "Lexicographically" },
+      { value: "Dist", label: "Distance" }
         ]}
       />
   
@@ -247,7 +282,7 @@ const [value, setSelectedValue] = useState<string |null>('');
       )
     } else {
       return (
-        <Button size="lg" onClick={handleYesClick} variant='light' radius='xl' color="green">
+        <Button size="lg" className="yes" onClick={handleYesClick} variant='light' radius='xl' color="green">
           <IconThumbUp color='green' size={20} stroke={1.5} />
         </Button>
       )
@@ -273,7 +308,7 @@ const [value, setSelectedValue] = useState<string |null>('');
     
     return (<Tooltip label="Ascending">
     <span>
-    <Button size="lg" onClick={() => handleSort(true)} variant='light' radius='xl' color="yellow">
+    <Button className="sort-ascending-btn" size="lg" onClick={() => handleSort(true)} variant='light' radius='xl' color="yellow">
     <IconSortAscending color='orange' size={20} stroke={1.5} />
   </Button>
     </span>
@@ -284,7 +319,7 @@ const [value, setSelectedValue] = useState<string |null>('');
     
     return (<Tooltip label="Descending">
     <span>
-    <Button size="lg" onClick={() => handleSort(false)} variant='light' radius='xl' color="yellow">
+    <Button className="sort-descending-btn" size="lg" onClick={() => handleSort(false)} variant='light' radius='xl' color="yellow">
     <IconSortDescending color='orange' size={20} stroke={1.5} />
   </Button>
     </span>
@@ -326,6 +361,18 @@ const [value, setSelectedValue] = useState<string |null>('');
     }
   }
 
+  function Random() {
+    if (canSkip) {
+      return (
+        <NavLink onClick={() => handleRandomFinishClick()} active={true} variant="subtle" color="red" label="Choose a random option" rightSection={<IconChevronRight size="0.8rem" stroke={1.5}/>} />
+      )
+    } else {
+      return (
+        <></>
+      )
+    }
+  }
+
   if (ids1 == undefined || ids1.length == 0) return (<Text size="md" color="dimmed">Card stack is empty!</Text> )
 
   else{
@@ -349,6 +396,7 @@ const [value, setSelectedValue] = useState<string |null>('');
               </div>
             <VetoSkip />
             <Skip />
+            <Random/>
           </div>
         </div>
       </>

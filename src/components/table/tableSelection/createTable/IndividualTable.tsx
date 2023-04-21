@@ -45,10 +45,13 @@ export default function CreateTable() {
         price: ""
       },
       expiration: Timestamp.fromDate(new Date((new Date()).getTime() + 60 * 60 * 24 * 1000)),
-      numDoneVoting: 0,
-      date: new Date(),
+      // numDoneVoting: 0,
+      usersDoneVoting: [],
+      date: Timestamp.fromDate(new Date()),
       description: "",
       prefsDone: [],
+      restaurantList: [],
+      recommendation: ""
     }
     tableJSON.users[user?.uid!] = {}
     const table = new Table(tableJSON)

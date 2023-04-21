@@ -14,16 +14,23 @@ import {
     Modal,
     FileInput,
     Avatar,
+    Grid,
+    Flex,
+    ScrollArea,
+    Box,
   } from '@mantine/core';
+
 import React, {useEffect, useState } from 'react';
 import { NotificationsProvider } from '@mantine/notifications';
 import { useFirebaseAuth } from "@/lib/firebase/hooks/useFirebase";
-import { ReadUser, WriteUser } from "@/lib/firebase/auth/AuthOperations";
+import { ReadUser, UpdateUser, WriteUser } from "@/lib/firebase/auth/AuthOperations";
 import { getStorage, ref, uploadString, getDownloadURL, deleteObject  } from "firebase/storage";
 import firebase from "firebase/compat";
 import ReadPic from "@/components/ReadProfilePic";
 import { updateProfile } from "firebase/auth";
 import { useUser } from "@/providers/AuthProvider";
+import NavBar from '@/components/NavBar';
+import { User } from '@/types/User';
 
   const useStyles = createStyles((theme) => ({
     title: {
@@ -57,18 +64,30 @@ import { useUser } from "@/providers/AuthProvider";
     const { classes } = useStyles();
     const [imageResult,setImageResult] =useState<string | ArrayBuffer | null>()
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [thereIsFile,setFile] = useState(false) 
     const [isImage, setIsImage] = useState(false);
     const [avatarURL, setAvatarURL] =  useState<string>("");
     //const [url,setUrl] = useState("")
     const { user } = useUser();
+    const [userRecord, setUserRecord] = useState<User>()
+    const auth = useFirebaseAuth()
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
+    
     
     useEffect(() => {
       if (!avatarURL) {
         setAvatarURL(user?.photoURL!)
+      } 
+      else {
+        setAvatarURL("")
       }
+      const unsub = ReadUser(user.uid, setUserRecord)
+      return unsub
     }, [user])
     
-    const handleFileInputChange = (file: File | null) => {
+    const handleFileInputChange = async (file: File | null) => {
+        setLoading(true)
         if (file != null) {
           const reader = new FileReader();
           reader.onloadend = async () => {
@@ -79,42 +98,86 @@ import { useUser } from "@/providers/AuthProvider";
             setIsImage(isImage);
             if (isImage) {
               setSelectedFile(file);
+              setSelectedImage(null)
               if (user == undefined) {
                return
               }
+
               const storage = getStorage();
               const storageRef = ref(storage, `profilePictures/${user.uid}`);
               await uploadString(storageRef, result as string, "data_url");
               setImageResult(await getDownloadURL(storageRef))
+              setLoading(false)
             }
           };
           reader.readAsDataURL(file);
+          
         }
     };
 
     const handleUploadButtonClick = async () => {
+      setLoading(true)
       setOpen(false);
       //setAvatarPicture(<Avatar radius="xl" size="xl" src={imageResult as string} />)
       await updateProfile(user, {
         photoURL: imageResult as string
       })
-
+      userRecord!.profilePicture = imageResult as string
+      await UpdateUser(userRecord!)
       setAvatarURL(imageResult as string)
+      setSelectedFile(null)
+      setFile(false)
+      setSelectedImage(null)
     }
 
+    const handleImageClick = async(picSrc: string) => {
+      setSelectedFile(null)
+      const storage = getStorage();
+              const storageRef = ref(storage, `profilePictures/${user.uid}`);
+              const response = await fetch(picSrc);
+              const blob = await response.blob();
+              const dataUrl = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result as string);
+                reader.readAsDataURL(blob);
+              });
+              await uploadString(storageRef, dataUrl as string , "data_url");
+              setImageResult(await getDownloadURL(storageRef))
+              setLoading(false)
+              setFile(true)
+              setIsImage(true)
+              setSelectedImage(picSrc);
+
+    } 
+    
+
    const handleRemovePhoto = async () => {
+    setSelectedImage(null)
     setOpen(false)
+    const storage = getStorage();
+    await updateProfile(user, {
+      photoURL: ""
+    })
     setAvatarURL("")
-    // const storage = getStorage();
-    // if (user == undefined) {
-    //   return
-    //  }
-    // const pictureRef = ref(storage,  `profilePictures/${user.uid}`);
-    // await deleteObject(pictureRef);
+    if (user == undefined) {
+      return
+     }
+    const pictureRef = ref(storage,  `profilePictures/${user.uid}`);
+    await deleteObject(pictureRef);
+    
+
+    
    }
 
    return (
-   
+    <>
+    <NavBar>
+    </NavBar>
+<Container fluid className="bg-gradient-to-b from-rose-100 to-white">
+
+<Grid>
+    <Grid.Col span={12} md={12}>
+
     <NotificationsProvider>
       <Modal
              radius = "lg"
@@ -122,16 +185,30 @@ import { useUser } from "@/providers/AuthProvider";
              withCloseButton={false} 
              size="auto"
              opened={opened}
-             onClose={() => setOpen(false)}
+             onClose={() => ((setOpen(false)),setSelectedFile(null),setFile(false),setSelectedImage(null),setLoading(true))}
              overlayOpacity={0.55}
              overlayBlur={3} 
              overflow="inside" 
              style = {{ position : "absolute", top:'7%'
              } } >
-             <FileInput
+              
+              <ScrollArea type="always" h = {130} w={300} style={{ display: 'flex', flexDirection: 'row',overflowX: "auto" }}>
+                <Flex   justify="center"
+      align="center"
+      direction="row">
+              <Image src="/images/boba.png" style={{border: selectedImage === '/images/boba.png' ? '4px solid pink' : 'none' , width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/boba.png")} alt='boba'/> 
+              <Image src="/images/cake.png" style={{border: selectedImage === '/images/cake.png' ? '4px solid pink' : 'none',width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/cake.png")} alt='cake'/>  
+              <Image src="/images/burger.png" style={{border: selectedImage === '/images/burger.png' ? '4px solid pink' : 'none', width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}} onClick = {() => handleImageClick("/images/burger.png")} alt='fries'/>  
+              <Image src="/images/fries.png" style={{border: selectedImage === '/images/fries.png' ? '4px solid pink' : 'none',width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/fries.png")} alt='fries'/> 
+              <Image src="/images/sushi.png" style={{border: selectedImage === '/images/sushi.png' ? '4px solid pink' : 'none', width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}  onClick = {() => handleImageClick("/images/sushi.png")} alt='sushi'/> 
+              <Image src="/images/taco.png" style={{border: selectedImage === '/images/taco.png' ? '4px solid pink' : 'none', width: '110px', height: '110px', display: 'inline-block', cursor:"pointer"}}   onClick = {() => handleImageClick("/images/taco.png")} alt='taco'/>  
+              </Flex>
+              </ScrollArea>
+              <FileInput
+              
         accept="image/*"
         label="Select a profile picture"
-        onChange={handleFileInputChange}
+        onChange={ handleFileInputChange}
         value={selectedFile}
         styles={{ root: { marginBottom: "16px" } }}
       />
@@ -139,23 +216,23 @@ import { useUser } from "@/providers/AuthProvider";
         <Text color="red">Please select an image file</Text>
       )}
       
-      {selectedFile && isImage && (< Group style ={{padding:'xl'}}>
-
+      < Group style ={{padding:'xl'}}>
+      { !loading &&((selectedFile && isImage) || (isImage && thereIsFile)) && (
         <Button
           variant="outline"
           onClick={handleUploadButtonClick}
         >
           Upload
-        </Button> 
-        
-         <Button
+        </Button>) }
+      {
+        avatarURL!= "" && avatarURL!=undefined &&
+      <Button
          variant="outline" 
          onClick={handleRemovePhoto}
        >
          Remove Photo
-       </Button>
-       </Group>
-      )}
+       </Button> }
+      </Group>
 
       
      
@@ -207,5 +284,9 @@ import { useUser } from "@/providers/AuthProvider";
           </Center>
         </Container>     
       </NotificationsProvider>
+    </Grid.Col>
+</Grid>   
+</Container>
+</>
     )
   }

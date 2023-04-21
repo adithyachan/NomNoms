@@ -1,5 +1,5 @@
 import { ITable, Table } from "@/types/Table";
-import { collection, doc, QueryDocumentSnapshot, onSnapshot, query, DocumentSnapshot } from "firebase/firestore";
+import { collection, doc, QueryDocumentSnapshot, onSnapshot, query, DocumentSnapshot, where, WhereFilterOp, orderBy } from "firebase/firestore";
 import { WriteDocumentWithConverter, DeleteDocument } from "../FirestoreOperations";
 import { useFirebaseFirestore } from "../hooks/useFirebase";
 
@@ -17,10 +17,13 @@ const tableConverter = {
           leader: table.leader,
           prefs: table.prefs,
           expiration: table.expiration,
-          numDoneVoting: table.numDoneVoting,
+          // numDoneVoting: table.numDoneVoting,
+          usersDoneVoting: table.usersDoneVoting,
           description: table.description,
           date: table.date,
           prefsDone: table.prefsDone,
+          restaurantList: table.restaurantList,
+          recommendation: table.recommendation
         };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot | DocumentSnapshot) => {
@@ -61,10 +64,23 @@ export const ReadTable = (docName: string, setDoc: any) => {
  * Reads all tables
  * @returns object containing all tables as type {[id: string] : Table}
  */
-export const ReadTables =  (setDocs: any) => {
+export const ReadTables =  (setDocs: any, w?: {field: string, op: WhereFilterOp, val: string | boolean | number}, oB?: string) => {
   const firestore = useFirebaseFirestore()
   try {
-    const q = query(collection(firestore, collectionName));
+    let q = undefined
+    if (w && oB) {
+      q = query(collection(firestore, collectionName), where(w.field, w.op, w.val), orderBy(oB));
+    }
+    else if (w) {
+      q = query(collection(firestore, collectionName), where(w.field, w.op, w.val))
+    }
+    else if (oB) {
+      q = query(collection(firestore, collectionName), orderBy(oB))
+    }
+    else {
+      q = query(collection(firestore, collectionName))
+    }
+    
     const unsub = onSnapshot(q, (querySnapshot) => {
       const docs: Table[] = [];
       querySnapshot.forEach((doc) => {
@@ -72,7 +88,6 @@ export const ReadTables =  (setDocs: any) => {
           docs.push(converted);
       });
       setDocs(docs)
-      console.log(docs);
     });
 
     return unsub
