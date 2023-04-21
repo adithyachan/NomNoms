@@ -4,7 +4,7 @@ import { Center, Text } from "@mantine/core";
 
 
 export default function CreateJoinTableLayout() {
-  const [activeTab, setActiveTab] = useState<string | null>('Join');
+  const [activeTab, setActiveTab] = useState<string | null>('Create');
 
   return (
     <Center className="flex-col rounded-3xl bg-white shadow-red-100 shadow-xl p-10 m-10">
