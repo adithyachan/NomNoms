@@ -23,9 +23,8 @@ import { NotificationsProvider } from '@mantine/notifications';
 import { IconX } from '@tabler/icons-react';
 
 export default function LogInForm (props: PaperProps) {
-  //Router
+
   const router = useRouter();
-  //Form
   const form = useForm({
     initialValues: {
       email: '',
@@ -37,19 +36,22 @@ export default function LogInForm (props: PaperProps) {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
   },
   });
+
   const resetForm = () => {
     form.values.email = '';
     form.values.name = '',
     form.values.password = '',
-    form.values.terms = true
+    form.values.terms = false
   }
 
 
   //Return user to register page
   const HandleRegister = (e : any) => {
+    resetForm();
     router.push('/auth/register')
   }
   const HandleForgot = (e : any) => {
+    resetForm();
     router.push('/auth/resetpass')
   }
 

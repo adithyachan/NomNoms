@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import React from 'react';
 import { showNotification } from '@mantine/notifications';
 import { NotificationsProvider } from '@mantine/notifications';
+import { DeleteDocument } from '@/lib/firebase/FirestoreOperations';
 
 
   const useStyles = createStyles((theme) => ({
@@ -78,6 +79,7 @@ import { NotificationsProvider } from '@mantine/notifications';
                 },
               }),            
             })
+            DeleteDocument("users", user.uid);
             setTimeout(() => {
                 router.push('/tables');
             }, 2000)
