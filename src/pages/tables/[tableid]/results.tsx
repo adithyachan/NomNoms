@@ -131,7 +131,7 @@ export default function ResultsPage() {
                     )))
                     :
                     (<>
-                      {'No one voted for the same restaurant :('}
+                      {'No one voted for any restaurant :('}
                     </>)
 
                   }
@@ -142,7 +142,7 @@ export default function ResultsPage() {
               <Center className="flex-col rounded-3xl bg-rose-50 shadow-red-100 shadow-xl my-10 py-10">
                 <Text ta="center" className="mb-10 text-5xl font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Crowd Favs</Text>
                 <Container mah={500} className="overflow-y-scroll space-y-3 mb-5">
-                  {topRestaurantIDs.length > 0 ?
+                  {topRestaurantIDs.filter(i => totalVotes[i] >= 2).length > 0 ?
                     (topRestaurantIDs.filter(i => totalVotes[i] >= 2).map((id: string, idx) => (
                       <Flex key={idx} className="space-x-5 items-center">
                         <Flex direction="column">
@@ -157,7 +157,7 @@ export default function ResultsPage() {
                     )))
                     :
                     (<>
-                      {'No one voted for any restaurant :('}
+                      {'No one voted for the same restaurant :('}
                     </>)
                   }
                 </Container>
