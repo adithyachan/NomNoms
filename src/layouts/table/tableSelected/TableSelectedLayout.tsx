@@ -29,7 +29,7 @@ export default function TableSelectedLayout(props: {table: Table}) {
   const [sortDir, toggle] = useToggle()
   const [sortVar, setSortBy] = useState<string>()
   const [vote, setVote] = useState<boolean>()
-  const [cuisine, setCuisine] = useState<string>("food")
+  const [cuisine, setCuisine] = useState<string>()
   const [priceString, setPriceString] = useState<string>("1,2,3,4")
   const { user } = useUser()
 
