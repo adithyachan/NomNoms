@@ -22,7 +22,10 @@ export default function Voting({ votes, setVotes, table, data }: any) {
       const uid = user?.uid;
       if (uid) {
         table.users[uid] = votes;
-        table.numDoneVoting++;
+        // table.numDoneVoting++;
+        if (!table.usersDoneVoting.includes(uid)) {
+          table.usersDoneVoting.push(uid)
+        }
         UpdateTable(table);
         router.push(`/tables/${router.query.tableid}/results`);
       }

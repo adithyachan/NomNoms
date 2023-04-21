@@ -19,7 +19,8 @@ export interface ITable {
   expiration: any,
   description: string,
   date: any,
-  numDoneVoting: number,
+  // numDoneVoting: number,
+  usersDoneVoting: string[]
   prefsDone: string[],
   restaurantList: any[];
 }
@@ -41,7 +42,8 @@ export class Table implements ITable {
     price: string;
   };
   expiration: any;
-  numDoneVoting: number;
+  // numDoneVoting: number;
+  usersDoneVoting: string[];
   description: string;
   date: any;
   prefsDone: string[];
@@ -59,7 +61,8 @@ export class Table implements ITable {
       this.leader = json.leader;
       this.prefs = json.prefs;
       this.expiration = (new Timestamp(json.expiration.seconds, json.expiration.nanoseconds));
-      this.numDoneVoting = json.numDoneVoting;
+      // this.numDoneVoting = json.numDoneVoting;
+      this.usersDoneVoting = json.usersDoneVoting;
       this.date = json.date;
       this.description = json.description;
       this.prefsDone = json.prefsDone;
