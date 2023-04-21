@@ -15,7 +15,7 @@ export default function FavoritePicker({ ids, votes, setVotes, listData, setStat
       setLocalVotes((votes: any) => {
         const updatedVotes = {
           ...votes,
-          [favorite]: 1.5,
+          [favorite]: 1.01,
         };
         setVotes(updatedVotes); // Call setVotes with the updated localVotes
         setState('complete')

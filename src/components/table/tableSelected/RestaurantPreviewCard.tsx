@@ -9,7 +9,7 @@ export default function RestaurantPreviewCard(props: {data: any}) {
   const router = useRouter()
   
   return (
-    <div className="shadow-lg shadow-rose 200 rounded-2xl transition ease-in-out hover:shadow-xl hover:shadow-rose-300 duration-300 delay-75">
+    <div className="shadow-lg shadow-rose 200 rounded-2xl transition ease-in-out hover:shadow-xl hover:shadow-rose-300 duration-300 delay-75 w-full">
       <BackgroundImage src={restaurant.image_url ?? defaultImage} className="w-full h-32 rounded-2xl">
         <div className="h-full w-full bg-gray-800/60 rounded-2xl flex justify-end items-center">
           <div className="w-full ml-5 mt-3">

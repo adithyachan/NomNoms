@@ -3,8 +3,9 @@ import { ReadTable } from "@/lib/firebase/table/TableOperations";
 import { Table } from "@/types/Table";
 import { useState, useEffect } from "react";
 import ShowCard from "@/components/table/restaurantCards/Card";
-import { Text, Center } from "@mantine/core";
+import { Text, Center, Container, Flex, Title } from "@mantine/core";
 import { Button, Image } from "@mantine/core";
+import RestaurantPreviewCard from "@/components/table/tableSelected/RestaurantPreviewCard";
 export default function ResultsPage() {
   const router = useRouter()
   const { tableid } = router.query
@@ -64,48 +65,44 @@ export default function ResultsPage() {
 
       // const topRestaurantIDs = Object.entries(totalVotes).sort((a, b) => b[1] - a[1]).slice(0, 3).map(pair => pair[0])
       const topRestaurantIDs = Object.entries(totalVotes)
-        .filter(pair => pair[1] !== 0) // remove key-value pairs where value is 0
         .sort((a, b) => {
           if (b[1] === a[1]) {
             return a[0].localeCompare(b[0]); // lexicographically sort based on key
           }
           return b[1] - a[1]; // sort based on value
         })
-        .slice(0, 3)
         .map(pair => pair[0]);
       console.log(totalVotes)
       return (
-        <Center className="flex-col rounded-3xl bg-white shadow-red-100 shadow-xl p-10 m-10">
-          <Text ta="center" className="mb-10 text-5xl font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Results</Text>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '10px',
-              paddingBottom: '20px'
-            }}
-          >
-            {topRestaurantIDs.length > 0 ?
-              (topRestaurantIDs.map((id: string) => (
-                <ShowCard
-                  key={id}
-                  id={id}
-                />
+        <Center>
+          <Center className="flex-col rounded-3xl bg-rose-50 shadow-red-100 shadow-xl w-1/2 m-20 py-10">
+            <Text ta="center" className="mb-10 text-5xl font-black" variant="gradient" gradient={{from: "red.7", to: "red.4"}}>Results</Text>
+            <Container mah={500} className="overflow-y-scroll space-y-3 mb-5">
+              {topRestaurantIDs.length > 0 ?
+                (topRestaurantIDs.map((id: string, idx) => (
+                  <Flex key={idx} className="space-x-5 items-center">
+                    <Flex direction="column">
+                      <Title color="red">#{ idx + 1 }</Title>
+                      <small className="text-center text-xs">Votes:{ Math.floor(totalVotes[id]) }</small>
+                    </Flex>
+                    <RestaurantPreviewCard 
+                      key={ id } 
+                      data={ table.restaurantList.find(i => i.id == id) }
+                    />
+                  </Flex>
                 )))
-              :
-              (<>
-                {'No one voted for anything :('}
-              </>)
+                :
+                (<>
+                  {'No one voted for anything :('}
+                </>)
 
-            }
-          </div>
-          <Button color="red" onClick={HandleDone}>
-            Finish
-          </Button>
+              }
+            </Container>
+            <Button color="red" onClick={HandleDone}>
+              Finish
+            </Button>
+          </Center>
         </Center>
-        
       
       )
       
