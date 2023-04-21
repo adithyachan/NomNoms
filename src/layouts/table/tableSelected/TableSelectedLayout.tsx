@@ -153,8 +153,10 @@ export default function TableSelectedLayout(props: {table: Table}) {
       router.push("/tables/tablenotfound")
     }
 
-    if (props.table.prefsDone.length == Object.keys(props.table.users).length) {
-      router.push(router.asPath + "/voting")
+    if (props.table.prefsDone.length == Object.keys(props.table.users).length &&
+        !(Object.keys(props.table.users).includes(user.uid!) && 
+        Object.keys(props.table.users[user.uid!]).length !== 0)) {
+        router.push(router.asPath + "/voting")
     }
   }, [props.table])
   
