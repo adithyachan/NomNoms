@@ -13,7 +13,7 @@ import { IconCalendar, IconClock } from "@tabler/icons-react";
 import { getRestaurantList } from "@/lib/utils/yelpAPI";
 import { showNotification, NotificationsProvider } from "@mantine/notifications";
 import { IconX } from "@tabler/icons-react";
-
+import data from "valid-zips.json"
 
 const special_chars = /[ `!@#$%^&*()+_\-=\[\]{};':"\\|,.<>\/?]/
 const numFetch = 50;
@@ -41,9 +41,17 @@ export default function CreateTable() {
   // Input validation
   const special_chars_check = !special_chars.test(value)
   const length_check = value.length >= 4 && value.length <= 16
-  const zip_check = zip.length == 5 && !Number.isNaN(zip)
+  const zip_check = zip.length == 5 && !Number.isNaN(zip) && zipisvalid()
   const valid = special_chars_check && length_check && zip_check
-
+  function zipisvalid() {
+    if (zip.length!=5) {
+      return false
+    }
+    if (data.includes(zip) ) {
+      return true
+    }
+    return false
+  }
   const getRestaurantFirstTime = async (n: number = 5) => {
     let data: any[] = []
     let per = 0
