@@ -1,3 +1,4 @@
+export{}
 describe('Login Test', () => {
   it('Logs in as guest', () => {
     // visit app homepage
@@ -17,7 +18,7 @@ describe('Login Test', () => {
     cy.get('input[placeholder="Zip Code"]').type('95014')
     cy.get('input[placeholder="Event Description"]').type('this table is used for automated testing')
     cy.get('span.mantine-qo1k2.mantine-Button-label').contains('Create').click()
-    cy.wait(7000)
+    cy.wait(10000)
     cy.get('body').type('{esc}')
     cy.get(':contains("Join"):last').click()
     cy.wait(5000)
@@ -26,3 +27,8 @@ describe('Login Test', () => {
     
   })
 })
+
+
+
+
+  
