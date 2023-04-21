@@ -25,33 +25,38 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const res = (await ReadDocument("tables", tableid as string))
   
   if (res) {
-    return { props: { tableExists: true } }
+    const table: ITable = res as ITable
+    table.lastAccessed = { seconds: table.lastAccessed.seconds, nanoseconds: table.lastAccessed.nanoseconds }
+    table.expiration = { seconds: table.expiration.seconds, nanoseconds: table.expiration.nanoseconds }
+    table.date = { seconds: table.date.seconds, nanoseconds: table.date.nanoseconds }
+    return { props: { table: table } }
   }
   
-  return { props: { tableExists: false } }
+  return { props: { table: undefined } }
 }
 
-export default function TablePage(props: { tableExists: boolean}) {
+export default function TablePage(props: { table: ITable | undefined }) {
   const router = useRouter()
   const { tableid } = router.query
   const { user } = useUser()
   const [table, setTable] = useState<Table>()
 
   const updateTable = async () => {
-    if (table) {
-      table.lastAccessed = Timestamp.fromDate((new Date()))
-      table.expiration = Timestamp.fromDate(new Date(table.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
-      if (! Object.keys(table.users).includes(user?.uid!)) {
+    if (props.table) {
+      const temp = new Table(props.table)
+      temp.lastAccessed = Timestamp.fromDate((new Date()))
+      temp.expiration = Timestamp.fromDate(new Date(temp.expiration.toDate().getTime() + 60 * 60 * 24 * 1000))
+      if (! Object.keys(temp.users).includes(user?.uid!)) {
         showNotification({
           title: `You're in!`,
-          message: `Successfully joined table: ${table.name}`,
+          message: `Successfully joined table: ${temp.name}`,
           autoClose: 3000,
           color: 'teal',
           icon: <IconCheck size={16} />,           
         })
-        table.users[user?.uid!] = {};
+        temp.users[user?.uid!] = {};
       }
-      await UpdateTable(table as ITable)
+      await UpdateTable(temp as ITable)
     } 
   }
 
@@ -66,9 +71,9 @@ export default function TablePage(props: { tableExists: boolean}) {
       router.push("/auth/verification")
     }
 
-    if (props.tableExists) {
-      const unsub = ReadTable(tableid as string, setTable)
+    if (props.table) {
       updateTable()
+      const unsub = ReadTable(tableid as string, setTable)
       return unsub
     }
   }, [user])
@@ -81,7 +86,7 @@ export default function TablePage(props: { tableExists: boolean}) {
   return (
     <>
       <NotificationsProvider>
-        <TableSelectedLayout table={ table }/>
+        <TableSelectedLayout table={ table } />
       </NotificationsProvider>
     </>
   )

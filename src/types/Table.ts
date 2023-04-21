@@ -47,7 +47,10 @@ export class Table implements ITable {
   prefsDone: string[];
   restaurantList: any[];
 
-  constructor(json: ITable) {
+  constructor(json: ITable | undefined) {
+      if (!json) {
+        throw undefined
+      }
       this.id = json.id;
       this.name = json.name;
       this.lastAccessed = (new Timestamp(json.lastAccessed.seconds, json.lastAccessed.nanoseconds));
