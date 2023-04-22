@@ -351,7 +351,7 @@ export default function ShowCard(props : {id : string }) {
         
           position: 'absolute',
           top: '73%',
-          left: 346,
+          left: 304,
         }}>
           
           {photosExists &&  <Button style={{ color : 'white', fontWeight : 800, fontSize : '10px',backgroundColor: 'transparent'}} onClick={() => setOpen(true)}>Photos</Button>
